@@ -1,0 +1,1690 @@
+{% extends "base.html" %}
+{% block title %}Нейроспаммер{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile_edit.css') }}">
+<style>
+    /* Стили для новых модальных окон нейроспаммера */
+    .neuro-spammer-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1050;
+        overflow-x: hidden;
+        overflow-y: auto;
+        outline: 0;
+    }
+    .neuro-spammer-modal.show {
+        display: block;
+    }
+    .neuro-spammer-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+    .neuro-spammer-modal-dialog {
+        position: relative;
+        width: 100%;
+        max-width: 900px;
+        margin: 30px auto;
+        pointer-events: none;
+    }
+    .neuro-spammer-modal-content {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        background-color: #252935;
+        border: 1px solid #2a2e3a;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        pointer-events: auto;
+        max-height: 85vh;
+        overflow: hidden;
+    }
+    .neuro-spammer-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 24px;
+        padding-bottom: 0;
+        background-color: #252935;
+    }
+    .neuro-spammer-modal-title {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 500;
+        color: #e0e0e0;
+    }
+    .btn-close {
+        background: none;
+        border: none;
+        font-size: 28px;
+        line-height: 1;
+        color: #a0a0a0;
+        cursor: pointer;
+        padding: 0;
+        margin: 0;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        transition: all 0.2s;
+    }
+    .btn-close:hover {
+        background-color: #3a3a3a;
+        color: #ffffff;
+    }
+    .neuro-spammer-modal-body {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        flex-grow: 1;
+        background: #252935;
+        overflow-y: auto;
+    }
+    .neuro-spammer-format-info {
+        background-color: #1c1f28;
+        padding: 14px 18px;
+        border-radius: 8px;
+        border-left: 4px solid #4067c5;
+        font-size: 14px;
+    }
+    .neuro-spammer-format-info p {
+        margin: 0 0 10px 0;
+        font-weight: 500;
+        color: #e0e0e0;
+    }
+    .neuro-spammer-format-info pre {
+        margin: 0;
+        font-family: 'Courier New', Courier, monospace;
+        white-space: pre-wrap;
+        word-break: break-all;
+        color: #a0a0a0;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+    .neuro-spammer-textarea-wrapper {
+        position: relative;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    .neuro-spammer-textarea-container {
+        position: relative;
+        flex-grow: 1;
+        display: flex;
+        background-color: #1c1f28;
+        border: 1px solid #2a2e3a;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .line-numbers {
+        background-color: #1a1d26;
+        color: #6c757d;
+        padding: 12px 12px 12px 8px;
+        text-align: right;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 14px;
+        line-height: 21px;
+        user-select: none;
+        border-right: 1px solid #2a2e3a;
+        min-width: 50px;
+        overflow: hidden;
+        white-space: pre;
+    }
+    .neuro-spammer-textarea {
+        width: 100%;
+        min-height: 350px;
+        resize: none;
+        padding: 12px 12px 12px 8px;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 14px;
+        line-height: 21px;
+        border: none;
+        box-sizing: border-box;
+        background-color: #1c1f28;
+        color: #e0e0e0;
+        flex-grow: 1;
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+    .neuro-spammer-textarea:focus {
+        outline: none;
+    }
+    .neuro-spammer-textarea::placeholder {
+        color: #6c757d;
+        opacity: 1;
+    }
+    .neuro-spammer-modal-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 24px;
+        background-color: #252935;
+        border-top: 1px solid #2a2e3a;
+    }
+    .footer-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    .search-toggle-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(145deg, #5c8aff, #4c7cff);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 14px;
+        font-weight: 500;
+    }
+    .search-toggle-btn:hover {
+        background: linear-gradient(145deg, #4c7cff, #3f6fd3);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(92, 138, 255, 0.3);
+    }
+    .search-toggle-btn.active {
+        background: linear-gradient(145deg, #3f6fd3, #2f5ba0);
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    .search-toggle-btn .search-icon {
+        width: 16px;
+        height: 16px;
+    }
+    .search-toggle-btn .search-text {
+        white-space: nowrap;
+    }
+    .search-container {
+        display: flex;
+        align-items: center;
+        background-color: #1c1f28;
+        border: 1px solid #2a2e3a;
+        border-radius: 8px;
+        padding: 6px 12px;
+        min-width: 280px;
+        margin-left: 8px;
+    }
+    .search-input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+    .search-input-icon {
+        color: #6c757d;
+        margin-right: 8px;
+        flex-shrink: 0;
+        width: 16px;
+        height: 16px;
+    }
+    .search-input {
+        background: transparent;
+        border: none;
+        color: #e0e0e0;
+        font-size: 14px;
+        flex: 1;
+        outline: none;
+        padding: 4px 0;
+    }
+    .search-input::placeholder {
+        color: #6c757d;
+    }
+    .clear-search-btn {
+        background: none;
+        border: none;
+        color: #6c757d;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        margin-left: 4px;
+    }
+    .clear-search-btn:hover {
+        background-color: #2a2e3a;
+        color: #e0e0e0;
+    }
+    .row-count {
+        font-size: 14px;
+        color: #a0a0a0;
+        margin-left: 16px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="proxy-page">
+    <h1 class="page-title">Нейроспаммер</h1>
+    <!-- Кнопки материалов/файлов -->
+    <div class="card">
+        <div class="card-body">
+            <div class="file-buttons-container">
+                <button class="btn btn-light" id="btn-recipients">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    Получатели
+                    <span class="section-button-counter ms-1" id="counter-recipients">0</span>
+                </button>
+                <button class="btn btn-light" id="btn-product-description">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
+                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    Описание
+                </button>
+                <button class="btn btn-light" id="btn-dialog-scripting">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    Скрипт
+                </button>
+                <button class="btn btn-light" id="btn-greeting">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Приветствие
+                </button>
+                <button class="btn btn-light" id="btn-arguments">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
+                        <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+                    </svg>
+                    Аргументы
+                </button>
+                <button class="btn btn-light" id="btn-slang">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    Сленг+
+                </button>
+                <button class="btn btn-light" id="btn-exclude">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>
+                    Стоп слова
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Основные настройки -->
+    <div class="card">
+        <div class="card-body">
+            <div class="options-container">
+                <div>
+                    <label for="delayBetweenMessages" class="form-label">
+                        Задержка между отправками с аккаунта
+                        <span class="help-icon ms-1" data-tooltip="Минимальное время между отправкой сообщений с одного аккаунта. Помогает избежать блокировки.">
+                            <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                    </label>
+                    <div class="input-group" style="max-width: 200px">
+                        <input class="form-control has-trailing-label" id="delayBetweenMessages" value="10" type="number" min="1">
+                        <span class="input-trailing-label">сек</span>
+                        <div class="invalid-feedback" id="invalid-feedback-for-delayBetweenMessages"></div>
+                    </div>
+                </div>
+                <div>
+                    <label for="totalMessageLimit" class="form-label">
+                        Общий лимит сообщений
+                        <span class="help-icon ms-1" data-tooltip="Максимальное количество сообщений, которое будет отправлено всеми аккаунтами. 0 = без ограничений.">
+                            <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                    </label>
+                    <div class="input-group" style="max-width: 200px">
+                        <input class="form-control" id="totalMessageLimit" value="1000" type="number" min="0">
+                        <div class="invalid-feedback" id="invalid-feedback-for-totalMessageLimit"></div>
+                    </div>
+                </div>
+                <div>
+                    <label for="accountMessageLimit" class="form-label">
+                        Лимит сообщений с аккаунта
+                        <span class="help-icon ms-1" data-tooltip="Максимальное количество сообщений, которое отправит один аккаунт. 0 = без ограничений.">
+                            <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                    </label>
+                    <div class="input-group" style="max-width: 200px">
+                        <input class="form-control" id="accountMessageLimit" value="100" type="number" min="0">
+                        <div class="invalid-feedback" id="invalid-feedback-for-accountMessageLimit"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Дополнительные настройки -->
+    <div class="card">
+        <div class="card-body">
+            <h3 class="subsection-title subsection-title-collapse collapsed" id="additionalSettingsHeader">
+                Дополнительные настройки
+                <svg class="svg-icon collapse-chevron" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4px" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </h3>
+            <div class="collapse" id="additionalSettingsOptions">
+                <div class="options-container">
+                    <div>
+                        <label for="adGoal" class="form-label">
+                            Цель рекламы
+                            <span class="help-icon ms-1" data-tooltip="Выберите основную цель вашей рекламной кампании. Это повлияет на формирование сообщений.">
+                                <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <path d="M12 17h.01"></path>
+                                </svg>
+                            </span>
+                        </label>
+                        <select class="form-select rounded-end" id="adGoal" style="width: 250px">
+                            <option value="link_click" selected>Переход по ссылке</option>
+                            <option value="other_action">Иное действие</option>
+                        </select>
+                    </div>
+                    <div id="linkTypeSection" style="display: block;">
+                        <label for="linkType" class="form-label">
+                            Тип ссылки
+                            <span class="help-icon ms-1" data-tooltip="Выберите тип ссылки, которую будете использовать в рассылке.">
+                                <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <path d="M12 17h.01"></path>
+                                </svg>
+                            </span>
+                        </label>
+                        <select class="form-select rounded-end" id="linkType" style="width: 250px">
+                            <option value="internal" selected>Внутренняя (Telegram)</option>
+                            <option value="external">Внешняя (Всё остальное)</option>
+                        </select>
+                    </div>
+                    <div id="externalLinkSection" style="display: none;">
+                        <label for="externalLink" class="form-label">
+                            Ваша ссылка
+                            <span class="help-icon ms-1" data-tooltip="Введите полный URL вашего сайта или внешнего ресурса.">
+                                <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <path d="M12 17h.01"></path>
+                                </svg>
+                            </span>
+                        </label>
+                        <input class="form-control" id="externalLink" placeholder="https://example.com  " type="url">
+                    </div>
+                    <div id="internalLinkSection" style="display: block;">
+                        <label for="internalLinkTarget" class="form-label">
+                            На что ведет ссылка
+                            <span class="help-icon ms-1" data-tooltip="Выберите тип Telegram-сущности, на которую ведет ваша ссылка.">
+                                <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <path d="M12 17h.01"></path>
+                                </svg>
+                            </span>
+                        </label>
+                        <select class="form-select rounded-end" id="internalLinkTarget" style="width: 250px">
+                            <option value="user" selected>На человека</option>
+                            <option value="chat">На чат</option>
+                            <option value="channel">На канал</option>
+                            <option value="bot">На бота</option>
+                        </select>
+                        <label for="internalLink" class="form-label mt-2">
+                            Ваша ссылка
+                            <span class="help-icon ms-1" data-tooltip="Введите username канала/чата/бота или ссылку t.me/username">
+                                <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <path d="M12 17h.01"></path>
+                                </svg>
+                            </span>
+                        </label>
+                        <input class="form-control" id="internalLink" placeholder="t.me/username или @channel_name" type="text">
+                    </div>
+                    <div>
+                        <label for="allowLinkPreview" class="form-label">
+                            Разрешить предпросмотр ссылок
+                            <span class="help-icon ms-1" data-tooltip="Если в тексте есть ссылка, то Телеграм попробует прикрепить к сообщению её предпросмотр. Выключите эту настройку, чтобы не прикреплять предпросмотр.">
+                                <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <path d="M12 17h.01"></path>
+                                </svg>
+                            </span>
+                        </label>
+                        <select class="form-select rounded-end" id="allowLinkPreview" style="width: 250px">
+                            <option value="true" selected>Да</option>
+                            <option value="false">Нет</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Кнопка запуска -->
+<div class="start-task-btn-group">
+    <button type="button" class="start-task-btn" id="start-spammer-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
+        Запустить рассылку
+    </button>
+</div>
+<!-- Модальное окно настроек запуска -->
+<div class="modal" id="spammerTaskModal">
+    <div class="modal-content">
+        <div class="modal-body">
+            <div class="options-container">
+                <div class="mb-4">
+                    <button class="btn btn-primary w-100" id="select-accounts-btn" title="Выбрать аккаунты для рассылки">
+                        <span>Аккаунты</span>
+                        <span class="mx-1 opacity-50">|</span>
+                        <span id="accounts-picked-for-task-count">0</span>
+                    </button>
+                </div>
+                <div>
+                    <label for="threadCount" class="form-label">
+                        Количество потоков
+                        <span class="help-icon ms-1" data-tooltip="Сколько аккаунтов работает одновременно. Больше потоков = быстрее рассылка, но выше риск блокировок.">
+                            <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                    </label>
+                    <div class="input-group">
+                        <input class="form-control" id="threadCount" type="number" min="1" max="50" value="1">
+                        <div class="invalid-feedback" id="invalid-feedback-for-threadCount"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-lg" id="do-start-spammer-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>
+                <span>Запустить</span>
+            </button>
+        </div>
+    </div>
+</div>
+<!-- Модальное окно выбора аккаунтов (переиспользуем логика как в profile_edit) -->
+<div class="modal" id="accountsModal" style="display: none;">
+    <div class="modal-content" style="width: 90%; max-width: 1200px; height: 80vh;">
+        <div class="modal-header">
+            <h5 class="modal-title">Выбор аккаунтов</h5>
+            <button type="button" class="modal-close" id="accountsModalClose">&times;</button>
+        </div>
+        <div class="modal-body" style="height: calc(100% - 120px); overflow: hidden;">
+            <div class="proxy-container" style="height: 100%;">
+                <div class="header-section">
+                    <div class="table-controls">
+                        <div class="account-folder-selector">
+                            <button class="account-folder-btn active" id="all-folder-accounts">
+                                <div class="account-count" data-count="0">0</div>
+                                <div class="account-label">Все аккаунты</div>
+                                <div class="active-indicator"></div>
+                            </button>
+                            <button class="account-folder-btn" id="working-folder-accounts">
+                                <div class="account-count" data-count="0">0</div>
+                                <div class="account-label">Для работы</div>
+                                <div class="active-indicator"></div>
+                            </button>
+                            <button class="account-folder-btn" id="archive-folder-accounts">
+                                <div class="account-count" data-count="0">0</div>
+                                <div class="account-label">Архив</div>
+                                <div class="active-indicator"></div>
+                            </button>
+                            <button class="account-folder-btn" id="no-spam-folder-accounts">
+                                <div class="account-count" data-count="0">0</div>
+                                <div class="account-label">Без спамблока</div>
+                                <div class="active-indicator"></div>
+                            </button>
+                            <button class="account-folder-btn" id="with-spam-folder-accounts">
+                                <div class="account-count" data-count="0">0</div>
+                                <div class="account-label">Спамблок</div>
+                                <div class="active-indicator"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-body p-3 d-flex align-items-center">
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-light" id="select-all-accounts-modal">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 7 17l-5-5"></path><path d="m22 10-7.5 7.5L13 16"></path></svg>
+                            </button>
+                            <button id="deselect-all-btn-modal" type="button" class="btn btn-light">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+                            </button>
+                        </div>
+                        <span class="text-muted ms-auto" id="accounts-count-label-modal">Показано аккаунтов: 0 / 0</span>
+                    </div>
+                </div>
+                <div style="height: calc(100% - 200px); overflow-y: auto;">
+                    <table id="accounts-table-modal" class="proxy-table">
+                        <thead>
+                            <tr>
+                                <th class="selector-header"><input type="checkbox" id="select-all-checkbox-modal" class="select-all-checkbox"></th>
+                                <th>#</th>
+                                <th>Аватар</th>
+                                <th><div class="sortable-header" data-sort="phone">Телефон<div class="sort-icons"><span class="sort-asc">▲</span><span class="sort-desc">▼</span></div></div></th>
+                                <th><div class="sortable-header" data-sort="geo">Гео<div class="sort-icons"><span class="sort-asc">▲</span><span class="sort-desc">▼</span></div></div></th>
+                                <th><div class="sortable-header" data-sort="status">Статус<div class="sort-icons"><span class="sort-asc">▲</span><span class="sort-desc">▼</span></div></div></th>
+                                <th>Отлежка</th>
+                                <th><div class="sortable-header" data-sort="role">Роль<div class="sort-icons"><span class="sort-asc">▲</span><span class="sort-desc">▼</span></div></div></th>
+                                <th>Использован</th>
+                                <th><div class="sortable-header" data-sort="name">Имя<div class="sort-icons"><span class="sort-asc">▲</span><span class="sort-desc">▼</span></div></div></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="accountsModalCancel">Отмена</button>
+            <button type="button" class="btn btn-primary" id="confirmAccountsSelection" title="Подтвердить выбор аккаунтов">Подтвердить (<span id="selected-count-modal">0</span>)</button>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для списка получателей -->
+<div id="recipientsModal" class="neuro-spammer-modal">
+    <div class="neuro-spammer-modal-overlay"></div>
+    <div class="neuro-spammer-modal-dialog">
+        <div class="neuro-spammer-modal-content">
+            <div class="neuro-spammer-modal-header">
+                <h5 class="neuro-spammer-modal-title">Список получателей</h5>
+                <button type="button" class="btn-close" id="closeRecipientsModalBtn">&times;</button>
+            </div>
+            <div class="neuro-spammer-modal-body">
+                <div class="neuro-spammer-format-info">
+                    <p>Введите список получателей (по одному в строке):</p>
+                    <pre>username
+@username
+user_id</pre>
+                </div>
+                <div class="neuro-spammer-textarea-wrapper">
+                    <div class="neuro-spammer-textarea-container">
+                        <div class="line-numbers" id="lineNumbersRecipients"></div>
+                        <textarea
+                            id="recipientsTextarea"
+                            class="neuro-spammer-textarea"
+                            placeholder="Введите юзернеймы или ID получателей..."
+                        ></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="neuro-spammer-modal-footer">
+                <div class="footer-left">
+                    <button class="search-toggle-btn" id="searchToggleRecipients">
+                        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <span class="search-text">Поиск</span>
+                    </button>
+                    <div class="search-container" id="searchContainerRecipients" style="display: none;">
+                        <div class="search-input-wrapper">
+                            <svg class="search-input-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input type="text" id="searchInputRecipients" class="search-input" placeholder="Введите текст для поиска...">
+                            <button class="clear-search-btn" id="clearSearchRecipients" style="display: none;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <span class="row-count">Кол-во строк: <span id="recipientsLineCount">0</span></span>
+                </div>
+                <button class="btn btn-primary" id="saveRecipientsBtn">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для описания продукта -->
+<div id="productDescriptionModal" class="neuro-spammer-modal">
+    <div class="neuro-spammer-modal-overlay"></div>
+    <div class="neuro-spammer-modal-dialog">
+        <div class="neuro-spammer-modal-content">
+            <div class="neuro-spammer-modal-header">
+                <h5 class="neuro-spammer-modal-title">Описание продукта</h5>
+                <button type="button" class="btn-close" id="closeProductDescriptionModalBtn">&times;</button>
+            </div>
+            <div class="neuro-spammer-modal-body">
+                <div class="neuro-spammer-format-info">
+                    <p>Введите подробное описание вашего продукта:</p>
+                    <pre>Наш продукт - это инновационное решение для автоматизации маркетинга в Telegram...</pre>
+                </div>
+                <div class="neuro-spammer-textarea-wrapper">
+                    <div class="neuro-spammer-textarea-container">
+                        <div class="line-numbers" id="lineNumbersProductDescription"></div>
+                        <textarea
+                            id="productDescriptionTextarea"
+                            class="neuro-spammer-textarea"
+                            placeholder="Введите описание продукта..."
+                        ></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="neuro-spammer-modal-footer">
+                <div class="footer-left">
+                    <button class="search-toggle-btn" id="searchToggleProductDescription">
+                        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <span class="search-text">Поиск</span>
+                    </button>
+                    <div class="search-container" id="searchContainerProductDescription" style="display: none;">
+                        <div class="search-input-wrapper">
+                            <svg class="search-input-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input type="text" id="searchInputProductDescription" class="search-input" placeholder="Введите текст для поиска...">
+                            <button class="clear-search-btn" id="clearSearchProductDescription" style="display: none;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <span class="row-count">Кол-во строк: <span id="productDescriptionLineCount">0</span></span>
+                </div>
+                <button class="btn btn-primary" id="saveProductDescriptionBtn" title="Сохранить описание продукта">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для скриптинга диалогов -->
+<div id="dialogScriptingModal" class="neuro-spammer-modal">
+    <div class="neuro-spammer-modal-overlay"></div>
+    <div class="neuro-spammer-modal-dialog">
+        <div class="neuro-spammer-modal-content">
+            <div class="neuro-spammer-modal-header">
+                <h5 class="neuro-spammer-modal-title">Скриптинг диалогов</h5>
+                <button type="button" class="btn-close" id="closeDialogScriptingModalBtn">&times;</button>
+            </div>
+            <div class="neuro-spammer-modal-body">
+                <div class="neuro-spammer-format-info">
+                    <p>Введите примеры диалогов (по одному в строке):</p>
+                    <pre>Пользователь: Здравствуйте, интересует ваш продукт?
+Бот: Добрый день! Конечно, расскажу подробнее о наших возможностях...</pre>
+                </div>
+                <div class="neuro-spammer-textarea-wrapper">
+                    <div class="neuro-spammer-textarea-container">
+                        <div class="line-numbers" id="lineNumbersDialogScripting"></div>
+                        <textarea
+                            id="dialogScriptingTextarea"
+                            class="neuro-spammer-textarea"
+                            placeholder="Введите примеры диалогов..."
+                        ></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="neuro-spammer-modal-footer">
+                <div class="footer-left">
+                    <button class="search-toggle-btn" id="searchToggleDialogScripting">
+                        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <span class="search-text">Поиск</span>
+                    </button>
+                    <div class="search-container" id="searchContainerDialogScripting" style="display: none;">
+                        <div class="search-input-wrapper">
+                            <svg class="search-input-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input type="text" id="searchInputDialogScripting" class="search-input" placeholder="Введите текст для поиска...">
+                            <button class="clear-search-btn" id="clearSearchDialogScripting" style="display: none;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <span class="row-count">Кол-во строк: <span id="dialogScriptingLineCount">0</span></span>
+                </div>
+                <button class="btn btn-primary" id="saveDialogScriptingBtn" title="Сохранить скрипт диалога">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для приветствия -->
+<div id="greetingModal" class="neuro-spammer-modal">
+    <div class="neuro-spammer-modal-overlay"></div>
+    <div class="neuro-spammer-modal-dialog">
+        <div class="neuro-spammer-modal-content">
+            <div class="neuro-spammer-modal-header">
+                <h5 class="neuro-spammer-modal-title">Приветствие</h5>
+                <button type="button" class="btn-close" id="closeGreetingModalBtn">&times;</button>
+            </div>
+            <div class="neuro-spammer-modal-body">
+                <div class="neuro-spammer-format-info">
+                    <p>Введите варианты приветственных сообщений (по одному в строке):</p>
+                    <pre>Привет! 👋
+Здравствуйте!</pre>
+                </div>
+                <div class="neuro-spammer-textarea-wrapper">
+                    <div class="neuro-spammer-textarea-container">
+                        <div class="line-numbers" id="lineNumbersGreeting"></div>
+                        <textarea
+                            id="greetingTextarea"
+                            class="neuro-spammer-textarea"
+                            placeholder="Введите варианты приветствий..."
+                        ></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="neuro-spammer-modal-footer">
+                <div class="footer-left">
+                    <button class="search-toggle-btn" id="searchToggleGreeting">
+                        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <span class="search-text">Поиск</span>
+                    </button>
+                    <div class="search-container" id="searchContainerGreeting" style="display: none;">
+                        <div class="search-input-wrapper">
+                            <svg class="search-input-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input type="text" id="searchInputGreeting" class="search-input" placeholder="Введите текст для поиска...">
+                            <button class="clear-search-btn" id="clearSearchGreeting" style="display: none;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <span class="row-count">Кол-во строк: <span id="greetingLineCount">0</span></span>
+                </div>
+                <button class="btn btn-primary" id="saveGreetingBtn" title="Сохранить приветствие">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для аргументов -->
+<div id="argumentsModal" class="neuro-spammer-modal">
+    <div class="neuro-spammer-modal-overlay"></div>
+    <div class="neuro-spammer-modal-dialog">
+        <div class="neuro-spammer-modal-content">
+            <div class="neuro-spammer-modal-header">
+                <h5 class="neuro-spammer-modal-title">Аргументы за продукт</h5>
+                <button type="button" class="btn-close" id="closeArgumentsModalBtn">&times;</button>
+            </div>
+            <div class="neuro-spammer-modal-body">
+                <div class="neuro-spammer-format-info">
+                    <p>Введите убедительные аргументы в пользу вашего продукта (по одному в строке):</p>
+                    <pre>• Уникальная технология
+• Бесплатная доставка</pre>
+                </div>
+                <div class="neuro-spammer-textarea-wrapper">
+                    <div class="neuro-spammer-textarea-container">
+                        <div class="line-numbers" id="lineNumbersArguments"></div>
+                        <textarea
+                            id="argumentsTextarea"
+                            class="neuro-spammer-textarea"
+                            placeholder="Введите аргументы..."
+                        ></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="neuro-spammer-modal-footer">
+                <div class="footer-left">
+                    <button class="search-toggle-btn" id="searchToggleArguments">
+                        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <span class="search-text">Поиск</span>
+                    </button>
+                    <div class="search-container" id="searchContainerArguments" style="display: none;">
+                        <div class="search-input-wrapper">
+                            <svg class="search-input-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input type="text" id="searchInputArguments" class="search-input" placeholder="Введите текст для поиска...">
+                            <button class="clear-search-btn" id="clearSearchArguments" style="display: none;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <span class="row-count">Кол-во строк: <span id="argumentsLineCount">0</span></span>
+                </div>
+                <button class="btn btn-primary" id="saveArgumentsBtn" title="Сохранить аргументы">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для позитивного сленга -->
+<div id="slangModal" class="neuro-spammer-modal">
+    <div class="neuro-spammer-modal-overlay"></div>
+    <div class="neuro-spammer-modal-dialog">
+        <div class="neuro-spammer-modal-content">
+            <div class="neuro-spammer-modal-header">
+                <h5 class="neuro-spammer-modal-title">Позитивный сленг</h5>
+                <button type="button" class="btn-close" id="closeSlangModalBtn">&times;</button>
+            </div>
+            <div class="neuro-spammer-modal-body">
+                <div class="neuro-spammer-format-info">
+                    <p>Введите позитивные слова и выражения (по одному в строке):</p>
+                    <pre>Классно!
+Отлично!
+Супер!</pre>
+                </div>
+                <div class="neuro-spammer-textarea-wrapper">
+                    <div class="neuro-spammer-textarea-container">
+                        <div class="line-numbers" id="lineNumbersSlang"></div>
+                        <textarea
+                            id="slangTextarea"
+                            class="neuro-spammer-textarea"
+                            placeholder="Введите позитивный сленг..."
+                        ></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="neuro-spammer-modal-footer">
+                <div class="footer-left">
+                    <button class="search-toggle-btn" id="searchToggleSlang">
+                        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <span class="search-text">Поиск</span>
+                    </button>
+                    <div class="search-container" id="searchContainerSlang" style="display: none;">
+                        <div class="search-input-wrapper">
+                            <svg class="search-input-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input type="text" id="searchInputSlang" class="search-input" placeholder="Введите текст для поиска...">
+                            <button class="clear-search-btn" id="clearSearchSlang" style="display: none;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <span class="row-count">Кол-во строк: <span id="slangLineCount">0</span></span>
+                </div>
+                <button class="btn btn-primary" id="saveSlangBtn" title="Сохранить сленг">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для исключаемых выражений -->
+<div id="excludeModal" class="neuro-spammer-modal">
+    <div class="neuro-spammer-modal-overlay"></div>
+    <div class="neuro-spammer-modal-dialog">
+        <div class="neuro-spammer-modal-content">
+            <div class="neuro-spammer-modal-header">
+                <h5 class="neuro-spammer-modal-title">Исключить выражения</h5>
+                <button type="button" class="btn-close" id="closeExcludeModalBtn">&times;</button>
+            </div>
+            <div class="neuro-spammer-modal-body">
+                <div class="neuro-spammer-format-info">
+                    <p>Введите слова и выражения, которые нужно исключить из рассылки (по одному в строке):</p>
+                    <pre>спам
+реклама
+продажа</pre>
+                </div>
+                <div class="neuro-spammer-textarea-wrapper">
+                    <div class="neuro-spammer-textarea-container">
+                        <div class="line-numbers" id="lineNumbersExclude"></div>
+                        <textarea
+                            id="excludeTextarea"
+                            class="neuro-spammer-textarea"
+                            placeholder="Введите выражения для исключения..."
+                        ></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="neuro-spammer-modal-footer">
+                <div class="footer-left">
+                    <button class="search-toggle-btn" id="searchToggleExclude">
+                        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <span class="search-text">Поиск</span>
+                    </button>
+                    <div class="search-container" id="searchContainerExclude" style="display: none;">
+                        <div class="search-input-wrapper">
+                            <svg class="search-input-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input type="text" id="searchInputExclude" class="search-input" placeholder="Введите текст для поиска...">
+                            <button class="clear-search-btn" id="clearSearchExclude" style="display: none;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <span class="row-count">Кол-во строк: <span id="excludeLineCount">0</span></span>
+                </div>
+                <button class="btn btn-primary" id="saveExcludeBtn" title="Сохранить исключения">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="customTooltip" class="custom-tooltip"></div>
+<script>
+// Реиспользование логики модалок и таблицы аккаунтов из profile_edit
+let selectedAccounts = new Set();
+let allAccounts = [];
+let currentFolder = 'all';
+let currentSpamFilter = null;
+let currentSort = { field: null, direction: 'asc' };
+let searchFilter = '';
+let roleFilter = '';
+let geoFilter = '';
+let statusFilter = '';
+
+// --- Новые функции для работы с модальными окнами нейроспаммера ---
+// --- Структура данных для хранения списков ---
+let neuroSpammerLists = {
+    recipients: [],
+    productDescription: '',
+    dialogScripting: [],
+    greeting: [],
+    arguments: [],
+    slang: [],
+    exclude: []
+};
+
+// --- Система уведомлений ---
+class NotificationSystem {
+    constructor() {
+        this.container = null;
+        this.init();
+    }
+    init() {
+        this.container = document.createElement('div');
+        this.container.className = 'notification-container';
+        document.body.appendChild(this.container);
+    }
+    show(options) {
+        const {
+            title,
+            message,
+            type = 'info',
+            duration = 5000
+        } = options;
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        const iconSvg = this.getIcon(type);
+        notification.innerHTML = `
+            <div class="notification-icon">
+                ${iconSvg}
+            </div>
+            <div class="notification-content">
+                <div class="notification-title">${title}</div>
+                <div class="notification-message">${message}</div>
+            </div>
+            <button class="notification-close">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        `;
+        this.container.appendChild(notification);
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 10);
+        const closeBtn = notification.querySelector('.notification-close');
+        closeBtn.addEventListener('click', () => {
+            this.hide(notification);
+        });
+        if (duration > 0) {
+            setTimeout(() => {
+                this.hide(notification);
+            }, duration);
+        }
+        return notification;
+    }
+    hide(notification) {
+        notification.classList.remove('show');
+        notification.classList.add('hide');
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 400);
+    }
+    getIcon(type) {
+        const icons = {
+            success: `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2">
+                    <path d="M20 6L9 17l-5-5"/>
+                </svg>
+            `,
+            error: `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc3545" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                </svg>
+            `,
+            warning: `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffc107" stroke-width="2">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            `,
+            info: `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5c8aff" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+            `
+        };
+        return icons[type] || icons.info;
+    }
+    success(title, message, duration = 5000) {
+        return this.show({ title, message, type: 'success', duration });
+    }
+    error(title, message, duration = 5000) {
+        return this.show({ title, message, type: 'error', duration });
+    }
+    warning(title, message, duration = 5000) {
+        return this.show({ title, message, type: 'warning', duration });
+    }
+    info(title, message, duration = 5000) {
+        return this.show({ title, message, type: 'info', duration });
+    }
+}
+const notifications = new NotificationSystem();
+
+// --- Функции для работы с модальными окнами ---
+function openModal(modalId, listKey, textareaId, lineNumbersId, lineCountId) {
+    const modal = document.getElementById(modalId);
+    const textarea = document.getElementById(textareaId);
+    modal.classList.add('show');
+    // Загружаем оригинальный список при открытии
+    if (Array.isArray(neuroSpammerLists[listKey])) {
+        textarea.value = neuroSpammerLists[listKey].join('\n');
+    } else {
+        textarea.value = neuroSpammerLists[listKey];
+    }
+    updateLineNumbers(lineNumbersId, textareaId);
+    updateLineCount(lineCountId, textareaId, listKey);
+    resetSearch(listKey);
+}
+
+function closeModal(modalId, listKey) {
+    const modal = document.getElementById(modalId);
+    modal.classList.remove('show');
+    resetSearch(listKey);
+}
+
+function updateLineNumbers(lineNumbersId, textareaId) {
+    const textarea = document.getElementById(textareaId);
+    const lineNumbers = document.getElementById(lineNumbersId);
+    const lineCount = textarea.value.split('\n').length;
+    let numbers = [];
+    for (let i = 1; i <= lineCount; i++) {
+        numbers.push(i);
+    }
+    lineNumbers.textContent = numbers.join('\n');
+    lineNumbers.scrollTop = textarea.scrollTop;
+}
+
+function updateLineCount(lineCountId, textareaId, listKey) {
+    const textarea = document.getElementById(textareaId);
+    let count = 0;
+    if (Array.isArray(neuroSpammerLists[listKey])) {
+        const lines = textarea.value.split('\n').filter(line => line.trim() !== '');
+        count = lines.length;
+    } else {
+        count = textarea.value.trim() ? 1 : 0;
+    }
+    document.getElementById(lineCountId).textContent = count;
+    // Обновляем соответствующий счетчик кнопки
+    if (lineCountId === 'recipientsLineCount') {
+        document.getElementById('counter-recipients').textContent = count;
+    }
+}
+
+// --- Функции поиска для каждого модального окна ---
+let searchStates = {
+    recipients: { active: false, originalList: [] },
+    productDescription: { active: false, originalList: '' },
+    dialogScripting: { active: false, originalList: [] },
+    greeting: { active: false, originalList: [] },
+    arguments: { active: false, originalList: [] },
+    slang: { active: false, originalList: [] },
+    exclude: { active: false, originalList: [] }
+};
+
+function toggleSearch(listKey) {
+    if (searchStates[listKey].active) {
+        hideSearch(listKey);
+    } else {
+        showSearch(listKey);
+    }
+}
+
+function showSearch(listKey) {
+    const searchContainerId = `searchContainer${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const searchToggleBtnId = `searchToggle${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const searchInputId = `searchInput${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const searchContainer = document.getElementById(searchContainerId);
+    const searchToggleBtn = document.getElementById(searchToggleBtnId);
+    const searchInput = document.getElementById(searchInputId);
+
+    searchContainer.style.display = 'block';
+    searchToggleBtn.classList.add('active');
+    searchStates[listKey].active = true;
+    setTimeout(() => {
+        searchInput.focus();
+    }, 100);
+}
+
+function hideSearch(listKey) {
+    const searchContainerId = `searchContainer${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const searchToggleBtnId = `searchToggle${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const searchContainer = document.getElementById(searchContainerId);
+    const searchToggleBtn = document.getElementById(searchToggleBtnId);
+
+    searchContainer.style.display = 'none';
+    searchToggleBtn.classList.remove('active');
+    searchStates[listKey].active = false;
+    resetSearch(listKey);
+}
+
+function performSearch(listKey) {
+    const searchInputId = `searchInput${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const textareaId = `${listKey}Textarea`;
+    const clearBtnId = `clearSearch${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const searchInput = document.getElementById(searchInputId);
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    const textarea = document.getElementById(textareaId);
+    const clearBtn = document.getElementById(clearBtnId);
+
+    clearBtn.style.display = searchTerm ? 'flex' : 'none';
+
+    if (searchTerm === '') {
+        if (Array.isArray(searchStates[listKey].originalList)) {
+            textarea.value = searchStates[listKey].originalList.join('\n');
+        } else {
+            textarea.value = searchStates[listKey].originalList;
+        }
+    } else {
+        if (Array.isArray(searchStates[listKey].originalList)) {
+            const filteredList = searchStates[listKey].originalList.filter(line =>
+                line.toLowerCase().includes(searchTerm)
+            );
+            textarea.value = filteredList.join('\n');
+        } else {
+            // Для одиночного текста просто показываем/скрываем
+            textarea.value = searchStates[listKey].originalList.includes(searchTerm) ? searchStates[listKey].originalList : '';
+        }
+    }
+    const lineCountId = `${listKey}LineCount`;
+    updateLineCount(lineCountId, textareaId, listKey);
+}
+
+function resetSearch(listKey) {
+    const searchInputId = `searchInput${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const textareaId = `${listKey}Textarea`;
+    const clearBtnId = `clearSearch${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const searchInput = document.getElementById(searchInputId);
+    const clearBtn = document.getElementById(clearBtnId);
+    const textarea = document.getElementById(textareaId);
+
+    searchInput.value = '';
+    clearBtn.style.display = 'none';
+    // Восстанавливаем оригинальный список
+    if (Array.isArray(neuroSpammerLists[listKey])) {
+        textarea.value = neuroSpammerLists[listKey].join('\n');
+    } else {
+        textarea.value = neuroSpammerLists[listKey];
+    }
+    const lineCountId = `${listKey}LineCount`;
+    updateLineCount(lineCountId, textareaId, listKey);
+}
+
+function saveList(listKey, textareaId, modalId) {
+    const textarea = document.getElementById(textareaId);
+    // Если поиск активен, сначала сбрасываем его
+    const searchInputId = `searchInput${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    if (searchStates[listKey].active && document.getElementById(searchInputId).value.trim() !== '') {
+        resetSearch(listKey);
+    }
+    const list = textarea.value.trim();
+    if (list) {
+        console.log(`Сохранение списка ${listKey}:`, list);
+        if (Array.isArray(neuroSpammerLists[listKey])) {
+            neuroSpammerLists[listKey] = textarea.value.split('\n');
+        } else {
+            neuroSpammerLists[listKey] = textarea.value;
+        }
+        notifications.success('Успешно!', `Список ${listKey} успешно сохранен`, 3000);
+    } else {
+        notifications.warning('Внимание', `Список ${listKey} пуст`, 3000);
+    }
+    closeModal(modalId, listKey);
+    // Обновляем счетчик при сохранении
+    const lineCountId = `${listKey}LineCount`;
+    updateLineCount(lineCountId, textareaId, listKey);
+}
+
+function showModal(modalId) {
+    document.getElementById(modalId).classList.add('show');
+    document.getElementById(modalId).style.display = 'block';
+}
+function hideModal(modalId) {
+    document.getElementById(modalId).classList.remove('show');
+    setTimeout(() => { document.getElementById(modalId).style.display = 'none'; }, 1);
+}
+function updateSelectedAccountsCount() {
+    const el = document.getElementById('accounts-picked-for-task-count');
+    if (el) el.textContent = selectedAccounts.size;
+    const el2 = document.getElementById('selected-count-modal');
+    if (el2) el2.textContent = selectedAccounts.size;
+}
+function selectAllAccountsInModal() {
+    document.querySelectorAll('.account-checkbox').forEach(checkbox => {
+        const accountId = checkbox.getAttribute('data-account-id');
+        selectedAccounts.add(accountId);
+        checkbox.checked = true;
+    });
+    updateSelectedAccountsCount();
+}
+function deselectAllAccountsInModal() {
+    selectedAccounts.clear();
+    document.querySelectorAll('.account-checkbox').forEach(checkbox => { checkbox.checked = false; });
+    updateSelectedAccountsCount();
+}
+async function loadAccounts(folder = 'all') {
+    try {
+        const response = await fetch('/get_accounts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ folder }) });
+        if (!response.ok) throw new Error('Ошибка загрузки аккаунтов');
+        allAccounts = await response.json();
+        renderAccountsTable();
+        updateAccountsCount();
+    } catch (e) { console.error(e); }
+}
+function getStatusClass(status) {
+    switch (status) {
+        case 'alive': return 'alive';
+        case 'dead': return 'dead';
+        case 'spam_block': return 'spam-block';
+        default: return 'unknown';
+    }
+}
+function getStatusText(status) {
+    switch (status) {
+        case 'alive': return 'Без ограничений';
+        case 'dead': return 'Мертв';
+        case 'spam_block': return 'Спам блок';
+        default: return 'Неизвестно';
+    }
+}
+function getCountryData(){ return { RU:{name:'Россия'}, UA:{name:'Украина'}, KZ:{name:'Казахстан'}, US:{name:'США'} }; }
+function getCountryInfo(code){ const m=getCountryData(); return m[code]||{name:code||'Неизвестно'}; }
+function getFlagEmoji(code){ if(!code) return '🏳️'; const cps=code.toUpperCase().split('').map(c=>127397+c.charCodeAt(0)); try{ return String.fromCodePoint(...cps);}catch(e){return '🏳️';}}
+
+function renderAccountsTable() {
+    const tbody = document.querySelector('#accounts-table-modal tbody');
+    if (!tbody) return;
+    tbody.innerHTML = (allAccounts || []).map((account, index) => {
+        const fullName = `${account.first_name || ''} ${account.last_name || ''}`.trim();
+        const countryInfo = getCountryInfo(account.geo);
+        const flagEmoji = getFlagEmoji(account.geo);
+        return `
+            <tr data-account-id="${account.id}" class="account-row">
+                <td><input type="checkbox" class="account-checkbox" data-account-id="${account.id}" ${selectedAccounts.has(account.id) ? 'checked' : ''}></td>
+                <td>${index + 1}</td>
+                <td class="avatar-cell"><div class="avatar-placeholder">${(account.first_name||account.last_name||'?').toString().charAt(0).toUpperCase()}</div></td>
+                <td>${account.phone || ''}</td>
+                <td><div class="geo-cell" title="${countryInfo.name}"><span class="country-flag">${flagEmoji}</span><span class="country-code">${account.geo||''}</span></div></td>
+                <td><span class="status-badge ${getStatusClass(account.status)}">${getStatusText(account.status)}</span></td>
+                <td class="rest-period" data="${account.register_time}">${account.rest_until || '-'}</td>
+                <td>${account.role || ''}</td>
+                <td>${account.last_used || 'Нет'}</td>
+                <td>${fullName || ''}</td>
+            </tr>
+        `;
+    }).join('');
+
+    document.querySelectorAll('.account-checkbox').forEach(cb => {
+        cb.addEventListener('change', function(){
+            const id = this.dataset.accountId;
+            if (this.checked) selectedAccounts.add(id); else selectedAccounts.delete(id);
+            updateSelectedAccountsCount();
+        });
+    });
+}
+
+function updateAccountsCount(){
+    const total = allAccounts.length;
+    const displayed = document.querySelectorAll('#accounts-table-modal tbody tr').length;
+    const el = document.getElementById('accounts-count-label-modal');
+    if (el) el.textContent = `Показано аккаунтов: ${displayed} / ${total}`;
+}
+
+// Тогглы секций
+function toggleSection(headerId, contentId) {
+    const content = document.getElementById(contentId);
+    const header = document.getElementById(headerId);
+    const chevron = header?.querySelector('.collapse-chevron');
+    if (!content || !header || !chevron) return;
+    content.classList.toggle('show');
+    header.classList.toggle('collapsed');
+    chevron.classList.toggle('rotated');
+}
+
+// Логика для переключения видимости настроек цели рекламы
+function updateAdGoalSettings() {
+    const goal = document.getElementById('adGoal').value;
+    const linkTypeSection = document.getElementById('linkTypeSection');
+    const externalLinkSection = document.getElementById('externalLinkSection');
+    const internalLinkSection = document.getElementById('internalLinkSection');
+
+    if (goal === 'link_click') {
+        linkTypeSection.style.display = 'block';
+        const linkType = document.getElementById('linkType').value;
+        externalLinkSection.style.display = linkType === 'external' ? 'block' : 'none';
+        internalLinkSection.style.display = linkType === 'internal' ? 'block' : 'none';
+    } else {
+        linkTypeSection.style.display = 'none';
+        externalLinkSection.style.display = 'none';
+        internalLinkSection.style.display = 'none';
+    }
+}
+
+// Логика для переключения видимости типа ссылки
+function updateLinkTypeSettings() {
+    const goal = document.getElementById('adGoal').value;
+    const linkType = document.getElementById('linkType').value;
+    const externalLinkSection = document.getElementById('externalLinkSection');
+    const internalLinkSection = document.getElementById('internalLinkSection');
+
+    if (goal === 'link_click') {
+        externalLinkSection.style.display = linkType === 'external' ? 'block' : 'none';
+        internalLinkSection.style.display = linkType === 'internal' ? 'block' : 'none';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+    // --- Обработчики для кнопок открытия модальных окон ---
+    document.getElementById('btn-recipients').addEventListener('click', function() {
+        openModal('recipientsModal', 'recipients', 'recipientsTextarea', 'lineNumbersRecipients', 'recipientsLineCount');
+    });
+    document.getElementById('btn-product-description').addEventListener('click', function() {
+        openModal('productDescriptionModal', 'productDescription', 'productDescriptionTextarea', 'lineNumbersProductDescription', 'productDescriptionLineCount');
+    });
+    document.getElementById('btn-dialog-scripting').addEventListener('click', function() {
+        openModal('dialogScriptingModal', 'dialogScripting', 'dialogScriptingTextarea', 'lineNumbersDialogScripting', 'dialogScriptingLineCount');
+    });
+    document.getElementById('btn-greeting').addEventListener('click', function() {
+        openModal('greetingModal', 'greeting', 'greetingTextarea', 'lineNumbersGreeting', 'greetingLineCount');
+    });
+    document.getElementById('btn-arguments').addEventListener('click', function() {
+        openModal('argumentsModal', 'arguments', 'argumentsTextarea', 'lineNumbersArguments', 'argumentsLineCount');
+    });
+    document.getElementById('btn-slang').addEventListener('click', function() {
+        openModal('slangModal', 'slang', 'slangTextarea', 'lineNumbersSlang', 'slangLineCount');
+    });
+    document.getElementById('btn-exclude').addEventListener('click', function() {
+        openModal('excludeModal', 'exclude', 'excludeTextarea', 'lineNumbersExclude', 'excludeLineCount');
+    });
+
+    // --- Обработчики для кнопок закрытия модальных окон ---
+    document.getElementById('closeRecipientsModalBtn').addEventListener('click', function() { closeModal('recipientsModal', 'recipients'); });
+    document.getElementById('closeProductDescriptionModalBtn').addEventListener('click', function() { closeModal('productDescriptionModal', 'productDescription'); });
+    document.getElementById('closeDialogScriptingModalBtn').addEventListener('click', function() { closeModal('dialogScriptingModal', 'dialogScripting'); });
+    document.getElementById('closeGreetingModalBtn').addEventListener('click', function() { closeModal('greetingModal', 'greeting'); });
+    document.getElementById('closeArgumentsModalBtn').addEventListener('click', function() { closeModal('argumentsModal', 'arguments'); });
+    document.getElementById('closeSlangModalBtn').addEventListener('click', function() { closeModal('slangModal', 'slang'); });
+    document.getElementById('closeExcludeModalBtn').addEventListener('click', function() { closeModal('excludeModal', 'exclude'); });
+
+    // --- Обработчики для кнопок сохранения ---
+    document.getElementById('saveRecipientsBtn').addEventListener('click', function() { saveList('recipients', 'recipientsTextarea', 'recipientsModal'); });
+    document.getElementById('saveProductDescriptionBtn').addEventListener('click', function() { saveList('productDescription', 'productDescriptionTextarea', 'productDescriptionModal'); });
+    document.getElementById('saveDialogScriptingBtn').addEventListener('click', function() { saveList('dialogScripting', 'dialogScriptingTextarea', 'dialogScriptingModal'); });
+    document.getElementById('saveGreetingBtn').addEventListener('click', function() { saveList('greeting', 'greetingTextarea', 'greetingModal'); });
+    document.getElementById('saveArgumentsBtn').addEventListener('click', function() { saveList('arguments', 'argumentsTextarea', 'argumentsModal'); });
+    document.getElementById('saveSlangBtn').addEventListener('click', function() { saveList('slang', 'slangTextarea', 'slangModal'); });
+    document.getElementById('saveExcludeBtn').addEventListener('click', function() { saveList('exclude', 'excludeTextarea', 'excludeModal'); });
+
+    // --- Инициализация для каждого текстового поля ---
+    const textareas = [
+        { id: 'recipientsTextarea', lineNumbersId: 'lineNumbersRecipients', listKey: 'recipients', counterId: 'counter-recipients' },
+        { id: 'productDescriptionTextarea', lineNumbersId: 'lineNumbersProductDescription', listKey: 'productDescription' },
+        { id: 'dialogScriptingTextarea', lineNumbersId: 'lineNumbersDialogScripting', listKey: 'dialogScripting' },
+        { id: 'greetingTextarea', lineNumbersId: 'lineNumbersGreeting', listKey: 'greeting' },
+        { id: 'argumentsTextarea', lineNumbersId: 'lineNumbersArguments', listKey: 'arguments' },
+        { id: 'slangTextarea', lineNumbersId: 'lineNumbersSlang', listKey: 'slang' },
+        { id: 'excludeTextarea', lineNumbersId: 'lineNumbersExclude', listKey: 'exclude' }
+    ];
+
+    textareas.forEach(item => {
+        const textarea = document.getElementById(item.id);
+        const lineNumbers = document.getElementById(item.lineNumbersId);
+
+        updateLineNumbers(item.lineNumbersId, item.id);
+
+        textarea.addEventListener('scroll', function() {
+            lineNumbers.scrollTop = this.scrollTop;
+        });
+
+        textarea.addEventListener('input', function() {
+            if (!searchStates[item.listKey].active || document.getElementById(`searchInput${item.listKey.charAt(0).toUpperCase() + item.listKey.slice(1)}`).value.trim() === '') {
+                if (Array.isArray(neuroSpammerLists[item.listKey])) {
+                    neuroSpammerLists[item.listKey] = textarea.value.split('\n');
+                } else {
+                    neuroSpammerLists[item.listKey] = textarea.value;
+                }
+            }
+            updateLineCount(`${item.listKey}LineCount`, item.id, item.listKey);
+        });
+
+        textarea.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                setTimeout(() => updateLineNumbers(item.lineNumbersId, item.id), 0);
+            }
+        });
+
+        // Обработчики поиска
+        const searchInput = document.getElementById(`searchInput${item.listKey.charAt(0).toUpperCase() + item.listKey.slice(1)}`);
+        searchInput.addEventListener('input', function() { performSearch(item.listKey); });
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                hideSearch(item.listKey);
+            }
+        });
+
+        const clearSearchBtn = document.getElementById(`clearSearch${item.listKey.charAt(0).toUpperCase() + item.listKey.slice(1)}`);
+        clearSearchBtn.addEventListener('click', function() { resetSearch(item.listKey); });
+
+        const searchToggleBtn = document.getElementById(`searchToggle${item.listKey.charAt(0).toUpperCase() + item.listKey.slice(1)}`);
+        searchToggleBtn.addEventListener('click', function() { toggleSearch(item.listKey); });
+
+        // Закрытие по оверлею
+        const overlay = document.querySelector(`#${item.listKey.charAt(0).toUpperCase() + item.listKey.slice(1)}Modal .neuro-spammer-modal-overlay`);
+        if (overlay) {
+            overlay.addEventListener('click', function() { closeModal(`${item.listKey.charAt(0).toUpperCase() + item.listKey.slice(1)}Modal`, item.listKey); });
+        }
+    });
+
+    // Инициализируем счетчики при загрузке
+    updateLineCount('recipientsLineCount', 'recipientsTextarea', 'recipients');
+    updateLineCount('productDescriptionLineCount', 'productDescriptionTextarea', 'productDescription');
+    updateLineCount('dialogScriptingLineCount', 'dialogScriptingTextarea', 'dialogScripting');
+    updateLineCount('greetingLineCount', 'greetingTextarea', 'greeting');
+    updateLineCount('argumentsLineCount', 'argumentsTextarea', 'arguments');
+    updateLineCount('slangLineCount', 'slangTextarea', 'slang');
+    updateLineCount('excludeLineCount', 'excludeTextarea', 'exclude');
+
+    // Кнопка запуска
+    document.getElementById('start-spammer-btn').addEventListener('click', function(){ showModal('spammerTaskModal'); });
+    document.getElementById('spammerTaskModal').addEventListener('click', function(e){ if (e.target === this) hideModal('spammerTaskModal'); });
+
+    // Открытие выбора аккаунтов
+    document.getElementById('select-accounts-btn').addEventListener('click', function(){
+        hideModal('spammerTaskModal');
+        showModal('accountsModal');
+        loadAccounts();
+    });
+
+    // Закрытие модалки аккаунтов
+    document.getElementById('accountsModalClose').addEventListener('click', () => hideModal('accountsModal'));
+    document.getElementById('accountsModalCancel').addEventListener('click', () => hideModal('accountsModal'));
+    document.getElementById('accountsModal').addEventListener('click', function(e){ if (e.target === this) hideModal('accountsModal'); });
+    document.getElementById('confirmAccountsSelection').addEventListener('click', function(){ hideModal('accountsModal'); showModal('spammerTaskModal'); });
+
+    // Селекты папок и спам фильтров
+    document.getElementById('all-folder-accounts')?.addEventListener('click', () => { currentFolder='all'; loadAccounts('all'); });
+    document.getElementById('working-folder-accounts')?.addEventListener('click', () => { currentFolder='working'; loadAccounts('working'); });
+    document.getElementById('archive-folder-accounts')?.addEventListener('click', () => { currentFolder='archive'; loadAccounts('archive'); });
+    document.getElementById('no-spam-folder-accounts')?.addEventListener('click', () => { currentSpamFilter='no-spam'; loadAccounts(currentFolder); });
+    document.getElementById('with-spam-folder-accounts')?.addEventListener('click', () => { currentSpamFilter='with-spam'; loadAccounts(currentFolder); });
+
+    // Выделение/снятие выделения
+    document.getElementById('select-all-accounts-modal').addEventListener('click', selectAllAccountsInModal);
+    document.getElementById('deselect-all-btn-modal').addEventListener('click', deselectAllAccountsInModal);
+    const selectAllCheckbox = document.getElementById('select-all-checkbox-modal');
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', function(){ this.checked ? selectAllAccountsInModal() : deselectAllAccountsInModal(); });
+    }
+
+    // Тогглы секций
+    document.getElementById('additionalSettingsHeader').addEventListener('click', () => toggleSection('additionalSettingsHeader','additionalSettingsOptions'));
+
+    // Изменение цели рекламы
+    document.getElementById('adGoal').addEventListener('change', updateAdGoalSettings);
+    // Изменение типа ссылки
+    document.getElementById('linkType').addEventListener('change', updateLinkTypeSettings);
+    // Инициализация видимости при загрузке
+    updateAdGoalSettings();
+
+    // Запуск задачи
+    document.getElementById('do-start-spammer-btn').addEventListener('click', function(){
+        const threadCount = parseInt(document.getElementById('threadCount').value, 10);
+        const selectedAccountIds = Array.from(selectedAccounts);
+
+        if (!selectedAccountIds.length) { alert('Выберите аккаунты для рассылки'); return; }
+        if (!threadCount || threadCount < 1 || threadCount > 50) { alert('Введите корректное количество потоков (1-50)'); return; }
+
+        const delay = parseInt(document.getElementById('delayBetweenMessages').value, 10);
+        const totalLimit = parseInt(document.getElementById('totalMessageLimit').value, 10);
+        const accountLimit = parseInt(document.getElementById('accountMessageLimit').value, 10);
+        const allowLinkPreview = document.getElementById('allowLinkPreview').value === 'true';
+
+        if (isNaN(delay) || delay < 1) { alert('Задержка должна быть положительным числом'); return; }
+        if (isNaN(totalLimit) || totalLimit < 0) { alert('Общий лимит должен быть неотрицательным числом'); return; }
+        if (isNaN(accountLimit) || accountLimit < 0) { alert('Лимит с аккаунта должен быть неотрицательным числом'); return; }
+
+        const settings = {
+            delayBetweenMessages: delay,
+            totalMessageLimit: totalLimit,
+            accountMessageLimit: accountLimit,
+            adGoal: document.getElementById('adGoal').value,
+            allowLinkPreview: allowLinkPreview,
+            lists: neuroSpammerLists
+        };
+
+        // Добавляем настройки ссылки в зависимости от цели
+        if (settings.adGoal === 'link_click') {
+            settings.linkType = document.getElementById('linkType').value;
+            if (settings.linkType === 'external') {
+                settings.externalLink = document.getElementById('externalLink').value;
+            } else { // internal
+                settings.internalLinkTarget = document.getElementById('internalLinkTarget').value;
+                settings.internalLink = document.getElementById('internalLink').value;
+            }
+        }
+
+        fetch('/start_neuro_spammer_task', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ account_ids: selectedAccountIds, thread_count: threadCount, settings })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                alert('Рассылка запущена!');
+                hideModal('spammerTaskModal');
+                selectedAccounts.clear();
+                updateSelectedAccountsCount();
+            } else {
+                alert('Ошибка запуска: ' + (data.error || 'Неизвестная ошибка'));
+            }
+        })
+        .catch(err => { console.error(err); alert('Ошибка при запуске: ' + err.message); });
+    });
+
+    // Легкая анимация кнопки запуска
+    setTimeout(() => { document.getElementById('start-spammer-btn').classList.add('pulse'); }, 1000);
+});
+
+// Тултипы
+document.addEventListener('mouseover', function(e){
+    if (e.target.closest('[data-tooltip]')) {
+        const t = e.target.closest('[data-tooltip]').getAttribute('data-tooltip');
+        const el = document.getElementById('customTooltip');
+        el.textContent = t; el.style.left = (e.pageX+2)+'px'; el.style.top = (e.pageY-4)+'px'; el.classList.add('show');
+    }
+});
+document.addEventListener('mouseout', function(e){ if (e.target.closest('[data-tooltip]')) document.getElementById('customTooltip').classList.remove('show'); });
+</script>
+{% endblock %}

@@ -1,0 +1,423 @@
+/* onboarding.css - Стили для системы обучения */
+
+/* Затемнение фона */
+.onboarding-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 9998;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Подсветка элементов */
+.onboarding-highlight {
+    position: relative;
+    z-index: 9999 !important;
+    box-shadow: 0 0 0 4px rgba(92, 138, 255, 0.8), 0 0 20px rgba(92, 138, 255, 0.5) !important;
+    border-radius: 8px !important;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(92, 138, 255, 0.8), 0 0 20px rgba(92, 138, 255, 0.5); }
+    50% { box-shadow: 0 0 0 4px rgba(92, 138, 255, 1), 0 0 30px rgba(92, 138, 255, 0.8); }
+}
+
+/* Приветственное окно */
+.onboarding-welcome-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10000;
+    animation: scaleIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes scaleIn {
+    from { 
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    to { 
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.onboarding-welcome-content {
+    background: #1c1f28;
+    border-radius: 16px;
+    padding: 40px;
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    border: 1px solid #2a2e3a;
+    min-width: 600px;
+}
+
+.onboarding-welcome-left {
+    flex-shrink: 0;
+}
+
+.rocket-animation {
+    position: relative;
+}
+
+.rocket-animation img{
+    width: 112px;
+    position: relative;
+}
+
+/* Анимация тела ракеты */
+.rocket-body {
+    animation: rocketFloat 3s ease-in-out infinite;
+    transform-origin: 50% 50%;
+}
+
+@keyframes rocketFloat {
+    0%, 100% { 
+        transform: translateY(0) rotate(-2deg); 
+    }
+    50% { 
+        transform: translateY(-8px) rotate(2deg); 
+    }
+}
+
+/* Анимация огня */
+.rocket-fire {
+    animation: fireMove 0.8s ease-in-out infinite;
+    transform-origin: 50% 20%;
+}
+
+@keyframes fireMove {
+    0%, 100% { 
+        transform: scaleY(1) translateY(0); 
+    }
+    50% { 
+        transform: scaleY(1.2) translateY(2px); 
+    }
+}
+
+.flame {
+    animation: flameFlicker 0.4s ease-in-out infinite;
+}
+
+.flame-1 {
+    animation-delay: 0s;
+}
+
+.flame-2 {
+    animation-delay: 0.15s;
+}
+
+.flame-3 {
+    animation-delay: 0.3s;
+}
+
+@keyframes flameFlicker {
+    0%, 100% { 
+        opacity: 0.8; 
+        transform: scaleY(1) scaleX(1); 
+    }
+    50% { 
+        opacity: 0.4; 
+        transform: scaleY(0.8) scaleX(1.1); 
+    }
+}
+
+/* Анимация звезд */
+.stars {
+    animation: starsRotate 20s linear infinite;
+    transform-origin: 50% 50%;
+}
+
+@keyframes starsRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.star {
+    animation: starTwinkle 2s ease-in-out infinite;
+}
+
+.star-1 { animation-delay: 0s; }
+.star-2 { animation-delay: 0.4s; }
+.star-3 { animation-delay: 0.8s; }
+.star-4 { animation-delay: 1.2s; }
+.star-5 { animation-delay: 1.6s; }
+
+@keyframes starTwinkle {
+    0%, 100% { 
+        opacity: 1; 
+        transform: scale(1); 
+    }
+    50% { 
+        opacity: 0.3; 
+        transform: scale(0.5); 
+    }
+}
+
+.onboarding-welcome-right {
+    flex: 1;
+}
+
+.onboarding-welcome-right h2 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #e0e0e0;
+    margin: 0 0 8px 0;
+}
+
+.onboarding-welcome-right h3 {
+    font-size: 18px;
+    font-weight: 500;
+    color: #a0a0a0;
+    margin: 0 0 16px 0;
+}
+
+.onboarding-welcome-right p {
+    font-size: 16px;
+    color: #c0c0c0;
+    line-height: 1.6;
+    margin: 0 0 24px 0;
+}
+
+.onboarding-welcome-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+/* Кнопки */
+.onboarding-btn-primary,
+.onboarding-btn-secondary {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    outline: none;
+}
+
+.onboarding-btn-primary {
+    background: linear-gradient(145deg, #5c8aff, #4c7cff);
+    color: white;
+    box-shadow: 0 4px 12px rgba(92, 138, 255, 0.3);
+}
+
+.onboarding-btn-primary:hover {
+    background: linear-gradient(145deg, #4c7cff, #3f6fd3);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(92, 138, 255, 0.4);
+}
+
+.onboarding-btn-primary:active {
+    transform: translateY(0);
+}
+
+.onboarding-btn-secondary {
+    background: #2a2e3a;
+    color: #a0a0a0;
+    border: 1px solid #4a4a4a;
+}
+
+.onboarding-btn-secondary:hover {
+    background: #3a3e4a;
+    color: #e0e0e0;
+}
+
+/* Подсказки */
+.onboarding-tooltip {
+    position: fixed;
+    z-index: 10000;
+    animation: tooltipFadeIn 0.3s ease;
+}
+
+@keyframes tooltipFadeIn {
+    from { 
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.onboarding-tooltip-center {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.onboarding-tooltip-right {
+    transform: translateX(0) translateY(-50%);
+}
+
+.onboarding-tooltip-bottom {
+    transform: translateX(-50%) translateY(0);
+}
+
+.onboarding-tooltip-left {
+    transform: translateX(-100%) translateY(-50%);
+}
+
+.onboarding-tooltip-content {
+    background: #1c1f28;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    border: 1px solid #2a2e3a;
+    max-width: 320px;
+}
+
+.onboarding-tooltip-content p {
+    font-size: 15px;
+    color: #c0c0c0;
+    line-height: 1.6;
+    margin: 0 0 16px 0;
+}
+
+.onboarding-tooltip-content button {
+    width: 100%;
+}
+
+/* Стрелка подсказки */
+.onboarding-tooltip-arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+}
+
+.onboarding-tooltip-right .onboarding-tooltip-arrow {
+    left: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 10px 10px 10px 0;
+    border-color: transparent #1c1f28 transparent transparent;
+}
+
+.onboarding-tooltip-bottom .onboarding-tooltip-arrow {
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 10px 10px 10px;
+    border-color: transparent transparent #1c1f28 transparent;
+}
+
+.onboarding-tooltip-left .onboarding-tooltip-arrow {
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 10px 0 10px 10px;
+    border-color: transparent transparent transparent #1c1f28;
+}
+
+/* Уведомление */
+.onboarding-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    opacity: 0;
+    transform: translateX(400px);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.onboarding-notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.onboarding-notification-content {
+    background: #1c1f28;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    border: 1px solid #2a2e3a;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 400px;
+}
+
+.onboarding-notification-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(145deg, #5c8aff, #4c7cff);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.onboarding-notification-text {
+    flex: 1;
+}
+
+.onboarding-notification-text h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #e0e0e0;
+    margin: 0 0 4px 0;
+}
+
+.onboarding-notification-text p {
+    font-size: 14px;
+    color: #a0a0a0;
+    margin: 0;
+}
+
+.onboarding-notification-content button {
+    flex-shrink: 0;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .onboarding-welcome-content {
+        flex-direction: column;
+        min-width: 90vw;
+        padding: 24px;
+        gap: 20px;
+    }
+
+    .onboarding-welcome-right h2 {
+        font-size: 24px;
+    }
+
+    .onboarding-welcome-buttons {
+        flex-direction: column;
+    }
+
+    .onboarding-welcome-buttons button {
+        width: 100%;
+    }
+
+    .onboarding-notification {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+    }
+
+    .onboarding-notification-content {
+        min-width: auto;
+        flex-wrap: wrap;
+    }
+
+    .onboarding-tooltip-content {
+        max-width: 90vw;
+    }
+}

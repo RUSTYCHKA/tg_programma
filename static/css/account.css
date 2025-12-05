@@ -1,0 +1,693 @@
+/* ==========================================================================
+   CSS Variables для консистентности и адаптивности
+   ========================================================================== */
+:root {
+    /* Цветовая палитра */
+    --bg-primary: #1c1c24;
+    --bg-secondary: #1c1f28;
+    --bg-tertiary: #252935;
+    --bg-surface: #2d2d2d;
+    --bg-hover: #3a3a3a;
+    --bg-active: #2a3a4a;
+
+    /* Цвета текста */
+    --text-primary: #e0e0e0;
+    --text-secondary: #a0a0a0;
+    --text-muted: #7a7a7a;
+
+    /* Цвета акцентов */
+    --accent-primary: #007bff;
+    --accent-success: #28a745;
+    --accent-danger: #dc3545;
+    --accent-warning: #ffc107;
+
+    /* Границы и тени */
+    --border-color: #2a2e3a;
+    --border-radius: 12px;
+    --border-radius-sm: 8px;
+    --border-radius-lg: 16px;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.4);
+
+    /* Размеры */
+    --container-max-width: 2000px;
+    --sidebar-width: 320px;
+    --header-height: 60px;
+
+    /* Анимации */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.4s ease;
+
+    /* Breakpoints */
+    --breakpoint-sm: 576px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 992px;
+    --breakpoint-xl: 1200px;
+}
+
+/* ==========================================================================
+   Основные контейнеры с улучшенной адаптивностью
+   ========================================================================== */
+.proxy-container {
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding: clamp(10px, 2vw, 20px);
+    background: var(--bg-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 16px;
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+}
+
+/* ==========================================================================
+   Современные кнопки с улучшенными эффектами
+   ========================================================================== */
+.delete-button,
+.add-button {
+    position: relative;
+    padding: clamp(10px, 2vw, 12px) clamp(20px, 4vw, 30px);
+    border: none;
+    border-radius: 40px;
+    font-size: clamp(14px, 1.5vw, 16px);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-md);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    overflow: hidden;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+}
+
+.delete-button {
+    background: linear-gradient(145deg, #ff4b5c, #ff1e2a);
+    color: white;
+}
+
+.delete-button:hover {
+    background: linear-gradient(145deg, #ff1e2a, #d82e3e);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px) scale(1.02);
+}
+
+.delete-button:active {
+    background: linear-gradient(145deg, #d82e3e, #9f1f2a);
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.add-button {
+    background: linear-gradient(145deg, #5c8aff, #4c7cff);
+    color: white;
+}
+
+.add-button:hover {
+    background: linear-gradient(145deg, #4c7cff, #3f6fd3);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px) scale(1.02);
+}
+
+.add-button:active {
+    background: linear-gradient(145deg, #3f6fd3, #2f5ba0);
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Эффект фокуса для кнопок */
+.delete-button:focus,
+.add-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3), var(--shadow-md);
+}
+
+/* ==========================================================================
+   Современная таблица с улучшенной адаптивностью
+   ========================================================================== */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--bg-secondary);
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    box-shadow: var(--shadow-md);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+}
+
+thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--bg-tertiary);
+}
+
+th {
+    padding: clamp(12px, 2vw, 16px) clamp(8px, 1.5vw, 12px);
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: clamp(0.8rem, 1.2vw, 0.85rem);
+    font-weight: 700;
+    background: var(--bg-tertiary);
+    border-bottom: 2px solid var(--border-color);
+    position: relative;
+    letter-spacing: 0.5px;
+    vertical-align: middle;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+td {
+    color: var(--text-primary);
+    font-size: clamp(0.9rem, 1.3vw, 0.95rem);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    vertical-align: middle;
+    padding: clamp(12px, 2vw, 16px) clamp(8px, 1.5vw, 12px);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Выравнивание первой колонки */
+th:first-child,
+td:first-child {
+    padding-left: clamp(12px, 2vw, 16px);
+    text-align: center;
+    position: sticky;
+    left: 0;
+    background: var(--bg-secondary);
+    z-index: 5;
+}
+
+/* ==========================================================================
+   Стили для чекбоксов с улучшенной интерактивностью
+   ========================================================================== */
+.selector-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: clamp(40px, 5vw, 50px);
+}
+
+.selector-checkbox {
+    -webkit-appearance: none;
+    appearance: none;
+    width: clamp(16px, 2vw, 18px);
+    height: clamp(16px, 2vw, 18px);
+    border: 2px solid var(--text-secondary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    outline: none;
+    position: relative;
+    background: transparent;
+}
+
+.selector-checkbox:checked {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+}
+
+.selector-checkbox:checked::after {
+    content: "";
+    display: block;
+    width: 4px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    position: relative;
+    top: -1px;
+}
+
+.selector-checkbox:hover {
+    border-color: var(--accent-primary);
+    transform: scale(1.1);
+}
+
+/* ==========================================================================
+   Состояния строк таблицы
+   ========================================================================== */
+tr:hover td {
+    background: var(--bg-hover);
+    transform: translateX(2px);
+}
+
+tr.selected td {
+    background: var(--bg-active);
+}
+
+tbody tr {
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Полосатый эффект */
+tbody tr:nth-child(even) td {
+    background: var(--bg-secondary);
+}
+
+/* ==========================================================================
+   Адаптивность таблицы
+   ========================================================================== */
+@media (max-width: 768px) {
+    table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    th, td {
+        padding: 12px 16px;
+        min-width: 120px;
+    }
+
+    th:first-child,
+    td:first-child {
+        width: 50px;
+        min-width: 50px;
+        position: sticky;
+        left: 0;
+        z-index: 5;
+    }
+
+    /* Скрываем менее важные колонки на мобильных */
+    th:nth-child(n+6),
+    td:nth-child(n+6) {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    th, td {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+
+    th:first-child,
+    td:first-child {
+        width: 40px;
+        min-width: 40px;
+    }
+}
+
+/* ==========================================================================
+   Модальные окна с улучшенными эффектами
+   ========================================================================== */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: all var(--transition-normal);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.modal.active {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-content {
+    background: var(--bg-surface);
+    padding: clamp(20px, 3vw, 28px);
+    border-radius: var(--border-radius);
+    width: min(90vw, 500px);
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 24px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--bg-hover);
+}
+
+.close:hover {
+    color: var(--text-primary);
+    background: var(--accent-danger);
+    transform: scale(1.1);
+}
+
+/* ==========================================================================
+   Панели управления с улучшенной адаптивностью
+   ========================================================================== */
+.table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.controls-group {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+    flex-wrap: wrap;
+}
+
+.control-button {
+    width: clamp(36px, 4vw, 40px);
+    height: clamp(36px, 4vw, 40px);
+    border-radius: var(--border-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border: 1px solid var(--border-color);
+    background: var(--bg-hover);
+    color: var(--text-secondary);
+    position: relative;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.control-button:hover {
+    background: var(--bg-active);
+    color: var(--text-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.control-button:active {
+    transform: scale(0.95);
+}
+
+/* ==========================================================================
+   Карточки с улучшенной адаптивностью
+   ========================================================================== */
+.card {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.card-body {
+    padding: clamp(12px, 2vw, 16px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    width: 100%;
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+/* ==========================================================================
+   Адаптивность для мобильных устройств
+   ========================================================================== */
+@media (max-width: 768px) {
+    .proxy-container {
+        padding: 10px;
+        gap: 16px;
+    }
+
+    .header-section {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .delete-button,
+    .add-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .table-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .controls-group {
+        justify-content: center;
+        margin-left: 0;
+    }
+
+    .card-body {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-content {
+        margin: 10px;
+        padding: 16px;
+        width: calc(100vw - 20px);
+    }
+
+    .control-button {
+        width: 32px;
+        height: 32px;
+    }
+
+    .control-button svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+/* ==========================================================================
+   Улучшенные эффекты для интерактивных элементов
+   ========================================================================== */
+.spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Статус-бейджи */
+.status-badge {
+    color: var(--text-primary);
+    font-size: clamp(12px, 1vw, 14px);
+    font-weight: 600;
+    border: none;
+    border-radius: 20px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    outline: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.status-badge.alive {
+    background-color: rgba(40, 167, 69, 0.2);
+    color: var(--accent-success);
+}
+
+.status-badge.dead {
+    background-color: rgba(220, 53, 69, 0.2);
+    color: var(--accent-danger);
+}
+
+.status-badge.spam-block {
+    background-color: rgba(255, 193, 7, 0.2);
+    color: var(--accent-warning);
+}
+
+/* ==========================================================================
+   Улучшенная типографика
+   ========================================================================== */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+p, span, div {
+    color: var(--text-primary);
+}
+
+/* ==========================================================================
+   Скроллбары для Webkit браузеров
+   ========================================================================== */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--bg-hover);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+/* ==========================================================================
+   Улучшенная поддержка темной темы
+   ========================================================================== */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-primary: #0f0f0f;
+        --bg-secondary: #1a1a1a;
+        --bg-tertiary: #2a2a2a;
+        --text-primary: #ffffff;
+        --text-secondary: #cccccc;
+    }
+}
+
+/* ==========================================================================
+   Анимации для производительности
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ==========================================================================
+   Печать
+   ========================================================================== */
+@media print {
+    .modal,
+    .control-button,
+    .action-button {
+        display: none !important;
+    }
+
+    .proxy-container {
+        background: white !important;
+        color: black !important;
+    }
+
+    table {
+        background: white !important;
+        color: black !important;
+    }
+}
+
+
+/* ... (весь остальной CSS) ... */
+
+.empty-message-row td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 40px 0; /* Добавляем отступы для центрирования по высоте */
+}
+
+.empty-message-content p {
+  margin-bottom: 15px; /* Отступ между текстом и кнопкой */
+  font-size: 18px; /* Размер текста */
+  color: #6c757d; /* Цвет текста */
+}
+
+.empty-message-content .btn-primary {
+  /* Стили для кнопки "Добавить" */
+  font-size: 16px;
+  padding: 8px 16px;
+}

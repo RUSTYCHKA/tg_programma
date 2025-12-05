@@ -1,0 +1,1453 @@
+{% extends "base.html" %}
+{% block title %}Изменение профиля{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile_edit.css') }}">
+
+{% endblock %}
+
+{% block content %}
+<div class="proxy-page">
+    <h1 class="page-title">Изменение профиля</h1>
+    
+    <!-- Карточка с кнопкой -->
+    <div class="card">
+        <div class="card-body">
+            <div class="file-buttons-container">
+                <button class="btn btn-light" id="profileMaterialBtn">
+                    <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
+                        <path d="M16 18a4 4 0 0 0-8 0"></path>
+                        <circle cx="12" cy="11" r="3"></circle>
+                        <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+                        <line x1="8" x2="8" y1="2" y2="4"></line>
+                        <line x1="16" x2="16" y1="2" y2="4"></line>
+                    </svg>
+                    Материал для заполнения профилей
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Карточка с основными опциями -->
+    <div class="card">
+        <div class="card-body">
+            <div class="options-container">
+                <div class="option-item">
+                    <div class="option-label-container">
+                        <label for="updateName" class="form-label">Обновлять имя</label>
+                        <span class="help-icon" data-tooltip="Для обновления имён в папке должен быть файл &quot;Имена.txt&quot;">
+                            <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="updateName" checked>
+                    </div>
+                </div>
+
+                <div class="option-item">
+                    <div class="option-label-container">
+                        <label for="updateAvatar" class="form-label">Обновлять аватарку</label>
+                        <span class="help-icon" data-tooltip="Для обновления аватарок в папке с материалами должна быть папка &quot;Аватарки&quot;, содержащая изображения.">
+                            <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="updateAvatar" checked>
+                    </div>
+                </div>
+
+                <div class="option-item">
+                    <div class="option-label-container">
+                        <label for="updateBio" class="form-label">Обновлять био</label>
+                        <span class="help-icon" data-tooltip="Для обновления био в папке должен быть файл &quot;Био.txt&quot;">
+                            <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="updateBio">
+                    </div>
+                </div>
+
+                <div class="option-item">
+                    <div class="option-label-container">
+                        <label for="uploadStories" class="form-label">Загружать сторис</label>
+                        <span class="help-icon" data-tooltip="Для загрузки сторис в папке с материалами должна быть папка &quot;Сторис&quot;, содержащая изображения или видео.">
+                            <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="uploadStories">
+                    </div>
+                </div>
+
+                <div class="option-item">
+                    <div class="option-label-container">
+                        <label for="uploadChannel" class="form-label">Установить канал</label>
+                        <span class="help-icon" data-tooltip="Для установки канала в папке с материалами должен быть файл &quot;Каналы.txt&quot;">
+                            <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="uploadChannel">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Карточка с дополнительными опциями -->
+    <div class="card">
+        <div class="card-body">
+            <h3 class="subsection-title subsection-title-collapse collapsed" id="optionsHeader">
+                Дополнительные опции
+               <svg class="svg-icon collapse-chevron" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4px" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </h3>
+            <div class="collapse" id="profileOptions">
+                <div class="options-container">
+                    <div class="option-item">
+                        <div class="option-label-container">
+                            <label for="useAvatarsOnce" class="form-label">Использовать аватарки по одному разу</label>
+                            <span class="help-icon" data-tooltip="Если включить, то использованные аватарки будут перемещаться в отдельную папку и больше не будут браться в работу.">
+                                <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                            </span>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="useAvatarsOnce">
+                        </div>
+                    </div>
+
+                    <div class="option-item">
+                        <div class="option-label-container">
+                            <label for="deleteOldAvatars" class="form-label">Удалять старые аватарки перед установкой новых</label>
+                            <span class="help-icon" data-tooltip="Если включить, то на аккаунтах будут удаляться аватарки, установленные ранее. В результате на аккаунте будет только одна аватарка — установленная только что.">
+                                <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                            </span>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="deleteOldAvatars" checked>
+                        </div>
+                    </div>
+
+                    <div class="option-item">
+                        <div class="option-label-container">
+                            <label for="moveUpdatedAccounts" class="form-label">Перемещать обновленные аккаунты</label>
+                            <span class="help-icon" data-tooltip="Если включить, то обработанные аккаунты будут перемещаться в отдельную папку.">
+                                <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                            </span>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="moveUpdatedAccounts" checked>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+</div>
+
+    <!-- Красивая кнопка запуска внизу -->
+<div class="start-task-btn-group">
+    <button type="button" class="start-task-btn" id="start-task-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="6 3 20 12 6 21 6 3"></polygon>
+        </svg> Изменение профиля    
+    </button>
+</div>
+
+<!-- Модальное окно -->
+<div class="modal" id="taskModal">
+    <div class="modal-content">
+        <div class="modal-body">
+            <div class="options-container">
+                <div class="mb-4">
+                    <button class="btn btn-primary w-100" id="select-accounts-btn">
+                        <span>Аккаунты</span>
+                        <span class="mx-1 opacity-50">|</span>
+                        <span id="accounts-picked-for-task-count">0</span>
+                    </button>
+                </div>
+                <div>
+                    <label for="threadCount" class="form-label">Количество потоков</label>
+                    <span class="help-icon ms-1" data-tooltip="Потоки - это рабочие места для аккаунтов. Сколько потоков - столько аккаунтов может работать одновременно. Когда один аккаунт завершает работу, он освобождает место, на которое может встать следующий аккаунт.">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <path d="M12 17h.01"></path>
+                        </svg>
+                    </span>
+                    <div class="input-group">
+                        <input class="form-control" id="threadCount" type="number" min="1" max="50" value="1">
+                        <div class="invalid-feedback" id="invalid-feedback-for-threadCount"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-lg" id="do-start-task-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                    <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path>
+                    <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path>
+                    <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path>
+                    <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path>
+                </svg>
+                <span>Запустить</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно выбора аккаунтов -->
+<div class="modal" id="accountsModal" style="display: none;">
+    <div class="modal-content" style="width: 90%; max-width: 1200px; height: 80vh;">
+        <div class="modal-header">
+            <h5 class="modal-title">Выбор аккаунтов</h5>
+            <button type="button" class="modal-close" id="accountsModalClose">&times;</button>
+        </div>
+        <div class="modal-body" style="height: calc(100% - 120px); overflow: hidden;">
+            <div class="proxy-container" style="height: 100%;">
+                <div class="header-section">
+                    <div class="table-controls">
+                        <!-- Вкладки аккаунтов -->
+                        <div class="account-folder-selector">
+                            <button class="account-folder-btn active" id="all-folder-accounts">
+                                <div class="account-count" data-count="0">0</div>
+                                <div class="account-label">Все аккаунты</div>
+                                <div class="active-indicator"></div>
+                            </button>
+                            
+                            <button class="account-folder-btn" id="working-folder-accounts">
+                                <div class="account-count" data-count="0">0</div>
+                                <div class="account-label">Для работы</div>
+                                <div class="active-indicator"></div>
+                            </button>
+                            
+                            <button class="account-folder-btn" id="archive-folder-accounts">
+                                <div class="account-count" data-count="0">0</div>
+                                <div class="account-label">Архив</div>
+                                <div class="active-indicator"></div>
+                            </button>
+
+                            <button class="account-folder-btn" id="no-spam-folder-accounts">
+                                <div class="account-count" data-count="0">0</div>
+                                <div class="account-label">Без спамблока</div>
+                                <div class="active-indicator"></div>
+                            </button>
+                            
+                            <button class="account-folder-btn" id="with-spam-folder-accounts">
+                                <div class="account-count" data-count="0">0</div>
+                                <div class="account-label">Спамблок</div>
+                                <div class="active-indicator"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-3">
+                    <div class="card-body p-3 d-flex align-items-center">
+                        <div class="d-flex gap-2">
+                            <!-- Кнопки управления -->
+                            <button class="btn btn-light at-control at-select-all-accounts-btn" data-bs-toggle="tooltip" data-bs-title="Выделить все (Ctrl + A)" id="select-all-accounts-modal">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="align-middle">
+                                    <path d="M18 6 7 17l-5-5"></path>
+                                    <path d="m22 10-7.5 7.5L13 16"></path>
+                                </svg>
+                            </button>
+
+                            <button id="deselect-all-btn-modal" type="button" class="btn btn-light at-control at-deselect-all-accounts-btn" data-bs-toggle="tooltip" data-bs-title="Снять выделение">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="align-middle">
+                                    <path d="M18 6 6 18"></path>
+                                    <path d="m6 6 12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <span class="text-muted ms-auto at-displayed-accounts-count-label" id="accounts-count-label-modal">Показано аккаунтов: 0 / 0</span>
+                    </div>
+                </div>
+
+                <!-- Фильтры -->
+                <div class="table-filters-panel">
+                    <div class="filters-panel">
+                        <div class="filter-item" onclick="toggleFilterDropdown('role-modal')">
+                            <span class="filter-text">Роль</span>
+                            <span class="filter-arrow">▼</span>
+                            <div class="filter-dropdown" id="role-dropdown-modal">
+                                <div class="filter-option" data-value="">Все роли</div>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-item" onclick="toggleFilterDropdown('geo-modal')">
+                            <span class="filter-text">Гео</span>
+                            <span class="filter-arrow">▼</span>
+                            <div class="filter-dropdown" id="geo-dropdown-modal">
+                                <div class="filter-option" data-value="">Все страны</div>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-item" onclick="toggleFilterDropdown('status-modal')">
+                            <span class="filter-text">Статус</span>
+                            <span class="filter-arrow">▼</span>
+                            <div class="filter-dropdown" id="status-dropdown-modal">
+                                <div class="filter-option" data-value="">Все статусы</div>
+                                <div class="filter-option" data-value="alive">Живой</div>
+                                <div class="filter-option" data-value="dead">Мертв</div>
+                                <div class="filter-option" data-value="spam_block">Спам блок</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Поиск -->
+                        <div class="search-section" style="margin-left: auto;">
+                            <div class="search-container">
+                                <input type="text" class="search-input" id="account-search-modal" placeholder="Поиск по номеру, имени...">
+                                <button class="search-button" id="search-button-modal">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                    </svg>
+                                </button>
+                                <button class="clear-search" id="clear-search-modal" style="display: none;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Таблица аккаунтов -->
+                <div style="height: calc(100% - 200px); overflow-y: auto;">
+                    <table id="accounts-table-modal" class="proxy-table">
+                        <thead>
+                            <tr>
+                                <th class="selector-header">
+                                    <input type="checkbox" id="select-all-checkbox-modal" class="select-all-checkbox">
+                                </th>
+                                <th>#</th>
+                                <th>Аватар</th>
+                                <th>
+                                    <div class="sortable-header" data-sort="phone">
+                                        Телефон
+                                        <div class="sort-icons">
+                                            <span class="sort-asc">▲</span>
+                                            <span class="sort-desc">▼</span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="sortable-header" data-sort="geo">
+                                        Гео
+                                        <div class="sort-icons">
+                                            <span class="sort-asc">▲</span>
+                                            <span class="sort-desc">▼</span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="sortable-header" data-sort="status">
+                                        Статус
+                                        <div class="sort-icons">
+                                            <span class="sort-asc">▲</span>
+                                            <span class="sort-desc">▼</span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th>Отлежка</th>
+                                <th>
+                                    <div class="sortable-header" data-sort="role">
+                                        Роль
+                                        <div class="sort-icons">
+                                            <span class="sort-asc">▲</span>
+                                            <span class="sort-desc">▼</span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th>Использован</th>
+                                <th>
+                                    <div class="sortable-header" data-sort="name">
+                                        Имя
+                                        <div class="sort-icons">
+                                            <span class="sort-asc">▲</span>
+                                            <span class="sort-desc">▼</span>
+                                        </div>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="accountsModalCancel">Отмена</button>
+            <button type="button" class="btn btn-primary" id="confirmAccountsSelection">
+                Подтвердить (<span id="selected-count-modal">0</span>)
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Кастомный тултип -->
+<div id="customTooltip" class="custom-tooltip"></div>
+
+<script>
+// Глобальные переменные для хранения выбранных аккаунтов
+let selectedAccounts = new Set();
+let allAccounts = [];
+let currentFolder = 'all';
+let currentSpamFilter = null;
+let currentSort = { field: null, direction: 'asc' };
+let searchFilter = '';
+let roleFilter = '';
+let geoFilter = '';
+let restFilter = '';
+let statusFilter = '';
+let activeFilter = null;
+
+// Функция для переключения опций
+function toggleOptions() {
+    const optionsContent = document.getElementById('profileOptions');
+    const header = document.getElementById('optionsHeader');
+    const chevron = header.querySelector('.collapse-chevron');
+    
+    optionsContent.classList.toggle('show');
+    header.classList.toggle('collapsed');
+    chevron.classList.toggle('rotated');
+}
+
+// Функции для работы с модальными окнами
+function showModal(modalId) {
+    document.getElementById(modalId).classList.add('show');
+    document.getElementById(modalId).style.display = 'block';
+}
+
+function hideModal(modalId) {
+    document.getElementById(modalId).classList.remove('show');
+    setTimeout(() => {
+        document.getElementById(modalId).style.display = 'none';
+    }, 1);
+}
+
+// Функции для работы с аккаунтами
+function updateSelectedAccountsCount() {
+    document.getElementById('accounts-picked-for-task-count').textContent = selectedAccounts.size;
+    document.getElementById('selected-count-modal').textContent = selectedAccounts.size;
+}
+
+function toggleAccountSelection(accountId) {
+    if (selectedAccounts.has(accountId)) {
+        selectedAccounts.delete(accountId);
+    } else {
+        selectedAccounts.add(accountId);
+    }
+    updateSelectedAccountsCount();
+    updateAccountRowSelection(accountId);
+}
+
+function updateAccountRowSelection(accountId) {
+    const checkbox = document.querySelector(`.account-checkbox[data-account-id="${accountId}"]`);
+    if (checkbox) {
+        checkbox.checked = selectedAccounts.has(accountId);
+    }
+}
+
+function selectAllAccountsInModal() {
+    document.querySelectorAll('.account-checkbox').forEach(checkbox => {
+        const accountId = checkbox.getAttribute('data-account-id');
+        selectedAccounts.add(accountId);
+        checkbox.checked = true;
+    });
+    updateSelectedAccountsCount();
+}
+
+function deselectAllAccountsInModal() {
+    selectedAccounts.clear();
+    document.querySelectorAll('.account-checkbox').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+    updateSelectedAccountsCount();
+}
+
+// Загрузка аккаунтов через API
+async function loadAccounts(folder = 'all') {
+    try {
+        const response = await fetch('/get_accounts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ folder }),
+        });
+
+        if (!response.ok) throw new Error('Ошибка загрузки аккаунтов');
+
+        allAccounts = await response.json();
+        
+        // Обновляем фильтры
+        updateFilterOptions();
+        
+        renderAccountsTable();
+        updateAccountsCount();
+        updateAccountCounters();
+    } catch (error) {
+        console.error('Ошибка загрузки аккаунтов:', error);
+    }
+}
+
+// Функция для обновления опций фильтров
+function updateFilterOptions() {
+    const roleDropdown = document.getElementById('role-dropdown-modal');
+    const geoDropdown = document.getElementById('geo-dropdown-modal');
+
+    if (roleDropdown) {
+        // Собираем уникальные роли
+        const roles = [...new Set(allAccounts.map(acc => acc.role).filter(role => role))];
+        let options = '<div class="filter-option" data-value="">Все роли</div>';
+        roles.forEach(role => {
+            options += `<div class="filter-option" data-value="${role}">${role}</div>`;
+        });
+        roleDropdown.innerHTML = options;
+    }
+
+    if (geoDropdown) {
+        // Собираем уникальные страны
+        const geos = [...new Set(allAccounts.map(acc => acc.geo).filter(geo => geo))];
+        let options = '<div class="filter-option" data-value="">Все страны</div>';
+        geos.forEach(geo => {
+            options += `<div class="filter-option" data-value="${geo}">${geo}</div>`;
+        });
+        geoDropdown.innerHTML = options;
+    }
+
+    // Добавляем обработчики событий для опций
+    document.querySelectorAll('.filter-option').forEach(option => {
+        option.addEventListener('click', function (e) {
+            e.stopPropagation();
+            const filterItem = this.closest('.filter-item');
+            const filterType = filterItem
+                .querySelector('.filter-dropdown')
+                .id.replace('-dropdown-modal', '');
+            applyFilter(filterType, this.dataset.value);
+        });
+    });
+}
+
+// Функция для применения фильтров и сортировки
+function applyFiltersAndSort(accounts) {
+    let filteredAccounts = accounts;
+
+    // Применяем фильтр по папке и спаму
+    filteredAccounts = filteredAccounts.filter(account => {
+        let folderMatch = false;
+        const status = account.status;
+
+        switch (currentFolder) {
+            case 'working':
+                folderMatch = status === 'alive';
+                break;
+            case 'archive':
+                folderMatch = status === 'dead';
+                break;
+            default:
+                folderMatch = true;
+        }
+
+        let spamMatch = true;
+        if (currentSpamFilter === 'no-spam') {
+            spamMatch = status !== 'spam_block';
+        } else if (currentSpamFilter === 'with-spam') {
+            spamMatch = status === 'spam_block';
+        }
+
+        return folderMatch && spamMatch;
+    });
+
+    // Применяем фильтр по роли
+    if (roleFilter) {
+        filteredAccounts = filteredAccounts.filter(
+            account => account.role === roleFilter
+        );
+    }
+
+    // Применяем фильтр по гео
+    if (geoFilter) {
+        filteredAccounts = filteredAccounts.filter(
+            account => account.geo === geoFilter
+        );
+    }
+
+    // Применяем фильтр по статусу
+    if (statusFilter) {
+        filteredAccounts = filteredAccounts.filter(
+            account => account.status === statusFilter
+        );
+    }
+
+    // Применяем поиск
+    if (searchFilter) {
+        const searchLower = searchFilter.toLowerCase();
+        filteredAccounts = filteredAccounts.filter(account => {
+            const phone = account.phone || '';
+            const firstName = account.first_name || '';
+            const lastName = account.last_name || '';
+            const fullName = `${firstName} ${lastName}`.trim();
+            
+            return phone.toLowerCase().includes(searchLower) ||
+                   fullName.toLowerCase().includes(searchLower);
+        });
+    }
+
+    // Применяем сортировку
+    if (currentSort.field) {
+        filteredAccounts.sort((a, b) => {
+            let aValue, bValue;
+
+            switch (currentSort.field) {
+                case 'phone':
+                    aValue = a.phone || '';
+                    bValue = b.phone || '';
+                    break;
+                case 'geo':
+                    aValue = a.geo || '';
+                    bValue = b.geo || '';
+                    break;
+                case 'status':
+                    aValue = getStatusText(a.status);
+                    bValue = getStatusText(b.status);
+                    break;
+                case 'role':
+                    aValue = a.role || '';
+                    bValue = b.role || '';
+                    break;
+                case 'name':
+                    aValue = `${a.first_name || ''} ${a.last_name || ''}`.trim();
+                    bValue = `${b.first_name || ''} ${b.last_name || ''}`.trim();
+                    break;
+                default:
+                    return 0;
+            }
+
+            if (aValue < bValue) return currentSort.direction === 'asc' ? -1 : 1;
+            if (aValue > bValue) return currentSort.direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+    }
+
+    return filteredAccounts;
+}
+
+function renderAccountsTable() {
+    const tbody = document.querySelector('#accounts-table-modal tbody');
+    if (!tbody) return;
+
+    // Применяем фильтры и сортировку
+    const finalFilteredAccounts = applyFiltersAndSort(allAccounts);
+
+    tbody.innerHTML = finalFilteredAccounts
+        .map((account, index) => {
+            // Полное имя
+            const fullName = `${account.first_name || ''} ${account.last_name || ''}`.trim();
+
+            // Получаем аватарку из session_data
+            let avatarUrl = null;
+            if (account.session_data) {
+                avatarUrl = getAvatarFromSession(account.session_data);
+            }
+
+            // Плейсхолдер для аватарки
+            const avatarPlaceholder = account.first_name
+                ? account.first_name.charAt(0).toUpperCase()
+                : account.last_name
+                ? account.last_name.charAt(0).toUpperCase()
+                : '?';
+
+            // Получаем информацию о стране и флаг
+            const countryInfo = getCountryInfo(account.geo);
+            const flagEmoji = getFlagEmoji(account.geo);
+
+            return `
+                <tr data-account-id="${account.id}" class="account-row"> 
+                    <td>
+                        <input type="checkbox" class="account-checkbox" 
+                            data-account-id="${account.id}" ${selectedAccounts.has(account.id) ? 'checked' : ''}>
+                    </td>
+                    <td>${index + 1}</td>
+                    <td class="avatar-cell">
+                        ${avatarUrl
+                            ? `<img src="${avatarUrl}" class="avatar-image" alt="Avatar" data-full-avatar="${avatarUrl}" onclick="openAvatarModal('${avatarUrl}')" onerror="this.onerror=null;this.parentNode.innerHTML='<div class=\\'avatar-placeholder\\'>${avatarPlaceholder}</div>';"`
+                            : `<div class="avatar-placeholder">${avatarPlaceholder}</div>`
+                        }
+                    </td>
+                    <td>${account.phone || ''}</td>
+                    <td>
+                        <div class="geo-cell" title="${countryInfo.name}">
+                            <span class="country-flag">${flagEmoji}</span>
+                            <span class="country-code">${account.geo || ''}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="status-badge ${getStatusClass(account.status)}">
+                            ${getStatusText(account.status)}
+                        </span>
+                    </td>
+                    <td class="rest-period" data="${account.register_time}">${account.rest_until || '-'}</td>
+                    <td>${account.role || ''}</td>
+                    <td>${account.last_used || 'Нет'}</td>
+                    <td>${fullName || ''}</td>
+                </tr>
+            `;
+        })
+        .join('');
+
+    // Добавляем обработчики для чекбоксов
+    document.querySelectorAll('.account-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function (e) {
+            e.stopPropagation();
+            const accountId = this.dataset.accountId;
+            if (this.checked) {
+                selectedAccounts.add(accountId);
+            } else {
+                selectedAccounts.delete(accountId);
+            }
+            updateSelectedAccountsCount();
+        });
+    });
+
+    // Добавляем обработчики для кликов по строкам
+    document.querySelectorAll('#accounts-table-modal tbody .account-row').forEach(row => {
+        row.addEventListener('click', function (e) {
+            if (e.target.closest('.account-checkbox, .avatar-image')) {
+                return;
+            }
+
+            const accountId = this.dataset.accountId;
+            const checkbox = this.querySelector('.account-checkbox');
+            if (!checkbox) return;
+
+            const isCtrlPressed = e.ctrlKey || e.metaKey;
+            const isShiftPressed = e.shiftKey;
+
+            if (isCtrlPressed) {
+                checkbox.checked = !checkbox.checked;
+                if (checkbox.checked) {
+                    selectedAccounts.add(accountId);
+                } else {
+                    selectedAccounts.delete(accountId);
+                }
+            } else {
+                if (selectedAccounts.has(accountId) && selectedAccounts.size === 1) {
+                    checkbox.checked = false;
+                    selectedAccounts.delete(accountId);
+                } else {
+                    deselectAllAccountsInModal();
+                    checkbox.checked = true;
+                    selectedAccounts.add(accountId);
+                }
+            }
+            updateSelectedAccountsCount();
+        });
+    });
+}
+
+function updateAccountsCount() {
+    const totalCount = allAccounts.length;
+    const displayedCount = document.querySelectorAll('#accounts-table-modal tbody tr').length;
+    document.getElementById('accounts-count-label-modal').textContent = `Показано аккаунтов: ${displayedCount} / ${totalCount}`;
+}
+
+function toggleFilterDropdown(filterType) {
+    const filterItem = event.currentTarget;
+    const dropdown = filterItem.querySelector('.filter-dropdown');
+
+    // Если кликнули на уже активный фильтр - закрываем его
+    if (filterItem.classList.contains('active')) {
+        filterItem.classList.remove('active');
+        activeFilter = null;
+        return;
+    }
+
+    // Закрываем все другие dropdown'ы
+    document.querySelectorAll('.filter-item').forEach(item => {
+        item.classList.remove('active');
+    });
+
+    // Открываем текущий
+    filterItem.classList.add('active');
+    activeFilter = filterType;
+
+    // Закрытие при клике вне фильтра
+    setTimeout(() => {
+        document.addEventListener('click', closeFilterOnClickOutside, {
+            once: true,
+        });
+    }, 10);
+}
+
+function closeFilterOnClickOutside(event) {
+    const filterPanel = document.querySelector('.filters-panel');
+    if (!filterPanel.contains(event.target)) {
+        document.querySelectorAll('.filter-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        activeFilter = null;
+    } else {
+        // Проверяем, кликнули ли мы на опцию фильтра
+        const filterOption = event.target.closest('.filter-option');
+        if (filterOption) {
+            const filterItem = event.target.closest('.filter-item');
+            const filterType = filterItem
+                .querySelector('.filter-dropdown')
+                .id.replace('-dropdown-modal', '');
+
+            // Убираем активный класс со всех опций
+            filterItem.querySelectorAll('.filter-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+
+            // Добавляем активный класс к выбранной опции
+            filterOption.classList.add('active');
+
+            // Закрываем dropdown
+            filterItem.classList.remove('active');
+            activeFilter = null;
+
+            // Применяем фильтр
+            applyFilter(filterType, filterOption.dataset.value);
+        }
+    }
+}
+
+function applyFilter(filterType, value) {
+    switch (filterType) {
+        case 'role':
+            roleFilter = value;
+            renderAccountsTable();
+            break;
+        case 'geo':
+            geoFilter = value;
+            renderAccountsTable();
+            break;
+        case 'status':
+            statusFilter = value;
+            renderAccountsTable();
+            break;
+    }
+}
+
+// Вспомогательные функции из accounts.js
+function getStatusClass(status) {
+    switch (status) {
+        case 'alive':
+            return 'alive';
+        case 'dead':
+            return 'dead';
+        case 'spam_block':
+            return 'spam-block';
+        default:
+            return 'unknown';
+    }
+}
+
+function getStatusText(status) {
+    switch (status) {
+        case 'alive':
+            return 'Без ограничений';
+        case 'dead':
+            return 'Мертв';
+        case 'spam_block':
+            return 'Спам блок';
+        default:
+            return 'Неизвестно';
+    }
+}
+
+function getAvatarFromSession(sessionData) {
+    try {
+        if (typeof sessionData === 'object' && sessionData !== null) {
+            if (sessionData.img) return sessionData.img;
+            if (sessionData.photo) return sessionData.photo;
+            if (sessionData.avatar) return sessionData.avatar;
+        } else if (typeof sessionData === 'string') {
+            const parsed = JSON.parse(sessionData);
+            if (parsed.img) return parsed.img;
+            if (parsed.photo) return parsed.photo;
+            if (parsed.avatar) return parsed.avatar;
+        }
+    } catch (e) {
+        console.error('Ошибка при парсинге session ', e);
+    }
+    return null;
+}
+
+function getCountryData() {
+    return {
+        US: { name: 'США' },
+        RU: { name: 'Россия' },
+        UA: { name: 'Украина' },
+        BY: { name: 'Беларусь' },
+        KZ: { name: 'Казахстан' },
+        UZ: { name: 'Узбекистан' },
+        KG: { name: 'Киргизия' },
+        MD: { name: 'Молдова' },
+        AZ: { name: 'Азербайджан' },
+        AM: { name: 'Армения' },
+        GE: { name: 'Грузия' },
+        TJ: { name: 'Таджикистан' },
+        TM: { name: 'Туркменистан' },
+        DE: { name: 'Германия' },
+        FR: { name: 'Франция' },
+        GB: { name: 'Великобритания' },
+        IT: { name: 'Италия' },
+        ES: { name: 'Испания' },
+        PL: { name: 'Польша' },
+        CZ: { name: 'Чехия' },
+        NL: { name: 'Нидерланды' },
+        BE: { name: 'Бельгия' },
+        SE: { name: 'Швеция' },
+        NO: { name: 'Норвегия' },
+        FI: { name: 'Финляндия' },
+        DK: { name: 'Дания' },
+        IE: { name: 'Ирландия' },
+        PT: { name: 'Португалия' },
+        GR: { name: 'Греция' },
+        TR: { name: 'Турция' },
+        IL: { name: 'Израиль' },
+        SA: { name: 'Саудовская Аравия' },
+        AE: { name: 'ОАЭ' },
+        QA: { name: 'Катар' },
+        KW: { name: 'Кувейт' },
+        BH: { name: 'Бахрейн' },
+        OM: { name: 'Оман' },
+        JO: { name: 'Иордания' },
+        LB: { name: 'Ливан' },
+        EG: { name: 'Египет' },
+        MA: { name: 'Марокко' },
+        TN: { name: 'Тунис' },
+        DZ: { name: 'Алжир' },
+        ZA: { name: 'ЮАР' },
+        NG: { name: 'Нигерия' },
+        KE: { name: 'Кения' },
+        GH: { name: 'Гана' },
+        CI: { name: "Кот-д'Ивуар" },
+        SN: { name: 'Сенегал' },
+        UG: { name: 'Уганда' },
+        TZ: { name: 'Танзания' },
+        ZM: { name: 'Замбия' },
+        ZW: { name: 'Зимбабве' },
+        MW: { name: 'Малави' },
+        MZ: { name: 'Мозамбик' },
+        AO: { name: 'Ангола' },
+        CM: { name: 'Камерун' },
+        BJ: { name: 'Бенин' },
+        BF: { name: 'Буркина-Фасо' },
+        NE: { name: 'Нигер' },
+        TD: { name: 'Чад' },
+        SO: { name: 'Сомали' },
+        SD: { name: 'Судан' },
+        SS: { name: 'Южный Судан' },
+        ER: { name: 'Эритрея' },
+        DJ: { name: 'Джибути' },
+        ET: { name: 'Эфиопия' },
+        KM: { name: 'Коморы' },
+        SC: { name: 'Сейшельские острова' },
+        MU: { name: 'Маврикий' },
+        MG: { name: 'Мадагаскар' },
+        RE: { name: 'Реюньон' },
+        YT: { name: 'Майотта' },
+        CN: { name: 'Китай' },
+        JP: { name: 'Япония' },
+        KR: { name: 'Южная Корея' },
+        KP: { name: 'Северная Корея' },
+        VN: { name: 'Вьетнам' },
+        TH: { name: 'Таиланд' },
+        SG: { name: 'Сингапур' },
+        MY: { name: 'Малайзия' },
+        ID: { name: 'Индонезия' },
+        PH: { name: 'Филиппины' },
+        MM: { name: 'Мьянма' },
+        KH: { name: 'Камбоджа' },
+        LA: { name: 'Лаос' },
+        BN: { name: 'Бруней' },
+        TL: { name: 'Восточный Тимор' },
+        IN: { name: 'Индия' },
+        PK: { name: 'Пакистан' },
+        BD: { name: 'Бангладеш' },
+        LK: { name: 'Шри-Ланка' },
+        MV: { name: 'Мальдивы' },
+        NP: { name: 'Непал' },
+        BT: { name: 'Бутан' },
+        AF: { name: 'Афганистан' },
+        IR: { name: 'Иран' },
+        IQ: { name: 'Ирак' },
+        SY: { name: 'Сирия' },
+        PS: { name: 'Палестина' },
+        YE: { name: 'Йемен' },
+        CY: { name: 'Кипр' },
+        BG: { name: 'Болгария' },
+        RO: { name: 'Румыния' },
+        RS: { name: 'Сербия' },
+        HR: { name: 'Хорватия' },
+        SI: { name: 'Словения' },
+        BA: { name: 'Босния и Герцеговина' },
+        ME: { name: 'Черногория' },
+        MK: { name: 'Северная Македония' },
+        AL: { name: 'Албания' },
+        XK: { name: 'Косово' },
+        MT: { name: 'Мальта' },
+        IS: { name: 'Исландия' },
+        LU: { name: 'Люксембург' },
+        LI: { name: 'Лихтенштейн' },
+        AD: { name: 'Андорра' },
+        MC: { name: 'Монако' },
+        SM: { name: 'Сан-Марино' },
+        VA: { name: 'Ватикан' },
+        CH: { name: 'Швейцария' },
+        AT: { name: 'Австрия' },
+        HU: { name: 'Венгрия' },
+        SK: { name: 'Словакия' },
+        EE: { name: 'Эстония' },
+        LV: { name: 'Латвия' },
+        LT: { name: 'Литва' },
+        CA: { name: 'Канада' },
+        MX: { name: 'Мексика' },
+        BR: { name: 'Бразилия' },
+        AR: { name: 'Аргентина' },
+        CL: { name: 'Чили' },
+        PE: { name: 'Перу' },
+        CO: { name: 'Колумбия' },
+        VE: { name: 'Венесуэла' },
+        EC: { name: 'Эквадор' },
+        BO: { name: 'Боливия' },
+        PY: { name: 'Парагвай' },
+        UY: { name: 'Уругвай' },
+        GY: { name: 'Гайана' },
+        SR: { name: 'Суринам' },
+        AU: { name: 'Австралия' },
+        NZ: { name: 'Новая Зеландия' },
+        FJ: { name: 'Фиджи' },
+        PG: { name: 'Папуа — Новая Гвинея' },
+        SB: { name: 'Соломоновы Острова' },
+        VU: { name: 'Вануату' },
+    };
+}
+
+function getCountryInfo(countryCode) {
+    const countryData = getCountryData();
+    return countryData[countryCode] || { name: countryCode || 'Неизвестно' };
+}
+
+function getFlagEmoji(countryCode) {
+    if (!countryCode) return '🏳️';
+
+    const codePoints = countryCode
+        .toUpperCase()
+        .split('')
+        .map(char => 127397 + char.charCodeAt(0));
+
+    try {
+        return String.fromCodePoint(...codePoints);
+    } catch (e) {
+        return '🏳️';
+    }
+}
+
+// Функция для открытия модального окна с аватаркой
+function openAvatarModal(avatarUrl) {
+    let modal = document.getElementById('avatar-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'avatar-modal';
+        modal.className = 'avatar-modal';
+        modal.innerHTML = `
+            <div class="avatar-modal-content">
+                <span class="avatar-modal-close" onclick="closeAvatarModal()">&times;</span>
+                <img class="avatar-modal-image" src="" alt="Full size avatar">
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        modal.addEventListener('click', function (event) {
+            if (event.target === modal) {
+                closeAvatarModal();
+            }
+        });
+    }
+
+    const img = modal.querySelector('.avatar-modal-image');
+    img.src = avatarUrl;
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeAvatarModal() {
+    const modal = document.getElementById('avatar-modal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+    document.body.style.overflow = '';
+}
+
+// Обновление счетчиков аккаунтов
+async function updateAccountCounters() {
+    try {
+        const response = await fetch('/accounts_count');
+        const data = await response.json();
+
+        // Обновляем счетчики в модальном окне
+        const allCountElement = document.querySelector('#all-folder-accounts .account-count');
+        if (allCountElement) {
+            allCountElement.textContent = data.all || 0;
+            allCountElement.setAttribute('data-count', data.all || 0);
+        }
+
+        const workingCountElement = document.querySelector('#working-folder-accounts .account-count');
+        if (workingCountElement) {
+            workingCountElement.textContent = data.working || 0;
+            workingCountElement.setAttribute('data-count', data.working || 0);
+        }
+
+        const archiveCountElement = document.querySelector('#archive-folder-accounts .account-count');
+        if (archiveCountElement) {
+            archiveCountElement.textContent = data.archived || 0;
+            archiveCountElement.setAttribute('data-count', data.archived || 0);
+        }
+
+        const noSpamCountElement = document.querySelector('#no-spam-folder-accounts .account-count');
+        if (noSpamCountElement) {
+            noSpamCountElement.textContent = data.no_spam || 0;
+            noSpamCountElement.setAttribute('data-count', data.no_spam || 0);
+        }
+
+        const withSpamCountElement = document.querySelector('#with-spam-folder-accounts .account-count');
+        if (withSpamCountElement) {
+            withSpamCountElement.textContent = data.with_spam || 0;
+            withSpamCountElement.setAttribute('data-count', data.with_spam || 0);
+        }
+    } catch (error) {
+        console.error('Ошибка при получении данных:', error);
+    }
+}
+
+// Функции для переключения папок в модальном окне
+function switchFolderInModal(folder) {
+    currentFolder = folder;
+    currentSpamFilter = null;
+    updateButtonsInModal();
+    loadAccounts(folder);
+}
+
+function toggleSpamFilterInModal(filter) {
+    currentSpamFilter = currentSpamFilter === filter ? null : filter;
+    updateButtonsInModal();
+    loadAccounts(currentFolder);
+}
+
+function updateButtonsInModal() {
+    // Обновляем активное состояние кнопок папок в модальном окне
+    document.querySelectorAll('#accountsModal .account-folder-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.getElementById(`${currentFolder}-folder-accounts`)?.classList.add('active');
+
+    // Обновляем активное состояние кнопок спама
+    if (currentSpamFilter) {
+        document
+            .getElementById(`${currentSpamFilter}-folder-accounts`)
+            ?.classList.add('active');
+    }
+}
+
+// Обработчики событий
+document.addEventListener('DOMContentLoaded', function() {
+    // Кнопка запуска задачи
+    document.getElementById('start-task-btn').addEventListener('click', function() {
+        showModal('taskModal');
+    });
+    
+    
+    // Закрытие модального окна задачи при клике вне его
+    document.getElementById('taskModal').addEventListener('click', function(e) {
+        // Проверяем, является ли клик на `.modal-content` или внутри него
+        if (!e.target.closest('.modal-content')) {
+            hideModal('taskModal');
+        }
+    });
+
+    document.getElementById('accountsModal').addEventListener('click', function(e) {
+        // Проверяем, является ли клик на `.modal-content` или внутри него
+        if (!e.target.closest('.modal-content')) {
+            hideModal('accountsModal');
+        }
+    });
+    
+        
+    // Кнопка выбора аккаунтов в модальном окне задачи
+    document.getElementById('select-accounts-btn').addEventListener('click', function() {
+        hideModal('taskModal');
+        showModal('accountsModal');
+        loadAccounts(); // Загружаем аккаунты при открытии модального окна
+    });
+    
+    // Закрытие модального окна аккаунтов
+    document.getElementById('accountsModalClose').addEventListener('click', () => hideModal('accountsModal'));
+    document.getElementById('accountsModalCancel').addEventListener('click', () => hideModal('accountsModal'));
+    
+    // Закрытие модального окна аккаунтов при клике вне его
+    document.getElementById('accountsModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            hideModal('accountsModal');
+        }
+    });
+    
+    // Подтверждение выбора аккаунтов
+    document.getElementById('confirmAccountsSelection').addEventListener('click', function() {
+        hideModal('accountsModal');
+        showModal('taskModal');
+    });
+    
+    // Кнопка открытия папки
+    document.getElementById('profileMaterialBtn').addEventListener('click', function() {
+        fetch('/api/open-folder?path=Файлы/Изменение профиля')
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(errorMessage => {
+                        throw new Error(errorMessage || `Ошибка сервера: ${response.status} ${response.statusText}`);
+                    });
+                }
+                if (typeof showNotification === 'function') {
+                    showNotification('Папка открыта', 'success');
+                }
+                return response.text();
+            })
+            .catch(error => {
+                console.error('Ошибка при открытии папки:', error.message);
+                if (typeof showNotification === 'function') {
+                    showNotification('Ошибка при открытии папки: ' + error.message, 'error');
+                } else {
+                    alert('Ошибка при открытии папки: ' + error.message);
+                }
+            });
+    });
+    
+    // Опции
+    document.getElementById('optionsHeader').addEventListener('click', toggleOptions);
+    
+    // Кнопки выделения в модальном окне аккаунтов
+    document.getElementById('select-all-accounts-modal').addEventListener('click', selectAllAccountsInModal);
+    document.getElementById('deselect-all-btn-modal').addEventListener('click', deselectAllAccountsInModal);
+    
+    // Обработчики для кнопок папок в модальном окне
+    document.getElementById('all-folder-accounts')?.addEventListener('click', () => switchFolderInModal('all'));
+    document.getElementById('working-folder-accounts')?.addEventListener('click', () => switchFolderInModal('working'));
+    document.getElementById('archive-folder-accounts')?.addEventListener('click', () => switchFolderInModal('archive'));
+    document.getElementById('no-spam-folder-accounts')?.addEventListener('click', () => toggleSpamFilterInModal('no-spam'));
+    document.getElementById('with-spam-folder-accounts')?.addEventListener('click', () => toggleSpamFilterInModal('with-spam'));
+    
+    // Обработчик для поиска в модальном окне
+    const searchInput = document.getElementById('account-search-modal');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            searchFilter = this.value;
+            renderAccountsTable();
+        });
+    }
+    
+    // Обработчик для кнопки очистки поиска
+    const clearSearchBtn = document.getElementById('clear-search-modal');
+    if (clearSearchBtn) {
+        clearSearchBtn.addEventListener('click', function() {
+            searchInput.value = '';
+            searchFilter = '';
+            renderAccountsTable();
+            this.style.display = 'none';
+        });
+    }
+    
+    // Показываем/скрываем кнопку очистки поиска
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            clearSearchBtn.style.display = this.value ? 'block' : 'none';
+        });
+    }
+    
+    // Обработчик для чекбокса "Выбрать все" в модальном окне
+    const selectAllCheckbox = document.getElementById('select-all-checkbox-modal');
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                selectAllAccountsInModal();
+            } else {
+                deselectAllAccountsInModal();
+            }
+        });
+    }
+    
+    // Добавляем обработчики для сортировки в модальном окне
+    document.querySelectorAll('#accounts-table-modal .sortable-header').forEach(header => {
+        header.addEventListener('click', function () {
+            const sortField = this.dataset.sort;
+            if (currentSort.field === sortField) {
+                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.field = sortField;
+                currentSort.direction = 'asc';
+            }
+            updateSortIndicatorsInModal();
+            renderAccountsTable();
+        });
+    });
+    
+    // Кнопка запуска задачи заполнения профилей
+    document.getElementById('do-start-task-btn').addEventListener('click', function() {
+        const threadCount = document.getElementById('threadCount').value;
+        const selectedAccountIds = Array.from(selectedAccounts);
+        
+        if (selectedAccountIds.length === 0) {
+            if (typeof showNotification === 'function') {
+                showNotification('Выберите аккаунты для изменения профиля', 'warning');
+            } else {
+            alert('Выберите аккаунты для заполнения профилей');
+            }
+            return;
+        }
+        
+        if (!threadCount || threadCount < 1 || threadCount > 50) {
+            if (typeof showNotification === 'function') {
+                showNotification('Введите корректное количество потоков (1-50)', 'warning');
+            } else {
+            alert('Введите корректное количество потоков (1-50)');
+            }
+            return;
+        }
+        
+        // Собираем настройки
+        const settings = {
+            updateName: document.getElementById('updateName').checked,
+            updateAvatar: document.getElementById('updateAvatar').checked,
+            updateBio: document.getElementById('updateBio').checked,
+            uploadStories: document.getElementById('uploadStories').checked,
+            uploadChannel: document.getElementById('uploadChannel').checked,
+            useAvatarsOnce: document.getElementById('useAvatarsOnce').checked,
+            deleteOldAvatars: document.getElementById('deleteOldAvatars').checked,
+            moveUpdatedAccounts: document.getElementById('moveUpdatedAccounts').checked
+        };
+        
+        // Отправляем запрос на сервер
+        fetch('/start_profile_edit_task', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                account_ids: selectedAccountIds,
+                thread_count: parseInt(threadCount),
+                settings: settings
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                if (typeof showNotification === 'function') {
+                    showNotification('Задача изменения профиля запущена успешно!', 'success');
+                } else {
+                alert('Задача заполнения профилей запущена успешно!');
+                }
+                hideModal('taskModal');
+                // Очищаем выбранные аккаунты
+                selectedAccounts.clear();
+                updateSelectedAccountsCount();
+            } else {
+                if (typeof showNotification === 'function') {
+                    showNotification('Ошибка при запуске задачи: ' + (data.error || 'Неизвестная ошибка'), 'error');
+            } else {
+                alert('Ошибка при запуске задачи: ' + (data.error || 'Неизвестная ошибка'));
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+            if (typeof showNotification === 'function') {
+                showNotification('Ошибка при запуске задачи: ' + error.message, 'error');
+            } else {
+            alert('Ошибка при запуске задачи: ' + error.message);
+            }
+        });
+    });
+    
+    // Добавляем анимацию кнопке
+    setTimeout(function() {
+        document.getElementById('start-task-btn').classList.add('pulse');
+    }, 1000);
+});
+
+// Функция для обновления индикаторов сортировки в модальном окне
+function updateSortIndicatorsInModal() {
+    document.querySelectorAll('#accounts-table-modal .sortable-header').forEach(header => {
+        header.classList.remove('sort-asc', 'sort-desc');
+        if (header.dataset.sort === currentSort.field) {
+            header.classList.add(
+                currentSort.direction === 'asc' ? 'sort-asc' : 'sort-desc'
+            );
+        }
+    });
+}
+
+// Кастомные тултипы
+document.addEventListener('mouseover', function(e) {
+    if (e.target.closest('[data-tooltip]')) {
+        const tooltipElement = e.target.closest('[data-tooltip]');
+        const tooltipText = tooltipElement.getAttribute('data-tooltip');
+        showTooltip(tooltipText, e.pageX, e.pageY);
+    }
+});
+
+document.addEventListener('mouseout', function(e) {
+    if (e.target.closest('[data-tooltip]')) {
+        hideTooltip();
+    }
+});
+
+function showTooltip(text, x, y) {
+    const tooltip = document.getElementById('customTooltip');
+    tooltip.textContent = text;
+    tooltip.style.left = x + 2 + 'px';
+    tooltip.style.top = y - 4 + 'px';
+    tooltip.classList.add('show');
+}
+
+function hideTooltip() {
+    const tooltip = document.getElementById('customTooltip');
+    tooltip.classList.remove('show');
+}
+</script>
+{% endblock %}

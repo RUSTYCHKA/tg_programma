@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Админка</title>
+    <style>
+        body { 
+            background: #f0f2f5; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            font-family: Arial, sans-serif; 
+        }
+        .admin-box { 
+            background: white; 
+            padding: 2rem; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+            width: 400px; 
+            text-align: center; 
+        }
+        .admin-title { 
+            font-size: 1.5rem; 
+            margin-bottom: 1.5rem; 
+            color: #333; 
+        }
+        .input-field { 
+            width: 100%; 
+            padding: 0.75rem; 
+            margin-bottom: 1rem; 
+            border: 1px solid #ddd; 
+            border-radius: 4px; 
+            font-size: 1rem; 
+        }
+        .submit-btn { 
+            width: 100%; 
+            padding: 0.75rem; 
+            background: #1890ff; 
+            color: white; 
+            border: none; 
+            border-radius: 4px; 
+            font-size: 1rem; 
+            cursor: pointer; 
+        }
+        .submit-btn:hover { 
+            background: #0056b3; 
+        }
+        .message { 
+            margin-bottom: 1rem; 
+            padding: 0.75rem; 
+            border-radius: 4px; 
+            text-align: center; 
+        }
+        .message.success { 
+            background: #e6ffed; 
+            color: #52c41a; 
+        }
+        .message.error { 
+            background: #fff1f0; 
+            color: #ff4d4f; 
+        }
+        .token-display { 
+            margin-top: 1rem; 
+            padding: 1rem; 
+            background: #f0f2f5; 
+            border-radius: 4px; 
+            word-wrap: break-word; 
+            font-family: monospace; 
+        }
+        .copy-btn { 
+            margin-top: 0.5rem; 
+            padding: 0.5rem 1rem; 
+            background: #1890ff; 
+            color: white; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+        }
+        .copy-btn:hover { 
+            background: #0056b3; 
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-box">
+        <h1 class="admin-title">Админка</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form method="POST">
+            <input type="password" name="password" class="input-field" placeholder="Пароль админа" required>
+            <input type="text" name="user_id" class="input-field" placeholder="Имя пользователя" required>
+            <input type="datetime-local" name="expires_at" class="input-field" required>
+            <button type="submit" class="submit-btn">Сгенерировать токен</button>
+        </form>
+        
+        {% if token %}
+            <div class="token-display" id="token-display">
+                {{ token }}
+            </div>
+            <button class="copy-btn" onclick="copyToken()">Скопировать токен</button>
+        {% endif %}
+    </div>
+
+    <script>
+        function copyToken() {
+            const tokenDisplay = document.getElementById('token-display');
+            const tokenText = tokenDisplay.innerText;
+            
+            // Копируем текст в буфер обмена
+            navigator.clipboard.writeText(tokenText)
+                .then(() => alert('Токен скопирован!'))
+                .catch(() => alert('Не удалось скопировать токен.'));
+        }
+    </script>
+</body>
+</html>

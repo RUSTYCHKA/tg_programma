@@ -1,0 +1,449 @@
+{% extends "base.html" %}
+
+{% block title %}Менеджер аккаунтов{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/accounts.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/onboarding.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="proxy-container">
+    <div class="header-section">
+        <div class="table-controls">
+            <!-- Вкладки аккаунтов -->
+            <div class="account-folder-selector">
+                <button class="account-folder-btn active" id="all-folder">
+                    <div class="account-count" data-count="0">0</div>
+                    <div class="account-label">Все аккаунты</div>
+                    <div class="active-indicator"></div>
+                </button>
+                
+                <button class="account-folder-btn" id="working-folder">
+                    <div class="account-count" data-count="0">0</div>
+                    <div class="account-label">Для работы</div>
+                    <div class="active-indicator"></div>
+                </button>
+                
+                <button class="account-folder-btn" id="archive-folder">
+                    <div class="account-count" data-count="0">0</div>
+                    <div class="account-label">Архив</div>
+                    <div class="active-indicator"></div>
+                </button>
+
+                <!-- Новые кнопки фильтрации спама -->
+                <button class="account-folder-btn" id="no-spam-folder">
+                    <div class="account-count" data-count="0">0</div>
+                    <div class="account-label">Без спамблока</div>
+                    <div class="active-indicator"></div>
+                </button>
+                
+                <button class="account-folder-btn" id="with-spam-folder">
+                    <div class="account-count" data-count="0">0</div>
+                    <div class="account-label">Спамблок</div>
+                    <div class="active-indicator"></div>
+                </button>
+            </div>
+            
+            
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body p-3 d-flex align-items-center">
+            <div class="d-flex gap-2">
+                <!-- Кнопка "Добавить аккаунты" -->
+                <button class="btn btn-light at-control at-add-accounts" data-bs-toggle="tooltip" data-bs-title="Добавить аккаунты" onclick="showAddAccountForm()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="align-middle">
+                        <path d="M5 12h14"></path>
+                        <path d="M12 5v14"></path>
+                    </svg>
+                </button>
+
+                <!-- Кнопка "Папка с аккаунтами" -->
+                <button class="btn btn-light at-control at-open-accounts-dir-btn" data-bs-toggle="tooltip" data-bs-title="Папка с аккаунтами" onclick="openAccountsDirectory()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="align-middle">
+                        <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"></path>
+                    </svg>
+                </button>
+
+                <!-- Кнопка "Перезагрузить список аккаунтов" -->
+                <button class="btn btn-light at-control at-reload-accounts-list-btn" data-bs-toggle="tooltip" data-bs-title="Перезагрузить список аккаунтов" onclick="reloadAccountsList()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="align-middle">
+                        <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path>
+                        <path d="M21 3v5h-5"></path>
+                    </svg>
+                </button>
+
+
+                <!-- Кнопка "Выделить..." -->
+                <button type="button" class="btn btn-light p-0 at-control" id="select-range-button">
+                    <div style="padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x);" data-bs-toggle="tooltip" data-bs-title="Выделить...">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="align-middle">
+                            <path d="M20 6 9 17l-5-5"></path>
+                        </svg>
+                    </div>
+                </button>
+
+                <!-- Кастомное выпадающее меню для диапазона -->
+                <div id="select-range-custom-menu" class="custom-dropdown" style="display: none; position: absolute; top: 0; left: 0; z-index: 1000;">
+                    <div class="custom-dropdown-content">
+                        <form id="select-range-form">
+                            <label for="select-range-lower-input">От:</label>
+                            <input type="number" id="select-range-lower-input" min="1" required>
+                            <label for="select-range-upper-input">до:</label>
+                            <input type="number" id="select-range-upper-input" min="1" required>
+                            <button type="submit" class="btn btn-primary">Выделить</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Кнопка "Выделить все" -->
+                <button type="button" class="btn btn-light at-control at-select-all-accounts-btn" data-bs-toggle="tooltip" data-bs-title="Выделить все (Ctrl + A)" onclick="selectAllAccounts()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="align-middle">
+                        <path d="M18 6 7 17l-5-5"></path>
+                        <path d="m22 10-7.5 7.5L13 16"></path>
+                    </svg>
+                </button>
+
+                <!-- Кнопка "Снять выделение" -->
+                <button id="deselect-all-btn" type="button" class="btn btn-light at-control at-deselect-all-accounts-btn" data-bs-toggle="tooltip" data-bs-title="Снять выделение" onclick="deselectAllAccounts()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="align-middle">
+                        <path d="M18 6 6 18"></path>
+                        <path d="m6 6 12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <!-- Счетчик аккаунтов -->
+            <span class="text-muted ms-auto at-displayed-accounts-count-label" id="accounts-count-label">Показано аккаунтов: 0 / 0</span>
+        </div>
+    </div>
+
+    <!-- Фильтры и поиск ПОД панелью кнопок, около таблицы -->
+    <div class="table-filters-panel">
+    
+        <div class="filters-panel">
+            <div class="filter-item" onclick="toggleFilterDropdown('role')">
+                <span class="filter-text">Роль</span>
+                <span class="filter-arrow">▼</span>
+                <div class="filter-dropdown" id="role-dropdown">
+                    <div class="filter-option" data-value="">Все роли</div>
+                    <!-- Опции будут заполняться динамически -->
+                </div>
+            </div>
+            
+            <div class="filter-item" onclick="toggleFilterDropdown('geo')">
+                <span class="filter-text">Гео</span>
+                <span class="filter-arrow">▼</span>
+                <div class="filter-dropdown" id="geo-dropdown">
+                    <div class="filter-option" data-value="">Все страны</div>
+                    <!-- Опции будут заполняться динамически -->
+                </div>
+            </div>
+            
+            <div class="filter-item" onclick="toggleFilterDropdown('rest')">
+                <span class="filter-text">Отлежка</span>
+                <span class="filter-arrow">▼</span>
+                <div class="filter-dropdown" id="rest-dropdown">
+                    <div class="filter-option" data-value="">Все</div>
+                    <div class="filter-option" data-value="with-rest">С отлежкой</div>
+                    <div class="filter-option" data-value="without-rest">Без отлежки</div>
+                </div>
+            </div>
+            
+            <div class="filter-item" onclick="toggleFilterDropdown('status')">
+                <span class="filter-text">Статус</span>
+                <span class="filter-arrow">▼</span>
+                <div class="filter-dropdown" id="status-dropdown">
+                    <div class="filter-option" data-value="">Все статусы</div>
+                    <div class="filter-option" data-value="alive">Живой</div>
+                    <div class="filter-option" data-value="dead">Мертв</div>
+                    <div class="filter-option" data-value="spam_block">Спам блок</div>
+                </div>
+            </div>
+
+            <div class="filter-item" onclick="toggleFilterDropdown('folder')">
+                <span class="filter-text">Папка</span>
+                <span class="filter-arrow">▼</span>
+                <div class="filter-dropdown" id="folder-dropdown">
+                    <div class="filter-option" data-value="all">Все аккаунты</div>
+                    <div class="filter-option" data-value="working">Для работы</div>
+                    <div class="filter-option" data-value="archive">Архив</div>
+                </div>
+            </div>
+            
+            <!-- Поиск СПРАВА -->
+            <div class="search-section" style="margin-left: auto;">
+                <div class="search-container">
+                    <input type="text" class="search-input" id="account-search" placeholder="Поиск по номеру, имени...">
+                    <button class="search-button" id="search-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                        </svg>
+                    </button>
+                    <button class="clear-search" id="clear-search" style="display: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Таблица с иконками сортировки -->
+    <table id="accounts-table" class="proxy-table">
+        <thead>
+            <tr>
+                <th class="selector-header">
+                    <input type="checkbox" id="select-all-checkbox" class="select-all-checkbox">
+                </th>
+                <th>
+                    <div class="sortable-header" data-sort="index">
+                        #
+                        <div class="sort-icons">
+                            <span class="sort-asc">▲</span>
+                            <span class="sort-desc">▼</span>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="sortable-header" data-sort="avatar">
+                        Аватар
+                        <div class="sort-icons">
+                            <span class="sort-asc">▲</span>
+                            <span class="sort-desc">▼</span>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="sortable-header" data-sort="phone">
+                        Телефон
+                        <div class="sort-icons">
+                            <span class="sort-asc">▲</span>
+                            <span class="sort-desc">▼</span>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="sortable-header" data-sort="geo">
+                        Гео
+                        <div class="sort-icons">
+                            <span class="sort-asc">▲</span>
+                            <span class="sort-desc">▼</span>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="sortable-header" data-sort="status">
+                        Статус
+                        <div class="sort-icons">
+                            <span class="sort-asc">▲</span>
+                            <span class="sort-desc">▼</span>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="sortable-header" data-sort="rest">
+                        Отлежка
+                        <div class="sort-icons">
+                            <span class="sort-asc">▲</span>
+                            <span class="sort-desc">▼</span>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="sortable-header" data-sort="role">
+                        Роль
+                        <div class="sort-icons">
+                            <span class="sort-asc">▲</span>
+                            <span class="sort-desc">▼</span>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="sortable-header" data-sort="used">
+                        Использован
+                        <div class="sort-icons">
+                            <span class="sort-asc">▲</span>
+                            <span class="sort-desc">▼</span>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="sortable-header" data-sort="name">
+                        Имя
+                        <div class="sort-icons">
+                            <span class="sort-asc">▲</span>
+                            <span class="sort-desc">▼</span>
+                        </div>
+                    </div>
+                </th>
+                <th>Разное</th> <!-- действия -->
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="empty-message-container" class="empty-message-row" style="display: none;">
+                <td colspan="11"> <!-- colspan должен соответствовать количеству столбцов в таблице -->
+                    <div class="empty-message-content">
+                        <p>Нет аккаунтов</p>
+                        <span class="add-account-text" onclick="showAddAccountForm()">Добавить</span>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Пагинация -->
+    <div class="pagination-container">
+        <div class="pagination-left">
+            <span class="pagination-text">Показать аккаунтов:</span>
+            <select id="items-per-page" class="pagination-select">
+                <option value="10">10</option>
+                <option value="50" selected>50</option>
+                <option value="100">100</option>
+                <option value="500">500</option>
+            </select>
+        </div>
+        
+        <div class="pagination-right">
+            <ul class="pagination">
+                <li class="page-item">
+                    <button id="prev-page" class="page-link" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                        </svg>
+                    </button>
+                </li>
+                <li class="page-item active">
+                    <span class="page-link">
+                        <span id="current-page">1</span>
+                    </span>
+                </li>
+                <li class="page-item">
+                    <button id="next-page" class="page-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="selection-actions" class="selection-actions">
+    <div class="selection-info">
+        <button id="deselect-btn" type="button" class="deselect-btn" data-bs-toggle="tooltip" data-bs-title="Снять выделение" onclick="deselectAllAccounts()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="align-middle">
+                <path d="M18 6 6 18"></path>
+                <path d="m6 6 12 12"></path>
+            </svg>
+        </button>
+        <span class="selection-text">Выделено аккаунтов: <span id="selected-count">0</span>/<span id="total-count">0</span></span>
+
+    </div>
+    
+    <div class="action-icons-group">
+        <button class="action-btn" data-tooltip="Проверить аккаунты" onclick="runAccountChecker()">
+            <i class="fa-solid fa-bolt"></i>
+        </button>
+        <button class="action-btn" data-tooltip="Изменить роль" onclick="changeRole()">
+            <i class="fa-solid fa-tags"></i>
+        </button>
+        <button class="action-btn" data-tooltip="Переместить аккаунты" onclick="moveAccounts()">
+            <i class="fa-solid fa-compass"></i>
+        </button>
+    </div>
+  
+    <button class="action-button" id="action-menu-button" onclick="toggleActionMenu(event)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" is="raptor-icon" data-lucide="target" class="lucide" id="ritz6fgu92z"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+        Действие...
+    </button>
+</div>
+
+<!-- Модальное окно для изменения фото -->
+<div id="edit-photo-modal" class="modal">
+  <div class="modal-content">
+    <label for="photo-input" class="file-input-label">
+        <svg class="file-input-icon" viewBox="0 0 24 24">
+            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
+        </svg>
+        Выберите файл
+        <span class="file-input-text">или перетащите его сюда</span>
+    </label>
+    <input type="file" id="photo-input" accept="image/*">
+    <div id="file-selected-status" style="display: none; color: #28a745; margin-top: 10px;">
+      Файл выбран
+    </div>
+    <div class="modal-actions">
+      <button class="cancel-btn" onclick="ModalManager.close('edit-photo-modal')">Отмена</button>
+      <button class="confirm-btn">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Модальное окно для изменения имени -->
+<div id="edit-first-name-modal" class="modal">
+  <div class="modal-content">
+    <h3>Изменить имя</h3>
+    <input type="text" id="first-name-input" placeholder="Введите новое имя">
+    <div class="modal-actions">
+      <button class="cancel-btn" onclick="ModalManager.close('edit-first-name-modal')">Отмена</button>
+      <button class="confirm-btn">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Модальное окно для изменения фамилии -->
+<div id="edit-last-name-modal" class="modal">
+  <div class="modal-content">
+    <h3>Изменить фамилию</h3>
+    <input type="text" id="last-name-input" placeholder="Введите новую фамилию">
+    <div class="modal-actions">
+      <button class="cancel-btn" onclick="ModalManager.close('edit-last-name-modal')">Отмена</button>
+      <button class="confirm-btn">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Меню действий -->
+<div id="action-menu" class="action-menu">
+    <button class="action-menu-item" onclick="checkAccounts()">
+        <img src="{{ url_for('static', filename='images/check.png') }}" alt="Проверить" class="nav-icon-black" > Проверить аккаунты
+    </button>
+    <button class="action-menu-item" onclick="checkSpamBlock()">
+        <img src="{{ url_for('static', filename='images/spam.png') }}" alt="Спам блок" class="nav-icon-black"> Проверить на спам блок
+    </button>
+    <button class="action-menu-item" onclick="openInWeb()">
+        <img src="{{ url_for('static', filename='images/web.png') }}" alt="Веб" class="nav-icon-black"> Открыть в вебе
+    </button>
+    <button class="action-menu-item" onclick="changePhoto()">
+        <img src="{{ url_for('static', filename='images/edit_photo.png') }}" alt="Фото" class="nav-icon-black"> Изменить фото
+    </button>
+    <button class="action-menu-item" onclick="changeFirstName()">
+        <img src="{{ url_for('static', filename='images/edit_name.png') }}" alt="Имя" class="nav-icon-black"> Изменить имя
+    </button>
+    <button class="action-menu-item" onclick="changeLastName()">
+        <img src="{{ url_for('static', filename='images/edit_surname.png') }}" alt="Фамилия" class="nav-icon-black"> Изменить фамилию
+    </button>
+</div>
+
+
+
+<!-- Модальное окно для просмотра аватарки -->
+<div id="avatar-modal" class="avatar-modal">
+    <div class="avatar-modal-content">
+        <span class="avatar-modal-close" onclick="closeAvatarModal()">&times;</span>
+        <img class="avatar-modal-image" src="" alt="Full size avatar">
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/accounts.js') }}"></script>
+<script src="{{ url_for('static', filename='js/onboarding.js') }}"></script>
+{% endblock %}

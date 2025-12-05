@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile_edit.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="proxy-page">
+    <h1 class="page-title">ИИ агенты</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="file-buttons-container">
+                <button class="btn btn-primary btn-create-agent" onclick="showAgentCreationForm()">
+                    <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Создать агента
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Список агентов -->
+    <div class="card">
+        <div class="card-body">
+            <div class="agents-list"></div>
+        </div>
+    </div>
+
+    <!-- Модальное окно создания/редактирования агента -->
+    <div class="modal" id="agentModal">
+        <div class="modal-content" style="max-width: 720px; width: 90%;">
+            <div class="modal-header">
+                <h5 class="modal-title">Создание агента</h5>
+                <button type="button" class="btn-close" onclick="hideAgentModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="options-container" style="padding: 0;">
+                    <div class="form-group">
+                        <label class="form-label">Название агента</label>
+                        <input type="text" id="agent-name-input" class="form-control" placeholder="Введите название агента">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Модель ИИ</label>
+                        <select v-model="currentAgent.model" class="form-select">
+                            <option value="gpt-4">GPT-4</option>
+                            <option value="claude-3">Claude 3</option>
+                            <option value="custom">Кастомная модель</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Базовый промт</label>
+                        <textarea id="agent-prompt-textarea" rows="4" class="form-control" style="min-height: 120px;" placeholder="Введите базовый промт для агента"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Примеры диалогов</label>
+                        <div class="dialogue-examples">
+                            <!-- пары вопросов/ответов отрисовываются JS -->
+                            <button type="button" class="btn btn-light btn-add-example">+ Добавить пример</button>
+                            <div class="file-upload" style="margin-top: 12px;">
+                                <label class="form-label" style="margin-bottom: 6px; display: block;">Импорт из файла</label>
+                                <input type="file" id="fileInput" accept=".json" onchange="importFromFile(event)">
+                                <label for="fileInput" class="file-input-label" id="file-upload-label">
+                                    <svg class="file-input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="2" fill="none"/>
+                                        <polyline points="17 8 12 3 7 8" stroke="currentColor" stroke-width="2" fill="none"/>
+                                        <line x1="12" y1="3" x2="12" y2="15" stroke="currentColor" stroke-width="2"/>
+                                    </svg>
+                                    Нажмите, чтобы выбрать JSON
+                                </label>
+                                <span id="fileName" class="file-input-text">Файл не выбран</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-cancel" onclick="hideAgentModal()">Отмена</button>
+                <button type="button" class="btn btn-primary btn-save">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/ai_agents.js') }}"></script>
+{% endblock %}

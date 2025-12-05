@@ -1,0 +1,291 @@
+/* ai_agents.css */
+
+:root {
+    --primary-color: #4A90E2;
+    --secondary-color: #50E3C2;
+    --bg-color: #f7f9fc;
+    --card-bg: #ffffff;
+    --text-color: #333333;
+    --border-radius: 8px;
+    --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --modal-overlay: rgba(0, 0, 0, 0.5);
+    --spacing: 16px;
+}
+
+.ai-agents-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: var(--spacing);
+    background-color: var(--bg-color);
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    color: var(--text-color);
+}
+
+.agents-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing);
+}
+
+.agents-header h2 {
+    margin: 0;
+    font-size: 1.75rem;
+}
+
+.btn-create-agent {
+    display: flex;
+    align-items: center;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-create-agent img {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+}
+
+.btn-create-agent:hover {
+    background-color: darken(var(--primary-color), 10%);
+}
+
+.agents-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing);
+}
+
+.agent-card {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: var(--spacing);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease;
+}
+
+.agent-card:hover {
+    transform: translateY(-4px);
+}
+
+.agent-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.agent-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.agent-actions button {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-left: 8px;
+    transition: color 0.2s ease;
+}
+
+.agent-actions .btn-edit:hover {
+    color: var(--primary-color);
+}
+
+.agent-actions .btn-delete:hover {
+    color: #e94e77;
+}
+
+.agent-details p {
+    margin: 0.25rem 0;
+}
+
+/* Modal Styles */
+.agent-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--modal-overlay);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.agent-modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: var(--spacing);
+    width: 90%;
+    max-width: 600px;
+    position: fixed; /* фиксированное позиционирование */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.file-upload {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.file-upload input[type="file"] {
+    display: none;
+}
+
+.file-label {
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 0.4rem 1rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.file-label:hover {
+    background-color: #357ab8;
+}
+
+.file-name {
+    font-size: 0.9rem;
+    color: #666;
+    font-style: italic;
+}
+
+
+.modal-content h3 {
+    margin-top: 0;
+}
+
+.close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 1.25rem;
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.dialogue-examples {
+    margin-top: 0.5rem;
+}
+
+.dialogue-pair {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.dialogue-pair input {
+    flex: 1;
+}
+
+.btn-remove {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: #e94e77;
+    transition: color 0.2s ease;
+}
+
+.btn-remove:hover {
+    color: #c12b48;
+}
+
+.btn-add-example {
+    background-color: var(--secondary-color);
+    color: #fff;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn-add-example:hover {
+    background-color: darken(var(--secondary-color), 10%);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.btn-cancel,
+.btn-save {
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-cancel {
+    background-color: #ccc;
+    color: #333;
+}
+
+.btn-cancel:hover {
+    background-color: #b3b3b3;
+}
+
+.btn-save {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.btn-save:hover {
+    background-color: darken(var(--primary-color), 10%);
+}

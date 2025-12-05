@@ -1,0 +1,294 @@
+{% extends "base.html" %}
+{% block title %}Разное{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/misc.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="proxy-page">
+    <h1 class="page-title">Разное</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="file-buttons-container">
+                <button class="btn btn-light" data-button-id="pack-logs-btn">
+                    <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10 12v-1"></path><path d="M10 18v-2"></path><path d="M10 7V6"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M15.5 22H18a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v16a2 2 0 0 0 .274 1.01"></path><circle cx="10" cy="20" r="2"></circle>
+                    </svg>
+                    Материал/логи
+                    <span class="help-icon" data-tooltip="Подготовка логов для отправки разработчикам. Можно запускать даже при работающей задаче.">
+                        <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path>
+                        </svg>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="options-container">
+                <div class="option-item">
+                    <div class="option-label-container">
+                        <label for="jsonPreset" class="form-label">Какие параметры генерировать в json файлах</label>
+                        <span class="help-icon" data-tooltip="Если вы загрузите в софт session файлы без json файлов, то софт сам сгенерирует json файлы. Данная настройка позволяет задать, какие параметры будут записаны в json.">
+                            <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                    </div>
+                    <select class="form-select" id="jsonPreset" style="width: 200px">
+                        <option value="Desktop (пара 2040)" selected>Desktop (пара 2040)</option>
+                        <option value="Web (пара 2496)">Web (пара 2496)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h3 class="subsection-title subsection-title-collapse collapsed" data-bs-toggle="collapse" data-bs-target="#connectSettings">Подключение аккаунтов
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4px" stroke-linecap="round" stroke-linejoin="round" class="collapse-chevron"><path d="m6 9 6 6 6-6"></path></svg>
+            </h3>
+            <div class="collapse" id="connectSettings">
+                <div class="options-container">
+                    <div class="option-item">
+                        <div class="option-label-container">
+                            <label for="proxyTimeout" class="form-label">Таймаут подключения к прокси</label>
+                            <span class="help-icon" data-tooltip="Время, которое даётся аккаунту на подключение к сети (либо на переподключение, если во время работы он потерял соединение).">
+                                <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg>
+                            </span>
+                        </div>
+                        <div class="input-group" style="max-width: 200px">
+                            <input class="form-control has-trailing-label" id="proxyTimeout" value="30">
+                            <span class="input-trailing-label">сек</span>
+                            <div class="invalid-feedback" id="invalid-feedback-for-proxyTimeout"></div>
+                        </div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-label-container">
+                            <label for="connectRetries" class="form-label">Кол-во попыток подключения</label>
+                        </div>
+                        <div class="input-group" style="max-width: 200px">
+                            <input class="form-control" id="connectRetries" value="4">
+                            <div class="invalid-feedback" id="invalid-feedback-for-connectRetries"></div>
+                        </div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-label-container">
+                            <label for="noProxyWeb" class="form-label">Не использовать прокси в вебе (опасно)</label>
+                            <span class="help-icon" data-tooltip="Если включить, то при запуске аккаунтов в вебе не будут использоваться прокси. Это позволит ускорить работу, но повысит риск банов.">
+                                <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg>
+                            </span>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="noProxyWeb">
+                        </div>
+                        <div class="invalid-feedback" id="invalid-feedback-for-noProxyWeb"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h3 class="subsection-title subsection-title-collapse collapsed" data-bs-toggle="collapse" data-bs-target="#extraOptions">Дополнительные опции
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4px" stroke-linecap="round" stroke-linejoin="round" class="collapse-chevron"><path d="m6 9 6 6 6-6"></path></svg>
+            </h3>
+            <div class="collapse" id="extraOptions">
+                <div class="options-container">
+                    <div class="option-item">
+                        <div class="option-label-container">
+                            <label for="maxDelay" class="form-label">Максимальная задержка</label>
+                            <span class="help-icon" data-tooltip="Периодически Телеграм будет выдавать аккаунтам 'задержки' на действия. Если задержка больше указанного значения — аккаунт завершит работу; если меньше — подождёт и продолжит.">
+                                <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg>
+                            </span>
+                        </div>
+                        <div class="input-group" style="max-width: 200px">
+                            <input class="form-control has-trailing-label" id="maxDelay" value="60">
+                            <span class="input-trailing-label">сек</span>
+                            <div class="invalid-feedback" id="invalid-feedback-for-maxDelay"></div>
+                        </div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-label-container">
+                            <label for="alwaysLatest" class="form-label">Всегда использовать актуальные версии для Telegram Desktop и Web A</label>
+                            <span class="help-icon" data-tooltip="Если включить, аккаунты на парах 2040 и 2496 будут использовать последние версии официальных приложений.">
+                                <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg>
+                            </span>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="alwaysLatest">
+                        </div>
+                        <div class="invalid-feedback" id="invalid-feedback-for-alwaysLatest"></div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-label-container">
+                            <label for="dedupeUsers" class="form-label">Удалять дубли пользователей</label>
+                            <span class="help-icon" data-tooltip="Удалять ли дубли в файлах пользователей (например, для инвайтера и спамера).">
+                                <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg>
+                            </span>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="dedupeUsers" checked>
+                        </div>
+                        <div class="invalid-feedback" id="invalid-feedback-for-dedupeUsers"></div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-label-container">
+                            <label for="showAvatars" class="form-label">Показывать аватарки аккаунтов</label>
+                            <span class="help-icon" data-tooltip="Если отключить, аватарки не будут скачиваться и отображаться. Чтобы настройка вступила в силу, нажмите F5.">
+                                <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg>
+                            </span>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="showAvatars" checked>
+                        </div>
+                        <div class="invalid-feedback" id="invalid-feedback-for-showAvatars"></div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-label-container">
+                            <label for="noReportPrompt" class="form-label">Не предлагать смотреть отчёт после выполнения задачи</label>
+                            <span class="help-icon" data-tooltip="Подсказка в консоли об открытии отчёта не будет показываться. Отчёты можно открыть вручную из папки 'Отчёты'.">
+                                <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg>
+                            </span>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="noReportPrompt">
+                        </div>
+                        <div class="invalid-feedback" id="invalid-feedback-for-noReportPrompt"></div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-label-container">
+                            <label for="noAutoReload" class="form-label">Отключить автоматическую перезагрузку списка аккаунтов</label>
+                            <span class="help-icon" data-tooltip="При изменении файлов аккаунтов список может перезагружаться автоматически. Эту автоматику можно отключить.">
+                                <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg>
+                            </span>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="noAutoReload">
+                        </div>
+                        <div class="invalid-feedback" id="invalid-feedback-for-noAutoReload"></div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-label-container">
+                            <label for="joinRequestWait" class="form-label">Сколько ждать принятия заявки на вступление</label>
+                        </div>
+                        <div class="input-group" style="max-width: 200px">
+                            <input class="form-control has-trailing-label" id="joinRequestWait" value="5">
+                            <span class="input-trailing-label">сек</span>
+                            <div class="invalid-feedback" id="invalid-feedback-for-joinRequestWait"></div>
+                        </div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-label-container">
+                            <label for="goOnline" class="form-label">Выводить аккаунты в онлайн</label>
+                            <span class="help-icon" data-tooltip="Ставить ли аккаунтам статус 'онлайн' при работе.">
+                                <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg>
+                            </span>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="goOnline">
+                        </div>
+                        <div class="invalid-feedback" id="invalid-feedback-for-goOnline"></div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-label-container">
+                            <label for="windowTitlePath" class="form-label">Показывать полный путь софта в названии окна</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="windowTitlePath">
+                        </div>
+                        <div class="invalid-feedback" id="invalid-feedback-for-windowTitlePath"></div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-label-container">
+                            <label for="delayedStart" class="form-label">Отложенный запуск задач</label>
+                            <span class="help-icon" data-tooltip="Перед запуском любой задачи можно будет отложить её на позже.">
+                                <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg>
+                            </span>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="delayedStart">
+                        </div>
+                        <div class="invalid-feedback" id="invalid-feedback-for-delayedStart"></div>
+                    </div>
+                    <div class="option-item">
+                        <div class="option-label-container">
+                            <label for="separateChromeProfile" class="form-label">Использовать отдельный профиль Chrome</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="separateChromeProfile">
+                        </div>
+                        <div class="invalid-feedback" id="invalid-feedback-for-separateChromeProfile"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<!-- Кастомный тултип -->
+<div id="customTooltip" class="custom-tooltip"></div>
+
+<script>
+// Инициализация collapsible блоков без Bootstrap
+(function() {
+    document.querySelectorAll('.subsection-title[data-bs-toggle="collapse"]').forEach(function(header) {
+        header.addEventListener('click', function() {
+            const targetSelector = header.getAttribute('data-bs-target');
+            if (!targetSelector) return;
+            const target = document.querySelector(targetSelector);
+            if (!target) return;
+            const chevron = header.querySelector('.collapse-chevron');
+            const isOpen = target.classList.contains('show');
+            if (isOpen) {
+                target.classList.remove('show');
+                header.classList.add('collapsed');
+                if (chevron) chevron.classList.remove('rotated');
+            } else {
+                target.classList.add('show');
+                header.classList.remove('collapsed');
+                if (chevron) chevron.classList.add('rotated');
+            }
+        });
+    });
+})();
+
+// Кастомные тултипы по образцу profile_edit.html
+document.addEventListener('mouseover', function(e) {
+    if (e.target.closest('[data-tooltip]')) {
+        const tooltipElement = e.target.closest('[data-tooltip]');
+        const tooltipText = tooltipElement.getAttribute('data-tooltip');
+        showTooltip(tooltipText, e.pageX, e.pageY);
+    }
+});
+
+document.addEventListener('mouseout', function(e) {
+    if (e.target.closest('[data-tooltip]')) {
+        hideTooltip();
+    }
+});
+
+function showTooltip(text, x, y) {
+    const tooltip = document.getElementById('customTooltip');
+    tooltip.textContent = text;
+    tooltip.style.left = x + 2 + 'px';
+    tooltip.style.top = y - 4 + 'px';
+    tooltip.classList.add('show');
+}
+
+function hideTooltip() {
+    const tooltip = document.getElementById('customTooltip');
+    tooltip.classList.remove('show');
+}
+</script>
+{% endblock %}

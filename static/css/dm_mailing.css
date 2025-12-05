@@ -1,0 +1,1050 @@
+/* Основные стили контейнера */
+.proxy-container {
+    max-width: 2000px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #2d2d2d;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Стили кнопок */
+.delete-button {
+    padding: 12px 30px;
+    background: linear-gradient(145deg, #ff4b5c, #ff1e2a);
+    color: white;
+    border: none;
+    border-radius: 40px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.delete-button:hover {
+    background: linear-gradient(145deg, #ff1e2a, #d82e3e);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    transform: scale(1.05);
+}
+
+.delete-button:active {
+    background: linear-gradient(145deg, #d82e3e, #9f1f2a);
+    transform: translateY(2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.delete-button:focus {
+    outline: none;
+    box-shadow: 0 0 12px rgba(92, 138, 255, 0.7);
+}
+
+.add-button {
+    padding: 12px 30px;
+    background: linear-gradient(145deg, #5c8aff, #4c7cff);
+    color: white;
+    border: none;
+    border-radius: 40px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.add-button:hover {
+    background: linear-gradient(145deg, #4c7cff, #3f6fd3);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    transform: scale(1.05);
+}
+
+.add-button:active {
+    background: linear-gradient(145deg, #3f6fd3, #2f5ba0);
+    transform: translateY(2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.add-button:focus {
+    outline: none;
+    box-shadow: 0 0 12px rgba(92, 138, 255, 0.7);
+}
+
+/* Стили таблицы - современный минимализм */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #2d2d2d;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.check-proxy-btn {
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+.spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+th {
+    padding: 16px 20px;
+    text-align: left;
+    font-weight: 500;
+    color: #a0a0a0;
+    font-size: 0.85rem;
+    background: #3a3a3a;
+    border-bottom: 1px solid #4a4a4a;
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    vertical-align: middle;
+}
+
+td {
+    padding: 16px 20px;
+    color: #e0e0e0;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #3a3a3a;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+    vertical-align: middle;
+    line-height: 1.5;
+}
+
+/* Выравнивание ячеек */
+th:first-child, td:first-child {
+    width: 100px;
+    padding-left: 16px;
+    padding-right: 16px;
+    text-align: center;
+}
+
+/* Стили для чекбоксов */
+.selector-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.selector-checkbox {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid #6a6a6a;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    outline: none;
+    position: relative;
+}
+
+.selector-checkbox:checked {
+    background: #3b82f6;
+    border-color: #3b82f6;
+}
+
+.selector-checkbox:checked::after {
+    content: "";
+    display: block;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    position: relative;
+    top: -1px;
+}
+
+.selector-checkbox:hover {
+    border-color: #93c5fd;
+}
+
+/* Состояния строк */
+tr:hover td {
+    background: #3a3a3a;
+}
+
+tr.selected td {
+    background: #3a4a5a;
+}
+
+/* Анимация строк */
+tbody tr {
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Полосатый эффект */
+tbody tr:nth-child(even) td {
+    background: #333333;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    th, td {
+        padding: 12px 16px;
+    }
+    
+    th:first-child, td:first-child {
+        width: 36px;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+}
+
+/* Стили формы добавления прокси */
+.add-proxy-form textarea {
+    width: 100%;
+    min-height: 200px;
+    padding: 15px;
+    border: 1px solid #4a4a4a;
+    border-radius: 8px;
+    font-size: 16px;
+    resize: vertical;
+    margin-bottom: 20px;
+    background: #3a3a3a;
+    color: #e0e0e0;
+}
+
+.add-proxy-form textarea::placeholder {
+    color: #a0a0a0;
+}
+
+.add-proxy-form button {
+    width: 100%;
+    padding: 15px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.add-proxy-form button:hover {
+    background: #0056b3;
+}
+
+/* Стили модального окна */
+.modal-add {
+    display: none;
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #2d2d2d;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    animation: modalFadeIn 0.3s ease-out;
+    margin: 0;
+    z-index: 1001;
+    border: 1px solid #4a4a4a;
+}
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 24px;
+    color: #a0a0a0;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: #e0e0e0;
+}
+
+/* Стили для меню действий */
+.action-button-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.action-menu-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 14px;
+    color: #e0e0e0;
+    cursor: pointer;
+    background: none;
+    border: none;
+    text-align: left;
+    transition: background 0.3s;
+}
+
+.action-menu-item:hover {
+    background: #3a3a3a;
+}
+
+.status-badge {
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 15px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 3px 8px rgba(40, 167, 69, 0.3);
+    outline: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.status-badge.alive {
+     background-color: #28a745;
+}
+
+.status-badge.dead {
+     background-color: #dc3545;
+}
+
+.status-badge.spam-block {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.status-badge.unknown {
+    background-color: #9E9E9E;
+}
+
+.nav-icon-black {
+    height: 1em;
+    width: auto;
+    vertical-align: middle;
+    margin-right: 0.5em;
+    filter: brightness(0) invert(1);
+}
+
+.action-button {
+    background: #007bff;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: background 0.3s ease, transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.action-button:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+}
+
+.action-menu {
+    display: none;
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    background: #2d2d2d;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    z-index: 1000;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px solid #4a4a4a;
+}
+
+.action-menu-item {
+    background: #3a3a3a;
+    color: #e0e0e0;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.3s ease;
+}
+
+.action-menu-item:hover {
+    background: #4a4a4a;
+}
+
+/* Стили для панели управления таблицей */
+.table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+    width: 100%;
+}
+
+.controls-group {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.control-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    background: #3a3a3a;
+    color: #a0a0a0;
+    position: relative;
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.control-button:hover {
+    background: #4a4a4a;
+    color: #e0e0e0;
+}
+
+.control-button:active {
+    transform: scale(0.95);
+}
+
+.control-button svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+/* Конкретные кнопки */
+.delete-selected {
+    background: #4a2a2a;
+    color: #ff6b6b;
+}
+
+.delete-selected:hover {
+    background: #5a3a3a;
+}
+
+.add-new {
+    background: #2a3a4a;
+    color: #6bafff;
+}
+
+.add-new:hover {
+    background: #3a4a5a;
+}
+
+.select-all {
+    background: #3a2a4a;
+    color: #bfa0ff;
+}
+
+.select-all:hover {
+    background: #4a3a5a;
+}
+
+.deselect-all {
+    background: #3a3a3a;
+    color: #a0a0a0;
+}
+
+/* Подсказки при наведении */
+.control-button::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #4a4a4a;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+}
+
+.control-button:hover::after {
+    opacity: 1;
+}
+
+/* Добавляем в существующие стили */
+.deselect-all {
+    display: none;
+    background: #3a3a3a;
+    color: #a0a0a0;
+}
+
+.web-open-button {
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.web-open-button:hover {
+    background-color: #0056b3;
+}
+
+.web-open-button:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.has-selected .deselect-all {
+    display: flex;
+}
+
+.has-selected .select-all {
+    display: none;
+}
+
+/* Стили для селектора папок */
+.account-folder-selector {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.account-folder-btn {
+    position: relative;
+    padding: 12px 20px;
+    background: #3a3a3a;
+    border: 2px solid #4a4a4a;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 180px;
+    width: auto;
+    text-align: left;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    height: 80px;
+}
+
+.control-button.filter-btn.active {
+    border: 2px solid #3b82f6;
+    background-color: #2a3a4a;
+}
+
+.control-button.no-spam.filter-btn.active {
+    border-color: #16a34a;
+    background-color: #2a3a2a;
+}
+
+.control-button.with-spam.filter-btn.active {
+    border-color: #dc2626;
+    background-color: #3a2a2a;
+}
+
+.account-folder-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    border-color: #5a5a5a;
+}
+
+.account-folder-btn.active {
+    background: #3a3a3a;
+    border-color: #007bff;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+}
+
+.account-count {
+    font-size: 24px;
+    font-weight: 700;
+    color: #e0e0e0;
+    min-width: 40px;
+    text-align: center;
+}
+
+.account-folder-btn.active .account-count {
+    color: #6bafff;
+    transform: none;
+}
+
+.account-label {
+    font-size: 16px;
+    color: #a0a0a0;
+    font-weight: 500;
+    white-space: nowrap;
+    text-align: left;
+}
+
+.account-folder-btn.active .account-label {
+    color: #6bafff;
+    font-weight: 600;
+}
+
+.active-indicator {
+    display: none !important;
+}
+
+.account-label {
+    font-size: 13px;
+    color: #a0a0a0;
+    transition: all 0.3s ease;
+}
+
+.account-folder-btn.active .account-label {
+    color: #6bafff;
+    font-weight: 500;
+}
+
+.active-indicator {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background: #007bff;
+    transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.account-folder-btn.active .active-indicator {
+    width: 100%;
+}
+
+@keyframes countChange {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.account-count.changed {
+    animation: countChange 0.6s ease;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-badge.active {
+    background-color: #2a4a3a;
+    color: #6bff9f;
+}
+
+.status-badge.blocked {
+    background-color: #4a2a2a;
+    color: #ff6b6b;
+}
+
+.info-message {
+    padding: 20px;
+    background-color: #3a3a3a;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    text-align: center;
+    border: 1px dashed #5a5a5a;
+    color: #e0e0e0;
+}
+
+.geo-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
+}
+
+.country-flag {
+    height: 2em;
+    width: auto;
+    vertical-align: middle;
+    object-fit: contain;
+    filter: brightness(0.9);
+}
+
+.selector-cell {
+    width: 40px;
+    text-align: center;
+}
+
+.selector-checkbox {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+}
+
+#accounts-table tbody tr:hover {
+    background-color: #3a3a3a;
+}
+
+#accounts-table tbody tr.selected {
+    background-color: #2a3a4a;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal[style*="display: block"] {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-content h3 {
+    margin: 0 0 20px 0;
+    font-size: 1.5rem;
+    color: #e0e0e0;
+    font-weight: 600;
+    text-align: center;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="file"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 1px solid #4a4a4a;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    background: #3a3a3a;
+    color: #e0e0e0;
+}
+
+.modal-content input:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.modal-actions .cancel-btn, 
+.modal-actions .confirm-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 100px;
+}
+
+.modal-actions .cancel-btn {
+    background-color: #3a3a3a;
+    color: #a0a0a0;
+    border: 1px solid #4a4a4a;
+}
+
+.modal-actions .cancel-btn:hover {
+    background-color: #4a4a4a;
+}
+
+.modal-actions .confirm-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+}
+
+.modal-actions .confirm-btn:hover {
+    background-color: #2980b9;
+}
+
+@keyframes modalFadeIn {
+    from { 
+        opacity: 0;
+    }
+    to { 
+        opacity: 1;
+    }
+}
+
+.file-input-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.file-input-label {
+    display: block;
+    padding: 12px 15px;
+    background: #3a3a3a;
+    border: 2px dashed #4a4a4a;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #e0e0e0;
+}
+
+.file-input-label:hover {
+    background: #4a4a4a;
+    border-color: #3498db;
+}
+
+.file-input-text {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: #a0a0a0;
+}
+
+#photo-input {
+    position: absolute;
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    z-index: -1;
+}
+
+.file-input-icon {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 8px;
+    fill: #3498db;
+}
+
+.file-selected #file-upload-label {
+    border-color: #28a745;
+    background-color: #2a3a2a;
+}
+
+.file-selected #file-name {
+    color: #6bff9f;
+    font-weight: 600;
+}
+
+.file-selected .upload-icon {
+    fill: #28a745;
+}
+
+#pm-mailing-modal .modal-content {
+    background: #2d2d2d;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    padding: 28px;
+    border: 1px solid #4a4a4a;
+}
+
+#pm-mailing-modal h2 {
+    color: #e0e0e0;
+    font-size: 24px;
+    margin-bottom: 25px;
+    font-weight: 600;
+    border-bottom: 2px solid #4a4a4a;
+    padding-bottom: 15px;
+}
+
+.mailing-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.form-group {
+    flex: 1;
+    min-width: 250px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #a0a0a0;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px solid #4a4a4a;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    background: #3a3a3a;
+    color: #e0e0e0;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #4299e1;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+    background: #3a3a3a;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.5;
+}
+
+.hint {
+    font-size: 12px;
+    color: #7a7a7a;
+    margin-top: 6px;
+    line-height: 1.4;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    justify-content: flex-end;
+}
+
+.cancel-btn,
+.confirm-btn {
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: none;
+}
+
+.cancel-btn {
+    background: #3a3a3a;
+    color: #a0a0a0;
+    border: 2px solid #4a4a4a;
+}
+
+.cancel-btn:hover {
+    background: #4a4a4a;
+    transform: translateY(-1px);
+}
+
+.confirm-btn {
+    background: #4299e1;
+    color: white;
+    box-shadow: 0 2px 4px rgba(66, 153, 225, 0.3);
+}
+
+.confirm-btn:hover {
+    background: #3182ce;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(66, 153, 225, 0.35);
+}
+
+.confirm-btn:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 640px) {
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .form-group {
+        min-width: 100%;
+    }
+    
+    #pm-mailing-modal .modal-content {
+        margin: 10px;
+        padding: 20px;
+    }
+}
+
+#pm-mailing-modal .close {
+    color: #7a7a7a;
+    transition: all 0.2s ease;
+}
+
+#pm-mailing-modal .close:hover {
+    color: #a0a0a0;
+    transform: scale(1.1);
+}

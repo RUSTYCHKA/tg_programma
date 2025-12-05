@@ -1,0 +1,18 @@
+
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+    <h1>Добро пожаловать в TeleRocket Web</h1>
+    <div class="dashboard-cards">
+        <div class="card">
+            <h3>Аккаунты в работе</h3>
+            <p class="count">24</p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <!-- Можно добавить специфичные для страницы скрипты -->
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

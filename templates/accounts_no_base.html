@@ -1,0 +1,304 @@
+
+
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/accounts.css') }}">
+{% endblock %}
+
+
+<div class="proxy-container">
+    <div class="header-section">+
+        
+        <div class="table-controls">
+            <div class="account-folder-selector">
+                <button class="account-folder-btn active" id="all-folder">
+                    <div class="account-count" data-count="0">0</div>
+                    <div class="account-label">Все аккаунты</div>
+                    <div class="active-indicator"></div>
+                </button>
+                
+                <button class="account-folder-btn" id="working-folder">
+                    <div class="account-count" data-count="0">0</div>
+                    <div class="account-label">Для работы</div>
+                    <div class="active-indicator"></div>
+                </button>
+                
+                <button class="account-folder-btn" id="archive-folder">
+                    <div class="account-count" data-count="0">0</div>
+                    <div class="account-label">Архив</div>
+                    <div class="active-indicator"></div>
+                </button>
+
+                            <!-- Новые кнопки фильтрации спама -->
+                <button class="account-folder-btn" id="no-spam-folder">
+                    <div class="account-count" data-count="0">0</div>
+                    <div class="account-label">Без спамблока</div>
+                    <div class="active-indicator"></div>
+                </button>
+                
+                <button class="account-folder-btn" id="with-spam-folder">
+                    <div class="account-count" data-count="0">0</div>
+                    <div class="account-label">Спамблок</div>
+                    <div class="active-indicator"></div>
+                </button>
+            </div>
+            <div class="controls-group">
+                <!-- Существующие кнопки -->
+                <button class="control-button delete-selected" data-tooltip="Удалить выбранное">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 6h18"></path>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                </button>
+
+                <button class="control-button add-new" id="add-account-btn" data-tooltip="Добавить аккаунты" onclick="showAddAccountForm()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                </button>
+
+                <button class="control-button select-all" data-tooltip="Выбрать все">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 11 12 14 22 4"></polyline>
+                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                    </svg>
+                </button>
+
+                <button class="control-button deselect-all" data-tooltip="Снять выделение">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    </svg>
+                </button>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Остальная часть шаблона остается без изменений -->
+    <table id="accounts-table" class="proxy-table">
+        <thead>
+            <tr>
+                <th class="selector-header"></th>
+                <th>Номер</th>
+                <th>Гео</th>
+                <th>Роль</th>
+                <th>Имя</th>
+                <th>Статус</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <!-- Остальная часть шаблона остается без изменений -->
+</div>
+
+<div class="action-button-container">
+    <button class="action-button" id="action-menu-button" onclick="toggleActionMenu()">Выбрать действие</button>
+</div>
+<!-- Модальное окно для изменения фото -->
+<div id="edit-photo-modal" class="modal">
+  <div class="modal-content">
+    <label for="photo-input" class="file-input-label">
+        <svg class="file-input-icon" viewBox="0 0 24 24">
+            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
+        </svg>
+        Выберите файл
+        <span class="file-input-text">или перетащите его сюда</span>
+    </label>
+    <input type="file" id="photo-input" accept="image/*">
+    <div id="file-selected-status" style="display: none; color: #28a745; margin-top: 10px;">
+      Файл выбран
+    </div>
+    <div class="modal-actions">
+      <button class="cancel-btn" onclick="ModalManager.close('edit-photo-modal')">Отмена</button>
+      <button class="confirm-btn">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Модальное окно для изменения имени -->
+<div id="edit-first-name-modal" class="modal">
+  <div class="modal-content">
+    <h3>Изменить имя</h3>
+    <input type="text" id="first-name-input" placeholder="Введите новое имя">
+    <div class="modal-actions">
+      <button class="cancel-btn" onclick="ModalManager.close('edit-first-name-modal')">Отмена</button>
+      <button class="confirm-btn">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Модальное окно для изменения фамилии -->
+<div id="edit-last-name-modal" class="modal">
+  <div class="modal-content">
+    <h3>Изменить фамилию</h3>
+    <input type="text" id="last-name-input" placeholder="Введите новую фамилию">
+    <div class="modal-actions">
+      <button class="cancel-btn" onclick="ModalManager.close('edit-last-name-modal')">Отмена</button>
+      <button class="confirm-btn">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Меню действий -->
+<div id="action-menu" class="action-menu">
+    <button class="action-menu-item" onclick="checkAccounts()">
+        <img src="{{ url_for('static', filename='images/check.png') }}" alt="Проверить" class="nav-icon-black" > Проверить аккаунты
+    </button>
+    <button class="action-menu-item" onclick="checkSpamBlock()">
+        <img src="{{ url_for('static', filename='images/spam.png') }}" alt="Спам блок" class="nav-icon-black"> Проверить на спам блок
+    </button>
+    <button class="action-menu-item" onclick="openInWeb()">
+        <img src="{{ url_for('static', filename='images/web.png') }}" alt="Веб" class="nav-icon-black"> Открыть в вебе
+    </button>
+    <button class="action-menu-item" onclick="changePhoto()">
+        <img src="{{ url_for('static', filename='images/edit_photo.png') }}" alt="Фото" class="nav-icon-black"> Изменить фото
+    </button>
+    <button class="action-menu-item" onclick="changeFirstName()">
+        <img src="{{ url_for('static', filename='images/edit_name.png') }}" alt="Имя" class="nav-icon-black"> Изменить имя
+    </button>
+    <button class="action-menu-item" onclick="changeLastName()">
+        <img src="{{ url_for('static', filename='images/edit_surname.png') }}" alt="Фамилия" class="nav-icon-black"> Изменить фамилию
+    </button>
+</div>
+
+<!-- Модальное окно для добавления аккаунтов -->
+<div id="add-account-modal" class="modal-add">
+    <div class="modal-content">
+        <span class="close" id='close-modal-btn' onclick="closeAddAccountForm()">&times;</span>
+        <h2>Добавление аккаунтов</h2>
+        <div class="add-proxy-form">
+            <div class="info-message">
+                Добавьте session+json от аккаунтов в папку для работы
+            </div>
+            <button onclick="closeAddAccountForm()">Закрыть</button>
+        </div>
+    </div>
+</div>
+
+
+<script src="{{ url_for('static', filename='js/accounts.js') }}"></script>
+
+
+
+
+
+<div class="accounts-filters-controls-container d-flex flex-wrap gap-2">
+
+    <!-- Кнопка очистки всех фильтров -->
+    <button class="btn btn-outline-danger at-control at-clear-all-filters-btn" data-bs-toggle="tooltip" style="display: none;" aria-label="Очистить фильтры" title="Очистить фильтры">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 6h18"></path>
+            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+        </svg>
+    </button>
+
+    <!-- Фильтр по роли -->
+    <div class="filter-control-container" data-filter-type="role">
+        <div class="dropdown">
+            <button class="btn filter-control dropdown-toggle at-control" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">
+                Роль
+            </button>
+            <div class="dropdown-menu p-3 filter-control-content-container" style="min-width: 250px;">
+                <div class="d-flex flex-column gap-2">
+                    <!-- сюда динамически подгружаем список ролей -->
+                    <div id="role-filter-options"></div>
+
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-primary filter-clear-all-btn" style="display: none;" title="Очистить фильтр">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 6h18"></path>
+                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                            </svg>
+                        </button>
+                        <button class="btn btn-primary flex-grow-1 filter-apply-btn">Применить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Фильтр по Гео -->
+    <div class="filter-control-container" data-filter-type="geo">
+        <div class="dropdown">
+            <button class="btn filter-control dropdown-toggle at-control" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">
+                Гео
+            </button>
+            <div class="dropdown-menu p-3 filter-control-content-container">
+                <!-- сюда грузим список стран -->
+                <div id="geo-filter-options"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Фильтр по отлежке -->
+    <div class="filter-control-container" data-filter-type="rest">
+        <div class="dropdown">
+            <button class="btn filter-control dropdown-toggle at-control" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">
+                Отлежка
+            </button>
+            <div class="dropdown-menu p-3 filter-control-content-container">
+                <div class="filter-option" data-value="">Все</div>
+                <div class="filter-option" data-value="with-rest">С отлежкой</div>
+                <div class="filter-option" data-value="without-rest">Без отлежки</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Фильтр по статусу -->
+    <div class="filter-control-container" data-filter-type="status">
+        <div class="dropdown">
+            <button class="btn filter-control dropdown-toggle at-control" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">
+                Статус
+            </button>
+            <div class="dropdown-menu p-3 filter-control-content-container">
+                <div class="filter-option" data-value="">Все статусы</div>
+                <div class="filter-option" data-value="alive">Живой</div>
+                <div class="filter-option" data-value="dead">Мертв</div>
+                <div class="filter-option" data-value="spam_block">Спам блок</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Фильтр по папкам -->
+    <div class="filter-control-container" data-filter-type="folder">
+        <div class="dropdown">
+            <button class="btn filter-control dropdown-toggle at-control" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">
+                Папка
+            </button>
+            <div class="dropdown-menu p-3 filter-control-content-container">
+                <div class="filter-option" data-value="all">Все аккаунты</div>
+                <div class="filter-option" data-value="working">Для работы</div>
+                <div class="filter-option" data-value="archive">Архив</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Кнопка "Другие фильтры" -->
+    <button class="btn filter-control at-control position-relative at-show-extra-filters-btn" data-bs-toggle="tooltip" title="Другие фильтры">
+        <span style="letter-spacing: 0.1rem">...</span>
+        <span class="badge rounded-pill text-body bg-white position-absolute top-0 start-100 translate-middle extra-filters-badge-counter d-none">1</span>
+    </button>
+
+    <!-- Поиск -->
+    <div class="search-section ms-auto">
+        <div class="search-container">
+            <input type="text" class="search-input" id="account-search" placeholder="Поиск по номеру, имени...">
+            <button class="search-button" id="search-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                </svg>
+            </button>
+            <button class="clear-search" id="clear-search" style="display: none;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>

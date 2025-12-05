@@ -1,0 +1,937 @@
+{% extends "base.html" %}
+{% block title %}Создание чатов/каналов{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile_edit.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="proxy-page">
+    <h1 class="page-title">Создание чатов/каналов</h1>
+
+    <!-- Кнопки материалов/файлов -->
+    <div class="card">
+        <div class="card-body">
+            <div class="file-buttons-container">
+                <button class="btn btn-light" id="btn-chat-names">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
+                        <path d="M4 20h16"></path>
+                        <path d="m6 16 6-12 6 12"></path>
+                        <path d="M8 12h8"></path>
+                    </svg>
+                    Названия
+                </button>
+                <button class="btn btn-light" id="btn-chat-usernames">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
+                        <circle cx="12" cy="12" r="4"></circle>
+                        <path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"></path>
+                    </svg>
+                    Юзернеймы
+                </button>
+                <button class="btn btn-light" id="btn-chat-bio">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
+                        <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"></path>
+                        <path d="M14 8H8"></path>
+                        <path d="M16 12H8"></path>
+                        <path d="M13 16H8"></path>
+                    </svg>
+                    Био
+                </button>
+                <button class="btn btn-light" id="btn-chat-avatars">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
+                        <path d="M18 20a6 6 0 0 0-12 0"></path>
+                        <circle cx="12" cy="10" r="4"></circle>
+                        <circle cx="12" cy="12" r="10"></circle>
+                    </svg>
+                    Аватарки
+                    <span class="help-icon" data-tooltip="Положите сюда файлы изображений. Они будут выбираться случайно. А чтобы не выставлять аватарки вашим чатам/каналам, оставьте папку пустой.">
+<svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                    </span>
+                </button>
+                <button class="btn btn-light" id="btn-chat-admins">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
+                        <path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"></path>
+                        <path d="M5 21h14"></path>
+                    </svg>
+                    Админы
+                    <span class="help-icon" data-tooltip="Список админов для добавления в каждый чат/канал.">
+<svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                    </span>
+                </button>
+                <button class="btn btn-light" id="btn-chat-posts">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        <path d="M13 8H7"></path>
+                        <path d="M17 12H7"></path>
+                    </svg>
+                    Посты
+                    <span class="help-icon" data-tooltip="Это посты, которые будут отправляться на все ваши чаты/каналы. Инструкцию по добавлению постов можно найти в руководстве софта.">
+<svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                    </span>
+                </button>
+                <button class="btn btn-light" id="btn-chat-results">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
+                        <rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect>
+                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                        <path d="m9 14 2 2 4-4"></path>
+                    </svg>
+                    Результаты
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Основные настройки -->
+    <div class="card">
+        <div class="card-body">
+            <div class="options-container">
+                <div>
+                    <label for="chatType" class="form-label">Что создавать</label>
+                    <div class="input-group">
+                        <select class="form-select rounded-end" id="chatType" style="width: 200px">
+                            <option value="Чаты">Чаты</option>
+                            <option value="Каналы" selected>Каналы</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label for="chatCount" class="form-label">Сколько штук создавать с каждого аккаунта</label>
+                    <div class="input-group" style="max-width: 200px">
+                        <input class="form-control rounded-end" id="chatCount" type="number" min="1" value="3">
+                        <div class="invalid-feedback" id="invalid-feedback-for-chatCount"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Права админов -->
+    <div class="card">
+        <div class="card-body">
+            <h3 class="subsection-title subsection-title-collapse collapsed" id="adminRightsHeader">
+                Какие права выдавать админам
+                <svg class="svg-icon collapse-chevron" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4px" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </h3>
+            <div class="collapse" id="adminRightsOptions">
+                <div class="options-container">
+                    <div>
+                        <label for="changeProfile" class="form-label">Изменять профиль чата/канала</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="changeProfile" checked>
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-changeProfile"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="deleteMessages" class="form-label">Удалять сообщения</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="deleteMessages" checked>
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-deleteMessages"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="banMembers" class="form-label">Банить участников</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="banMembers" checked>
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-banMembers"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="addUsers" class="form-label">Добавлять пользователей</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="addUsers" checked>
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-addUsers"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="pinMessages" class="form-label">Закреплять сообщения</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="pinMessages" checked>
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-pinMessages"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="addAdmins" class="form-label">Добавлять новых админов</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="addAdmins" checked>
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-addAdmins"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="manageVideoChat" class="form-label">Управлять видео чатом/трансляцией</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="manageVideoChat" checked>
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-manageVideoChat"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="anonymousAdmin" class="form-label">Быть анонимным админом</label>
+                        <span class="help-icon" data-tooltip="Включение данной настройки сделает админа анонимным. Он не сможет выключить свою анонимность сам.">
+<svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="anonymousAdmin">
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-anonymousAdmin"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="manageTopics" class="form-label">Управлять топиками (для чатов)</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="manageTopics" checked>
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-manageTopics"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="publishPosts" class="form-label">Публиковать посты (для каналов)</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="publishPosts" checked>
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-publishPosts"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="editPosts" class="form-label">Редактировать посты (для каналов)</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="editPosts" checked>
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-editPosts"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="manageStories" class="form-label">Управлять сторисами (для каналов)</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="manageStories" checked>
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-manageStories"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Права участников (для чатов) -->
+    <div class="card">
+        <div class="card-body">
+            <h3 class="subsection-title subsection-title-collapse collapsed" id="memberRightsHeader">
+                Права участников (для чатов)
+                <svg class="svg-icon collapse-chevron" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4px" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </h3>
+            <div class="collapse" id="memberRightsOptions">
+                <div class="options-container">
+                    <div>
+                        <label for="sendMessages" class="form-label">Отправлять сообщения</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="sendMessages" checked>
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-sendMessages"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="sendMedia" class="form-label">Отправлять медиа</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="sendMedia" checked>
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-sendMedia"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="sendPolls" class="form-label">Отправлять опросы</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="sendPolls" checked>
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-sendPolls"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="inviteUsers" class="form-label">Приглашать пользователей</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="inviteUsers" checked>
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-inviteUsers"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="changeChatProfile" class="form-label">Изменять профиль чата</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="changeChatProfile">
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-changeChatProfile"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="pinMessagesMembers" class="form-label">Закреплять сообщения</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="pinMessagesMembers">
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-pinMessagesMembers"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="manageTopicsMembers" class="form-label">Управлять топиками</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="manageTopicsMembers">
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-manageTopicsMembers"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Какие ошибки пропускать -->
+    <div class="card">
+        <div class="card-body">
+            <h3 class="subsection-title subsection-title-collapse collapsed" id="errorHandlingHeader">
+                Какие ошибки пропускать
+                <svg class="svg-icon collapse-chevron" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4px" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </h3>
+            <div class="collapse" id="errorHandlingOptions">
+                <div class="options-container">
+                    <div>
+                        <label for="skipAdminErrors" class="form-label">Пропускать ошибки при добавлении админов</label>
+                        <span class="help-icon" data-tooltip="При включении данной настройки аккаунт продолжит создавать чаты/каналы, даже если не смог добавить кого-то из админов. Ошибка может заключаться в том, что админ не найден, или у него стоит запрет на добавление в группы, или наш аккаунт получил слишком большую задержку и т.д.">
+<svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="skipAdminErrors">
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-skipAdminErrors"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="skipPostErrors" class="form-label">Пропускать ошибки при отправке постов</label>
+                        <span class="help-icon" data-tooltip="При включении данной настройки аккаунт продолжит создавать чаты/каналы, даже если не смог отправить какой-то из постов. Ошибка может заключаться например в том, что наш аккаунт получил слишком большую задержку.">
+<svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="skipPostErrors">
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-skipPostErrors"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Разные настройки -->
+    <div class="card">
+        <div class="card-body">
+            <h3 class="subsection-title subsection-title-collapse collapsed" id="miscSettingsHeader">
+                Разные настройки
+                <svg class="svg-icon collapse-chevron" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4px" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </h3>
+            <div class="collapse" id="miscSettingsOptions">
+                <div class="options-container">
+                    <div>
+                        <label for="pinChannelInProfile" class="form-label">Закреплять канал в профиле создателя</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="pinChannelInProfile">
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-pinChannelInProfile"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="disableReactions" class="form-label">Отключить реакции</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="disableReactions">
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-disableReactions"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="postDelay" class="form-label">Задержка между отправками постов</label>
+                        <span class="help-icon" data-tooltip="Можно указать диапазон. Например &quot;5-20&quot;">
+<svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                        <div class="input-group" style="max-width: 200px">
+                            <input class="form-control has-trailing-label" id="postDelay" value="0">
+                            <span class="input-trailing-label">сек</span>
+                            <div class="invalid-feedback" id="invalid-feedback-for-postDelay"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="pinFirstPost" class="form-label">Закреплять первый пост</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="pinFirstPost">
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-pinFirstPost"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="chatCreationDelay" class="form-label">Задержка после создания каждого чата/канала</label>
+                        <span class="help-icon" data-tooltip="Можно указать диапазон. Например &quot;5-20&quot;">
+<svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                        <div class="input-group" style="max-width: 200px">
+                            <input class="form-control has-trailing-label" id="chatCreationDelay" value="0">
+                            <span class="input-trailing-label">сек</span>
+                            <div class="invalid-feedback" id="invalid-feedback-for-chatCreationDelay"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="slowMode" class="form-label">Медленный режим (для чатов)</label>
+                        <select class="form-select rounded-end" id="slowMode" style="width: 200px">
+                            <option value="Отключено" selected>Отключено</option>
+                            <option value="10 секунд">10 секунд</option>
+                            <option value="30 секунд">30 секунд</option>
+                            <option value="1 минута">1 минута</option>
+                            <option value="5 минут">5 минут</option>
+                            <option value="15 минут">15 минут</option>
+                            <option value="1 час">1 час</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="enableTopics" class="form-label">Включить топики (для чатов)</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="enableTopics">
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-enableTopics"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="showHistory" class="form-label">Показывать историю для новых участников (для чатов)</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="showHistory" checked>
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-showHistory"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="messageTimer" class="form-label">Таймер самоуничтожения сообщений (для чатов)</label>
+                        <div class="input-group" style="max-width: 200px">
+                            <input class="form-control has-trailing-label" id="messageTimer" placeholder="Отключено" value="">
+                            <span class="input-trailing-label">сек</span>
+                            <div class="invalid-feedback" id="invalid-feedback-for-messageTimer"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="leaveAfterCreation" class="form-label">Покидать группу/канал после создания</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="leaveAfterCreation">
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-leaveAfterCreation"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="deleteSystemMessages" class="form-label">Удалить системные сообщения после создания</label>
+                        <span class="help-icon" data-tooltip="Данная настройка позволит удалить системные сообщения. Например, о смене аватарки и добавлении админов.">
+<svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="deleteSystemMessages" checked>
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-deleteSystemMessages"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="makeCreatorAnonymous" class="form-label">Делать создателя анонимным</label>
+                        <span class="help-icon" data-tooltip="Данная настройка может быть полезна для чатов. Если её включить, то посты будут размещаться от имени самого чата, а не от имени его создателя.">
+<svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="makeCreatorAnonymous">
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-makeCreatorAnonymous"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="disableCopyContent" class="form-label">Запретить копирование контента</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="disableCopyContent">
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-disableCopyContent"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Кнопка запуска -->
+<div class="start-task-btn-group">
+    <button type="button" class="start-task-btn" id="start-chat-creation-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
+        Запустить создание
+    </button>
+</div>
+
+<!-- Модальное окно настроек запуска -->
+<div class="modal" id="chatCreationTaskModal">
+    <div class="modal-content">
+        <div class="modal-body">
+            <div class="options-container">
+                <div class="mb-4">
+                    <button class="btn btn-primary w-100" id="select-accounts-btn">
+                        <span>Аккаунты</span>
+                        <span class="mx-1 opacity-50">|</span>
+                        <span id="accounts-picked-for-task-count">0</span>
+                    </button>
+                </div>
+                <div>
+                    <label for="threadCount" class="form-label">Количество потоков</label>
+                    <span class="help-icon ms-1" data-tooltip="Сколько аккаунтов работает одновременно.">
+                        <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                    </span>
+                    <div class="input-group">
+                        <input class="form-control" id="threadCount" type="number" min="1" max="50" value="1">
+                        <div class="invalid-feedback" id="invalid-feedback-for-threadCount"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-lg" id="do-start-chat-creation-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>
+                <span>Запустить</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно выбора аккаунтов (переиспользуем логику как в profile_edit) -->
+<div class="modal" id="accountsModal" style="display: none;">
+    <div class="modal-content" style="width: 90%; max-width: 1200px; height: 80vh;">
+        <div class="modal-header">
+            <h5 class="modal-title">Выбор аккаунтов</h5>
+            <button type="button" class="modal-close" id="accountsModalClose">&times;</button>
+        </div>
+        <div class="modal-body" style="height: calc(100% - 120px); overflow: hidden;">
+            <div class="proxy-container" style="height: 100%;">
+                <div class="header-section">
+                    <div class="table-controls">
+                        <div class="account-folder-selector">
+                            <button class="account-folder-btn active" id="all-folder-accounts">
+                                <div class="account-count" data-count="0">0</div>
+                                <div class="account-label">Все аккаунты</div>
+                                <div class="active-indicator"></div>
+                            </button>
+                            <button class="account-folder-btn" id="working-folder-accounts">
+                                <div class="account-count" data-count="0">0</div>
+                                <div class="account-label">Для работы</div>
+                                <div class="active-indicator"></div>
+                            </button>
+                            <button class="account-folder-btn" id="archive-folder-accounts">
+                                <div class="account-count" data-count="0">0</div>
+                                <div class="account-label">Архив</div>
+                                <div class="active-indicator"></div>
+                            </button>
+                            <button class="account-folder-btn" id="no-spam-folder-accounts">
+                                <div class="account-count" data-count="0">0</div>
+                                <div class="account-label">Без спамблока</div>
+                                <div class="active-indicator"></div>
+                            </button>
+                            <button class="account-folder-btn" id="with-spam-folder-accounts">
+                                <div class="account-count" data-count="0">0</div>
+                                <div class="account-label">Спамблок</div>
+                                <div class="active-indicator"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-3">
+                    <div class="card-body p-3 d-flex align-items-center">
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-light" id="select-all-accounts-modal">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 7 17l-5-5"></path><path d="m22 10-7.5 7.5L13 16"></path></svg>
+                            </button>
+                            <button id="deselect-all-btn-modal" type="button" class="btn btn-light">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+                            </button>
+                        </div>
+                        <span class="text-muted ms-auto" id="accounts-count-label-modal">Показано аккаунтов: 0 / 0</span>
+                    </div>
+                </div>
+                                <div style="height: calc(100% - 200px); overflow-y: auto;">
+                    <table id="accounts-table-modal" class="proxy-table">
+                        <thead>
+                            <tr>
+                                <th class="selector-header"><input type="checkbox" id="select-all-checkbox-modal" class="select-all-checkbox"></th>
+                                <th>#</th>
+                                <th>Аватар</th>
+                                <th><div class="sortable-header" data-sort="phone">Телефон<div class="sort-icons"><span class="sort-asc">▲</span><span class="sort-desc">▼</span></div></div></th>
+                                <th><div class="sortable-header" data-sort="geo">Гео<div class="sort-icons"><span class="sort-asc">▲</span><span class="sort-desc">▼</span></div></div></th>
+                                <th><div class="sortable-header" data-sort="status">Статус<div class="sort-icons"><span class="sort-asc">▲</span><span class="sort-desc">▼</span></div></div></th>
+                                <th>Отлежка</th>
+                                <th><div class="sortable-header" data-sort="role">Роль<div class="sort-icons"><span class="sort-asc">▲</span><span class="sort-desc">▼</span></div></div></th>
+                                <th>Использован</th>
+                                <th><div class="sortable-header" data-sort="name">Имя<div class="sort-icons"><span class="sort-asc">▲</span><span class="sort-desc">▼</span></div></div></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="accountsModalCancel">Отмена</button>
+            <button type="button" class="btn btn-primary" id="confirmAccountsSelection">Подтвердить (<span id="selected-count-modal">0</span>)</button>
+        </div>
+    </div>
+</div>
+
+<div id="customTooltip" class="custom-tooltip"></div>
+
+<script>
+// Реиспользование логики модалок и таблицы аккаунтов из profile_edit
+let selectedAccounts = new Set();
+let allAccounts = [];
+let currentFolder = 'all';
+let currentSpamFilter = null;
+let currentSort = { field: null, direction: 'asc' };
+let searchFilter = '';
+let roleFilter = '';
+let geoFilter = '';
+let statusFilter = '';
+
+function showModal(modalId) {
+    document.getElementById(modalId).classList.add('show');
+    document.getElementById(modalId).style.display = 'block';
+}
+function hideModal(modalId) {
+    document.getElementById(modalId).classList.remove('show');
+    setTimeout(() => { document.getElementById(modalId).style.display = 'none'; }, 1);
+}
+
+function updateSelectedAccountsCount() {
+    const el = document.getElementById('accounts-picked-for-task-count');
+    if (el) el.textContent = selectedAccounts.size;
+    const el2 = document.getElementById('selected-count-modal');
+    if (el2) el2.textContent = selectedAccounts.size;
+}
+
+function selectAllAccountsInModal() {
+    document.querySelectorAll('.account-checkbox').forEach(checkbox => {
+        const accountId = checkbox.getAttribute('data-account-id');
+        selectedAccounts.add(accountId);
+        checkbox.checked = true;
+    });
+    updateSelectedAccountsCount();
+}
+function deselectAllAccountsInModal() {
+    selectedAccounts.clear();
+    document.querySelectorAll('.account-checkbox').forEach(checkbox => { checkbox.checked = false; });
+    updateSelectedAccountsCount();
+}
+
+async function loadAccounts(folder = 'all') {
+    try {
+        const response = await fetch('/get_accounts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ folder }) });
+        if (!response.ok) throw new Error('Ошибка загрузки аккаунтов');
+        allAccounts = await response.json();
+        renderAccountsTable();
+        updateAccountsCount();
+    } catch (e) { console.error(e); }
+}
+
+function getStatusClass(status) {
+    switch (status) {
+        case 'alive': return 'alive';
+        case 'dead': return 'dead';
+        case 'spam_block': return 'spam-block';
+        default: return 'unknown';
+    }
+}
+function getStatusText(status) {
+    switch (status) {
+        case 'alive': return 'Без ограничений';
+        case 'dead': return 'Мертв';
+        case 'spam_block': return 'Спам блок';
+        default: return 'Неизвестно';
+    }
+}
+function getCountryData(){ return { RU:{name:'Россия'}, UA:{name:'Украина'}, KZ:{name:'Казахстан'}, US:{name:'США'} }; }
+function getCountryInfo(code){ const m=getCountryData(); return m[code]||{name:code||'Неизвестно'}; }
+function getFlagEmoji(code){ if(!code) return '🏳️'; const cps=code.toUpperCase().split('').map(c=>127397+c.charCodeAt(0)); try{ return String.fromCodePoint(...cps);}catch(e){return '🏳️';}}
+
+function renderAccountsTable() {
+    const tbody = document.querySelector('#accounts-table-modal tbody');
+    if (!tbody) return;
+    tbody.innerHTML = (allAccounts || []).map((account, index) => {
+        const fullName = `${account.first_name || ''} ${account.last_name || ''}`.trim();
+        const countryInfo = getCountryInfo(account.geo);
+        const flagEmoji = getFlagEmoji(account.geo);
+        return `
+            <tr data-account-id="${account.id}" class="account-row">
+                <td><input type="checkbox" class="account-checkbox" data-account-id="${account.id}" ${selectedAccounts.has(account.id) ? 'checked' : ''}></td>
+                <td>${index + 1}</td>
+                <td class="avatar-cell"><div class="avatar-placeholder">${(account.first_name||account.last_name||'?').toString().charAt(0).toUpperCase()}</div></td>
+                <td>${account.phone || ''}</td>
+                <td><div class="geo-cell" title="${countryInfo.name}"><span class="country-flag">${flagEmoji}</span><span class="country-code">${account.geo||''}</span></div></td>
+                <td><span class="status-badge ${getStatusClass(account.status)}">${getStatusText(account.status)}</span></td>
+                <td class="rest-period" data="${account.register_time}">${account.rest_until || '-'}</td>
+                <td>${account.role || ''}</td>
+                <td>${account.last_used || 'Нет'}</td>
+                <td>${fullName || ''}</td>
+            </tr>
+        `;
+    }).join('');
+
+    document.querySelectorAll('.account-checkbox').forEach(cb => {
+        cb.addEventListener('change', function(){
+            const id = this.dataset.accountId;
+            if (this.checked) selectedAccounts.add(id); else selectedAccounts.delete(id);
+            updateSelectedAccountsCount();
+        });
+    });
+}
+
+function updateAccountsCount(){
+    const total = allAccounts.length;
+    const displayed = document.querySelectorAll('#accounts-table-modal tbody tr').length;
+    const el = document.getElementById('accounts-count-label-modal');
+    if (el) el.textContent = `Показано аккаунтов: ${displayed} / ${total}`;
+}
+
+// Тогглы секций
+function toggleSection(headerId, contentId) {
+    const content = document.getElementById(contentId);
+    const header = document.getElementById(headerId);
+    const chevron = header?.querySelector('.collapse-chevron');
+    if (!content || !header || !chevron) return;
+    content.classList.toggle('show');
+    header.classList.toggle('collapsed');
+    chevron.classList.toggle('rotated');
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+    // Кнопка запуска
+    document.getElementById('start-chat-creation-btn').addEventListener('click', function(){ showModal('chatCreationTaskModal'); });
+    document.getElementById('chatCreationTaskModal').addEventListener('click', function(e){ if (e.target === this) hideModal('chatCreationTaskModal'); });
+
+    // Открытие выбора аккаунтов
+    document.getElementById('select-accounts-btn').addEventListener('click', function(){
+        hideModal('chatCreationTaskModal');
+        showModal('accountsModal');
+        loadAccounts();
+    });
+
+    // Закрытие модалки аккаунтов
+    document.getElementById('accountsModalClose').addEventListener('click', () => hideModal('accountsModal'));
+    document.getElementById('accountsModalCancel').addEventListener('click', () => hideModal('accountsModal'));
+    document.getElementById('accountsModal').addEventListener('click', function(e){ if (e.target === this) hideModal('accountsModal'); });
+    document.getElementById('confirmAccountsSelection').addEventListener('click', function(){ hideModal('accountsModal'); showModal('chatCreationTaskModal'); });
+
+    // Селекты папок и спам фильтров
+    document.getElementById('all-folder-accounts')?.addEventListener('click', () => { currentFolder='all'; loadAccounts('all'); });
+    document.getElementById('working-folder-accounts')?.addEventListener('click', () => { currentFolder='working'; loadAccounts('working'); });
+    document.getElementById('archive-folder-accounts')?.addEventListener('click', () => { currentFolder='archive'; loadAccounts('archive'); });
+    document.getElementById('no-spam-folder-accounts')?.addEventListener('click', () => { currentSpamFilter='no-spam'; loadAccounts(currentFolder); });
+    document.getElementById('with-spam-folder-accounts')?.addEventListener('click', () => { currentSpamFilter='with-spam'; loadAccounts(currentFolder); });
+
+    // Выделение/снятие выделения
+    document.getElementById('select-all-accounts-modal').addEventListener('click', selectAllAccountsInModal);
+    document.getElementById('deselect-all-btn-modal').addEventListener('click', deselectAllAccountsInModal);
+    const selectAllCheckbox = document.getElementById('select-all-checkbox-modal');
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', function(){ this.checked ? selectAllAccountsInModal() : deselectAllAccountsInModal(); });
+    }
+
+    // Тогглы секций
+    document.getElementById('adminRightsHeader').addEventListener('click', () => toggleSection('adminRightsHeader','adminRightsOptions'));
+    document.getElementById('memberRightsHeader').addEventListener('click', () => toggleSection('memberRightsHeader','memberRightsOptions'));
+    document.getElementById('errorHandlingHeader').addEventListener('click', () => toggleSection('errorHandlingHeader','errorHandlingOptions'));
+    document.getElementById('miscSettingsHeader').addEventListener('click', () => toggleSection('miscSettingsHeader','miscSettingsOptions'));
+
+    // Запуск задачи
+    document.getElementById('do-start-chat-creation-btn').addEventListener('click', function(){
+        const threadCount = parseInt(document.getElementById('threadCount').value, 10);
+        const selectedAccountIds = Array.from(selectedAccounts);
+        if (!selectedAccountIds.length) { alert('Выберите аккаунты для создания чатов/каналов'); return; }
+        if (!threadCount || threadCount < 1 || threadCount > 50) { alert('Введите корректное количество потоков (1-50)'); return; }
+
+        const settings = {
+            chatType: document.getElementById('chatType').value,
+            chatCount: parseInt(document.getElementById('chatCount').value, 10),
+            adminRights: {
+                changeProfile: document.getElementById('changeProfile').checked,
+                deleteMessages: document.getElementById('deleteMessages').checked,
+                banMembers: document.getElementById('banMembers').checked,
+                addUsers: document.getElementById('addUsers').checked,
+                pinMessages: document.getElementById('pinMessages').checked,
+                addAdmins: document.getElementById('addAdmins').checked,
+                manageVideoChat: document.getElementById('manageVideoChat').checked,
+                anonymousAdmin: document.getElementById('anonymousAdmin').checked,
+                manageTopics: document.getElementById('manageTopics').checked,
+                publishPosts: document.getElementById('publishPosts').checked,
+                editPosts: document.getElementById('editPosts').checked,
+                manageStories: document.getElementById('manageStories').checked
+            },
+            memberRights: {
+                sendMessages: document.getElementById('sendMessages').checked,
+                sendMedia: document.getElementById('sendMedia').checked,
+                sendPolls: document.getElementById('sendPolls').checked,
+                inviteUsers: document.getElementById('inviteUsers').checked,
+                changeChatProfile: document.getElementById('changeChatProfile').checked,
+                pinMessagesMembers: document.getElementById('pinMessagesMembers').checked,
+                manageTopicsMembers: document.getElementById('manageTopicsMembers').checked
+            },
+            errorHandling: {
+                skipAdminErrors: document.getElementById('skipAdminErrors').checked,
+                skipPostErrors: document.getElementById('skipPostErrors').checked
+            },
+            miscSettings: {
+                pinChannelInProfile: document.getElementById('pinChannelInProfile').checked,
+                disableReactions: document.getElementById('disableReactions').checked,
+                postDelay: document.getElementById('postDelay').value,
+                pinFirstPost: document.getElementById('pinFirstPost').checked,
+                chatCreationDelay: document.getElementById('chatCreationDelay').value,
+                slowMode: document.getElementById('slowMode').value,
+                enableTopics: document.getElementById('enableTopics').checked,
+                showHistory: document.getElementById('showHistory').checked,
+                messageTimer: document.getElementById('messageTimer').value,
+                leaveAfterCreation: document.getElementById('leaveAfterCreation').checked,
+                deleteSystemMessages: document.getElementById('deleteSystemMessages').checked,
+                makeCreatorAnonymous: document.getElementById('makeCreatorAnonymous').checked,
+                disableCopyContent: document.getElementById('disableCopyContent').checked
+            }
+        };
+
+        fetch('/start_chat_creation_task', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ account_ids: selectedAccountIds, thread_count: threadCount, settings })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                alert('Создание чатов/каналов запущено!');
+                hideModal('chatCreationTaskModal');
+                selectedAccounts.clear();
+                updateSelectedAccountsCount();
+            } else {
+                alert('Ошибка запуска: ' + (data.error || 'Неизвестная ошибка'));
+            }
+        })
+        .catch(err => { console.error(err); alert('Ошибка при запуске: ' + err.message); });
+    });
+
+    // Легкая анимация кнопки запуска
+    setTimeout(() => { document.getElementById('start-chat-creation-btn').classList.add('pulse'); }, 1000);
+});
+
+// Тултипы
+document.addEventListener('mouseover', function(e){
+    if (e.target.closest('[data-tooltip]')) {
+        const t = e.target.closest('[data-tooltip]').getAttribute('data-tooltip');
+        const el = document.getElementById('customTooltip');
+        el.textContent = t; el.style.left = (e.pageX+2)+'px'; el.style.top = (e.pageY-4)+'px'; el.classList.add('show');
+    }
+});
+document.addEventListener('mouseout', function(e){ if (e.target.closest('[data-tooltip]')) document.getElementById('customTooltip').classList.remove('show'); });
+
+// Обработчик для кнопки результатов создания чатов
+document.getElementById('btn-chat-results')?.addEventListener('click', function() {
+    fetch('/api/open-folder?path=Файлы/Создание чатов/Результаты')
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(errorMessage => {
+                    if (typeof showNotification === 'function') {
+                        showNotification('Ошибка открытия папки: ' + errorMessage, 'error');
+                    } else {
+                        alert('Ошибка открытия папки: ' + errorMessage);
+                    }
+                });
+            }
+            if (typeof showNotification === 'function') {
+                showNotification('Папка открыта', 'success');
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка при открытии папки:', error);
+            if (typeof showNotification === 'function') {
+                showNotification('Ошибка при открытии папки: ' + error.message, 'error');
+            } else {
+                alert('Ошибка при открытии папки: ' + error.message);
+            }
+        });
+});
+</script>
+{% endblock %}

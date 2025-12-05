@@ -1,0 +1,711 @@
+{% extends "base.html" %}
+{% block title %}Фильтрация чатов{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile_edit.css') }}">
+<style>
+    /* Стили для новых модальных окон фильтрации чатов */
+    .filter-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1050;
+        overflow-x: hidden;
+        overflow-y: auto;
+        outline: 0;
+    }
+    .filter-modal.show {
+        display: block;
+    }
+    .filter-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+    .filter-modal-dialog {
+        position: relative;
+        width: 100%;
+        max-width: 900px;
+        margin: 30px auto;
+        pointer-events: none;
+    }
+    .filter-modal-content {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        background-color: #252935;
+        border: 1px solid #2a2e3a;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        pointer-events: auto;
+        max-height: 85vh;
+        overflow: hidden;
+    }
+    .filter-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 24px;
+        padding-bottom: 0;
+        background-color: #252935;
+    }
+    .filter-modal-title {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 500;
+        color: #e0e0e0;
+    }
+    .btn-close {
+        background: none;
+        border: none;
+        font-size: 28px;
+        line-height: 1;
+        color: #a0a0a0;
+        cursor: pointer;
+        padding: 0;
+        margin: 0;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        transition: all 0.2s;
+    }
+    .btn-close:hover {
+        background-color: #3a3a3a;
+        color: #ffffff;
+    }
+    .filter-modal-body {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        flex-grow: 1;
+        background: #252935;
+        overflow-y: auto;
+    }
+    .filter-format-info {
+        background-color: #1c1f28;
+        padding: 14px 18px;
+        border-radius: 8px;
+        border-left: 4px solid #4067c5;
+        font-size: 14px;
+    }
+    .filter-format-info p {
+        margin: 0 0 10px 0;
+        font-weight: 500;
+        color: #e0e0e0;
+    }
+    .filter-format-info pre {
+        margin: 0;
+        font-family: 'Courier New', Courier, monospace;
+        white-space: pre-wrap;
+        word-break: break-all;
+        color: #a0a0a0;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+    .filter-textarea-wrapper {
+        position: relative;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    .filter-textarea-container {
+        position: relative;
+        flex-grow: 1;
+        display: flex;
+        background-color: #1c1f28;
+        border: 1px solid #2a2e3a;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .line-numbers {
+        background-color: #1a1d26;
+        color: #6c757d;
+        padding: 12px 12px 12px 8px;
+        text-align: right;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 14px;
+        line-height: 21px;
+        user-select: none;
+        border-right: 1px solid #2a2e3a;
+        min-width: 50px;
+        overflow: hidden;
+        white-space: pre;
+    }
+    .filter-textarea {
+        width: 100%;
+        min-height: 350px;
+        resize: none;
+        padding: 12px 12px 12px 8px;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 14px;
+        line-height: 21px;
+        border: none;
+        box-sizing: border-box;
+        background-color: #1c1f28;
+        color: #e0e0e0;
+        flex-grow: 1;
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+    .filter-textarea:focus {
+        outline: none;
+    }
+    .filter-textarea::placeholder {
+        color: #6c757d;
+        opacity: 1;
+    }
+    .filter-modal-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 24px;
+        background-color: #252935;
+        border-top: 1px solid #2a2e3a;
+    }
+    .footer-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    .search-toggle-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(145deg, #5c8aff, #4c7cff);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 14px;
+        font-weight: 500;
+    }
+    .search-toggle-btn:hover {
+        background: linear-gradient(145deg, #4c7cff, #3f6fd3);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(92, 138, 255, 0.3);
+    }
+    .search-toggle-btn.active {
+        background: linear-gradient(145deg, #3f6fd3, #2f5ba0);
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    .search-toggle-btn .search-icon {
+        width: 16px;
+        height: 16px;
+    }
+    .search-toggle-btn .search-text {
+        white-space: nowrap;
+    }
+    .search-container {
+        display: flex;
+        align-items: center;
+        background-color: #1c1f28;
+        border: 1px solid #2a2e3a;
+        border-radius: 8px;
+        padding: 6px 12px;
+        min-width: 280px;
+        margin-left: 8px;
+    }
+    .search-input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+    .search-input-icon {
+        color: #6c757d;
+        margin-right: 8px;
+        flex-shrink: 0;
+        width: 16px;
+        height: 16px;
+    }
+    .search-input {
+        background: transparent;
+        border: none;
+        color: #e0e0e0;
+        font-size: 14px;
+        flex: 1;
+        outline: none;
+        padding: 4px 0;
+    }
+    .search-input::placeholder {
+        color: #6c757d;
+    }
+    .clear-search-btn {
+        background: none;
+        border: none;
+        color: #6c757d;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        margin-left: 4px;
+    }
+    .clear-search-btn:hover {
+        background-color: #2a2e3a;
+        color: #e0e0e0;
+    }
+    .row-count {
+        font-size: 14px;
+        color: #a0a0a0;
+        margin-left: 16px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="proxy-page">
+    <h1 class="page-title">Фильтрация чатов</h1>
+    <!-- Кнопки материалов/файлов -->
+    <div class="card">
+        <div class="card-body">
+            <div class="file-buttons-container">
+                <button class="btn btn-light" id="btn-chat-filter-base">
+                    База для фильтрации
+                    <span class="section-button-counter ms-1" id="counter-chat-filter-base">0</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Основные настройки -->
+    <div class="card">
+        <div class="card-body">
+            <div class="options-container">
+                <div>
+                    <label for="filterAction" class="form-label">Действие с отфильтрованными</label>
+                    <div class="input-group">
+                        <select class="form-select rounded-end" id="filterAction" style="width: 429px">
+                            <option value="remove" selected>Удалить из базы</option>
+                            <option value="keep">Оставить в базе</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Кнопка запуска -->
+<div class="start-task-btn-group">
+    <button type="button" class="start-task-btn" id="start-filter-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
+        Запустить фильтрацию
+    </button>
+</div>
+
+<!-- Модальное окно для базы фильтрации -->
+<div id="chatFilterBaseModal" class="filter-modal">
+    <div class="filter-modal-overlay"></div>
+    <div class="filter-modal-dialog">
+        <div class="filter-modal-content">
+            <div class="filter-modal-header">
+                <h5 class="filter-modal-title">База для фильтрации</h5>
+                <button type="button" class="btn-close" id="closeChatFilterBaseModalBtn">&times;</button>
+            </div>
+            <div class="filter-modal-body">
+                <div class="filter-format-info">
+                    <p>Введите список чатов (по одной в строке):</p>
+                    <pre>https://t.me/chatname
+chatusername
+https://t.me/joinchat/invite_link</pre>
+                </div>
+                <div class="filter-textarea-wrapper">
+                    <div class="filter-textarea-container">
+                        <div class="line-numbers" id="lineNumbersChatFilterBase"></div>
+                        <textarea
+                            id="chatFilterBaseTextarea"
+                            class="filter-textarea"
+                            placeholder="Введите ссылки или юзернеймы чатов..."
+                        ></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="filter-modal-footer">
+                <div class="footer-left">
+                    <button class="search-toggle-btn" id="searchToggleChatFilterBase">
+                        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <span class="search-text">Поиск</span>
+                    </button>
+                    <div class="search-container" id="searchContainerChatFilterBase" style="display: none;">
+                        <div class="search-input-wrapper">
+                            <svg class="search-input-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input type="text" id="searchInputChatFilterBase" class="search-input" placeholder="Введите текст для поиска...">
+                            <button class="clear-search-btn" id="clearSearchChatFilterBase" style="display: none;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <span class="row-count">Кол-во строк: <span id="chatFilterBaseLineCount">0</span></span>
+                </div>
+                <button class="btn btn-primary" id="saveChatFilterBaseBtn">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="customTooltip" class="custom-tooltip"></div>
+<script>
+// --- Новые функции для работы с модальными окнами фильтрации чатов ---
+// --- Структура данных для хранения списков ---
+let filterLists = {
+    chatFilterBase: []
+};
+
+// --- Система уведомлений ---
+class NotificationSystem {
+    constructor() {
+        this.container = null;
+        this.init();
+    }
+    init() {
+        this.container = document.createElement('div');
+        this.container.className = 'notification-container';
+        document.body.appendChild(this.container);
+    }
+    show(options) {
+        const {
+            title,
+            message,
+            type = 'info',
+            duration = 5000
+        } = options;
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        const iconSvg = this.getIcon(type);
+        notification.innerHTML = `
+            <div class="notification-icon">
+                ${iconSvg}
+            </div>
+            <div class="notification-content">
+                <div class="notification-title">${title}</div>
+                <div class="notification-message">${message}</div>
+            </div>
+            <button class="notification-close">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        `;
+        this.container.appendChild(notification);
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 10);
+        const closeBtn = notification.querySelector('.notification-close');
+        closeBtn.addEventListener('click', () => {
+            this.hide(notification);
+        });
+        if (duration > 0) {
+            setTimeout(() => {
+                this.hide(notification);
+            }, duration);
+        }
+        return notification;
+    }
+    hide(notification) {
+        notification.classList.remove('show');
+        notification.classList.add('hide');
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 400);
+    }
+    getIcon(type) {
+        const icons = {
+            success: `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2">
+                    <path d="M20 6L9 17l-5-5"/>
+                </svg>
+            `,
+            error: `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc3545" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                </svg>
+            `,
+            warning: `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffc107" stroke-width="2">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            `,
+            info: `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5c8aff" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+            `
+        };
+        return icons[type] || icons.info;
+    }
+    success(title, message, duration = 5000) {
+        return this.show({ title, message, type: 'success', duration });
+    }
+    error(title, message, duration = 5000) {
+        return this.show({ title, message, type: 'error', duration });
+    }
+    warning(title, message, duration = 5000) {
+        return this.show({ title, message, type: 'warning', duration });
+    }
+    info(title, message, duration = 5000) {
+        return this.show({ title, message, type: 'info', duration });
+    }
+}
+const notifications = new NotificationSystem();
+
+// --- Функции для работы с модальными окнами ---
+function openModal(modalId, listKey, textareaId, lineNumbersId, lineCountId) {
+    const modal = document.getElementById(modalId);
+    const textarea = document.getElementById(textareaId);
+    modal.classList.add('show');
+    // Загружаем оригинальный список при открытии
+    textarea.value = filterLists[listKey].join('\n');
+    updateLineNumbers(lineNumbersId, textareaId);
+    updateLineCount(lineCountId, textareaId);
+    resetSearch(listKey);
+}
+
+function closeModal(modalId, listKey) {
+    const modal = document.getElementById(modalId);
+    modal.classList.remove('show');
+    resetSearch(listKey);
+}
+
+function updateLineNumbers(lineNumbersId, textareaId) {
+    const textarea = document.getElementById(textareaId);
+    const lineNumbers = document.getElementById(lineNumbersId);
+    const lineCount = textarea.value.split('\n').length;
+    let numbers = [];
+    for (let i = 1; i <= lineCount; i++) {
+        numbers.push(i);
+    }
+    lineNumbers.textContent = numbers.join('\n');
+    lineNumbers.scrollTop = textarea.scrollTop;
+}
+
+function updateLineCount(lineCountId, textareaId) {
+    const textarea = document.getElementById(textareaId);
+    const lines = textarea.value.split('\n').filter(line => line.trim() !== '');
+    document.getElementById(lineCountId).textContent = lines.length;
+    // Обновляем соответствующий счетчик кнопки
+    if (lineCountId === 'chatFilterBaseLineCount') {
+        document.getElementById('counter-chat-filter-base').textContent = lines.length;
+    }
+}
+
+// --- Функции поиска для каждого модального окна ---
+let searchStates = {
+    chatFilterBase: { active: false, originalList: [] }
+};
+
+function toggleSearch(listKey) {
+    if (searchStates[listKey].active) {
+        hideSearch(listKey);
+    } else {
+        showSearch(listKey);
+    }
+}
+
+function showSearch(listKey) {
+    const searchContainerId = `searchContainer${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const searchToggleBtnId = `searchToggle${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const searchInputId = `searchInput${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const searchContainer = document.getElementById(searchContainerId);
+    const searchToggleBtn = document.getElementById(searchToggleBtnId);
+    const searchInput = document.getElementById(searchInputId);
+
+    searchContainer.style.display = 'block';
+    searchToggleBtn.classList.add('active');
+    searchStates[listKey].active = true;
+    setTimeout(() => {
+        searchInput.focus();
+    }, 100);
+}
+
+function hideSearch(listKey) {
+    const searchContainerId = `searchContainer${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const searchToggleBtnId = `searchToggle${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const searchContainer = document.getElementById(searchContainerId);
+    const searchToggleBtn = document.getElementById(searchToggleBtnId);
+
+    searchContainer.style.display = 'none';
+    searchToggleBtn.classList.remove('active');
+    searchStates[listKey].active = false;
+    resetSearch(listKey);
+}
+
+function performSearch(listKey) {
+    const searchInputId = `searchInput${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const textareaId = `${listKey}Textarea`;
+    const clearBtnId = `clearSearch${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const searchInput = document.getElementById(searchInputId);
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    const textarea = document.getElementById(textareaId);
+    const clearBtn = document.getElementById(clearBtnId);
+
+    clearBtn.style.display = searchTerm ? 'flex' : 'none';
+
+    if (searchTerm === '') {
+        textarea.value = searchStates[listKey].originalList.join('\n');
+    } else {
+        const filteredList = searchStates[listKey].originalList.filter(line =>
+            line.toLowerCase().includes(searchTerm)
+        );
+        textarea.value = filteredList.join('\n');
+    }
+    const lineCountId = `${listKey}LineCount`;
+    updateLineCount(lineCountId, textareaId);
+}
+
+function resetSearch(listKey) {
+    const searchInputId = `searchInput${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const textareaId = `${listKey}Textarea`;
+    const clearBtnId = `clearSearch${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const searchInput = document.getElementById(searchInputId);
+    const clearBtn = document.getElementById(clearBtnId);
+    const textarea = document.getElementById(textareaId);
+
+    searchInput.value = '';
+    clearBtn.style.display = 'none';
+    // Восстанавливаем оригинальный список
+    textarea.value = filterLists[listKey].join('\n'); // Восстанавливаем оригинальный список
+    const lineCountId = `${listKey}LineCount`;
+    updateLineCount(lineCountId, textareaId);
+}
+
+function saveList(listKey, textareaId, modalId) {
+    const textarea = document.getElementById(textareaId);
+    // Если поиск активен, сначала сбрасываем его
+    const searchInputId = `searchInput${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    if (searchStates[listKey].active && document.getElementById(searchInputId).value.trim() !== '') {
+        resetSearch(listKey);
+    }
+    const list = textarea.value.trim();
+    if (list) {
+        console.log(`Сохранение списка ${listKey}:`, list);
+        filterLists[listKey] = textarea.value.split('\n');
+        notifications.success('Успешно!', `Список ${listKey} успешно сохранен`, 3000);
+    } else {
+        notifications.warning('Внимание', `Список ${listKey} пуст`, 3000);
+    }
+    closeModal(modalId, listKey);
+    // Обновляем счетчик при сохранении
+    const lineCountId = `${listKey}LineCount`;
+    updateLineCount(lineCountId, textareaId);
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+    // --- Обработчики для кнопок открытия модальных окон ---
+    document.getElementById('btn-chat-filter-base').addEventListener('click', function() {
+        openModal('chatFilterBaseModal', 'chatFilterBase', 'chatFilterBaseTextarea', 'lineNumbersChatFilterBase', 'chatFilterBaseLineCount');
+    });
+
+    // --- Обработчики для кнопок закрытия модальных окон ---
+    document.getElementById('closeChatFilterBaseModalBtn').addEventListener('click', function() { closeModal('chatFilterBaseModal', 'chatFilterBase'); });
+
+    // --- Обработчики для кнопок сохранения ---
+    document.getElementById('saveChatFilterBaseBtn').addEventListener('click', function() { saveList('chatFilterBase', 'chatFilterBaseTextarea', 'chatFilterBaseModal'); });
+
+    // --- Инициализация для каждого текстового поля ---
+    const textareas = [
+        { id: 'chatFilterBaseTextarea', lineNumbersId: 'lineNumbersChatFilterBase', listKey: 'chatFilterBase', counterId: 'counter-chat-filter-base' }
+    ];
+
+    textareas.forEach(item => {
+        const textarea = document.getElementById(item.id);
+        const lineNumbers = document.getElementById(item.lineNumbersId);
+
+        updateLineNumbers(item.lineNumbersId, item.id);
+
+        textarea.addEventListener('scroll', function() {
+            lineNumbers.scrollTop = this.scrollTop;
+        });
+
+        textarea.addEventListener('input', function() {
+            if (!searchStates[item.listKey].active || document.getElementById(`searchInput${item.listKey.charAt(0).toUpperCase() + item.listKey.slice(1)}`).value.trim() === '') {
+                filterLists[item.listKey] = textarea.value.split('\n');
+            }
+            updateLineCount(`${item.listKey}LineCount`, item.id);
+        });
+
+        textarea.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                setTimeout(() => updateLineNumbers(item.lineNumbersId, item.id), 0);
+            }
+        });
+
+        // Обработчики поиска
+        const searchInput = document.getElementById(`searchInput${item.listKey.charAt(0).toUpperCase() + item.listKey.slice(1)}`);
+        searchInput.addEventListener('input', function() { performSearch(item.listKey); });
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                hideSearch(item.listKey);
+            }
+        });
+
+        const clearSearchBtn = document.getElementById(`clearSearch${item.listKey.charAt(0).toUpperCase() + item.listKey.slice(1)}`);
+        clearSearchBtn.addEventListener('click', function() { resetSearch(item.listKey); });
+
+        const searchToggleBtn = document.getElementById(`searchToggle${item.listKey.charAt(0).toUpperCase() + item.listKey.slice(1)}`);
+        searchToggleBtn.addEventListener('click', function() { toggleSearch(item.listKey); });
+
+        // Закрытие по оверлею
+        const overlay = document.querySelector(`#${item.listKey.charAt(0).toUpperCase() + item.listKey.slice(1)}Modal .filter-modal-overlay`);
+        if (overlay) {
+            overlay.addEventListener('click', function() { closeModal(`${item.listKey.charAt(0).toUpperCase() + item.listKey.slice(1)}Modal`, item.listKey); });
+        }
+    });
+
+    // Инициализируем счетчики при загрузке
+    updateLineCount('chatFilterBaseLineCount', 'chatFilterBaseTextarea');
+
+    // Кнопка запуска
+    document.getElementById('start-filter-btn').addEventListener('click', function(){
+        // Пример логики запуска
+        const action = document.getElementById('filterAction').value;
+        if (typeof showNotification === 'function') {
+            showNotification(`Фильтрация запущена. Действие: ${action == 'remove' ? 'Удалить' : 'Оставить'}`, 'success');
+        } else {
+        alert(`Фильтрация запущена. Действие: ${action == 'remove' ? 'Удалить' : 'Оставить'}`);
+        }
+    });
+
+    // Легкая анимация кнопки запуска
+    setTimeout(() => { document.getElementById('start-filter-btn').classList.add('pulse'); }, 1000);
+});
+
+// Тултипы
+document.addEventListener('mouseover', function(e){
+    if (e.target.closest('[data-tooltip]')) {
+        const t = e.target.closest('[data-tooltip]').getAttribute('data-tooltip');
+        const el = document.getElementById('customTooltip');
+        el.textContent = t; el.style.left = (e.pageX+2)+'px'; el.style.top = (e.pageY-4)+'px'; el.classList.add('show');
+    }
+});
+document.addEventListener('mouseout', function(e){ if (e.target.closest('[data-tooltip]')) document.getElementById('customTooltip').classList.remove('show'); });
+</script>
+{% endblock %}

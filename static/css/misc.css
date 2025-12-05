@@ -1,0 +1,3616 @@
+/* proxy.css - Без Bootstrap */
+
+/* Основные стили */
+.proxy-page {
+    padding: 2.5rem 2.5rem 1.5rem;
+    background-color: #1c1c24;
+    color: #e0e0e0;
+    font-family: "Twemoji Country Flags", "TildaSans", Arial, sans-serif;
+    box-sizing: border-box;
+}
+
+.page-title {
+    font-size: 1.8rem;
+    margin: 0 0 20px 0;
+    color: #e0e0e0;
+}
+
+/* Карточки */
+.card {
+    background-color: #2d2d2d;
+    border: 1px solid #2a2e3a;
+    border-radius: 8px;
+    /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); */
+    margin-bottom: 20px;
+}
+
+.card-body {
+    /* Убираем фиксированный padding, используем flex */
+    padding: 12px 15px; /* Можно оставить минимальный отступ */
+    align-items: center; /* Выравниваем элементы по вертикали по центру */
+    justify-content: space-between; /* Распределяем пространство между группами: кнопки слева, счетчик справа */
+    flex-wrap: wrap; /* Позволяем элементам переноситься при необходимости */
+    gap: 10px; /* Расстояние между flex-элементами (кнопками и счетчиком) */
+    width: 100%; /* Убедимся, что тело растянуто */
+    background-color: #3a3a3a;
+    border-radius: 12px;
+}
+
+/* Кнопки */
+.file-buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: .5rem;
+}
+
+
+
+.svg-icon {
+    width: 14px;
+    height: 14px;
+}
+
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn-light {
+    background-color: #4067c5;
+    color: #ffffff;
+    border: 1px solid #4a4a4a;
+}
+
+.btn-light:hover {
+    /* background-color: #4a4a4a; */
+    color: #ffffff;
+    border-color: #5a5a5a;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.btn-light:active {
+    transform: translateY(1px);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.btn-secondary {
+    background-color: #3a3a3a;
+    color: #e0e0e0;
+    border: 1px solid #4a4a4a;
+}
+
+.btn-secondary:hover {
+    background-color: #4a4a4a;
+}
+
+.btn-primary {
+    background: linear-gradient(145deg, #5c8aff, #4c7cff);
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(145deg, #4c7cff, #3f6fd3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.btn-primary:active {
+    background: linear-gradient(145deg, #3f6fd3, #2f5ba0);
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Заголовок с аккордеоном */
+/* Заголовок с аккордеоном */
+.subsection-title {
+    font-size: 1.35rem;
+    font-weight: 500;
+    color: #e0e0e0;
+    cursor: pointer;
+    margin: 0;
+    padding: 0.5rem 0;
+    /* Изменения здесь: */
+    display: flex;
+    /* Убираем justify-content: space-between; */
+    align-items: center; /* Выравниваем элементы по вертикали по центру */
+    gap: 10px; /* Добавляем небольшое расстояние между текстом и стрелочкой */
+    /* width: fit-content; */ /* Опционально: можно добавить, чтобы заголовок не растягивался на всю ширину */
+}
+
+.subsection-title:hover {
+    color: #ffffff;
+}
+
+.collapse-chevron {
+    color: #a0a0a0;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+.collapse-chevron.rotated {
+    transform: rotate(180deg);
+}
+
+/* Контент аккордеона */
+.collapse {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.collapse.show {
+    max-height: 1000px; /* Достаточно большое значение */
+}
+
+/* Элементы опций */
+.option-item {
+    margin-bottom: 1.5rem;
+}
+
+.option-item:last-child {
+    margin-bottom: 0;
+}
+
+.option-label-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.form-label {
+    display: block;
+    margin: 0;
+    font-weight: 600;
+    color: #e0e0e0;
+    font-size: 0.9rem;
+}
+
+.help-icon {
+    position: relative;
+    cursor: help;
+    color: #a0a0a0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.help-icon:hover {
+    color: #e0e0e0;
+}
+
+.form-select {
+    padding: .25rem 2.1rem .25rem .7rem;
+    background-color: #252935;
+    color: #e0e0e0;
+    border: 1px solid #2a2e3a;
+    border-radius: .5rem;
+    line-height: 1.625;
+    font-size: 0.9rem;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23a0a0a0' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 16px 12px;
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.form-check {
+    display: block;
+}
+
+.form-switch .form-check-input {
+    width: 2rem; /* Было 3rem */
+    height: 0.9rem; /* Было 1.5rem */
+    background-color: #4a4a4a;
+    border: 1px solid #5a5a5a;
+    border-radius: 0.9rem; /* Половина от новой высоты */
+    appearance: none;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.05s;
+}
+
+.form-switch .form-check-input::before {
+    content: '';
+    position: absolute;
+    top: 0.0625rem; /* Половина от нового отступа? Примерно 1px или 0 */
+    left: 0.0625rem; /* Половина от нового отступа? Примерно 1px или 0 */
+    width: 0.7rem; /* Было 1.25rem */
+    height: 0.7rem; /* Было 1.25rem */
+    background-color: #fff;
+    border-radius: 50%;
+    transition: transform 0.05s;
+}
+.form-switch .form-check-input:checked {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.form-switch .form-check-input:checked::before {
+    transform: translateX(1rem);
+}
+
+
+/* Модальное окно */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.modal-dialog {
+    position: relative;
+    width: 90%;
+    max-width: 800px;
+    margin: 1.75rem auto;
+}
+
+.modal-content {
+    position: relative;
+    background-color: #2d2d2d;
+    border: 1px solid #4a4a4a;
+    border-radius: 0.3rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    outline: 0;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #4a4a4a;
+}
+
+.modal-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #e0e0e0;
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #a0a0a0;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.btn-close:hover {
+    background-color: #3a3a3a;
+    color: #e0e0e0;
+}
+
+.modal-body {
+    position: relative;
+    flex: 1 1 auto;
+    padding: 1.5rem;
+}
+
+.proxy-textarea {
+    width: 100%;
+    min-height: 300px;
+    padding: 1rem;
+    background-color: #3a3a3a;
+    color: #e0e0e0;
+    border: 1px solid #4a4a4a;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    resize: vertical;
+    box-sizing: border-box;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.proxy-textarea:focus {
+    border-color: #007bff;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+}
+
+.proxy-textarea::placeholder {
+    color: #a0a0a0;
+    opacity: 1;
+}
+
+.modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #4a4a4a;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.footer-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.row-count {
+    color: #a0a0a0;
+    font-size: 0.9rem;
+}
+
+.row-count span {
+    color: #e0e0e0;
+    font-weight: 500;
+}
+
+/* Кастомный тултип */
+.custom-tooltip {
+    position: absolute;
+    background-color: #252935;
+    color: #ffffff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    /* Удалено white-space: nowrap; */
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transform: translate(-50%, calc(-100% - 8px));
+    max-width: 600px; /* Ограничиваем максимальную ширину */
+    text-align: center; /* Центрируем текст внутри тултипа */
+    word-wrap: break-word; /* Переносим длинные слова при необходимости */
+    /* word-break: break-word; */ /* Альтернатива word-wrap, если нужно переносить внутри слов */
+}
+
+.custom-tooltip.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.custom-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #4a4a4a;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .proxy-page {
+        padding: 15px;
+    }
+    
+    .page-title {
+        font-size: 1.5rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .file-buttons-container {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .form-select {
+        max-width: none;
+    }
+    
+    .modal-dialog {
+        width: 95%;
+        margin: 10px;
+    }
+    
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: 1rem;
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .footer-info {
+        justify-content: space-between;
+    }
+    
+    .proxy-textarea {
+        min-height: 250px;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .proxy-page {
+        padding: 10px;
+    }
+    
+    .card-body {
+        padding: 0.75rem;
+    }
+    
+    .btn {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .subsection-title {
+        font-size: 1.1rem;
+    }
+    
+    .option-label-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .proxy-textarea {
+        min-height: 200px;
+        padding: 0.75rem;
+    }
+}
+
+
+/* Модальное окно */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.modal-dialog {
+    position: relative;
+    width: 90%;
+    max-width: 500px;
+    margin: 1.75rem auto;
+}
+
+.modal-content {
+    position: relative;
+    background-color: #2d2d2d;
+    border: 1px solid #4a4a4a;
+    border-radius: 0.3rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    outline: 0;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #4a4a4a;
+}
+
+.modal-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #e0e0e0;
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #a0a0a0;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.btn-close:hover {
+    background-color: #3a3a3a;
+    color: #e0e0e0;
+}
+
+.modal-body {
+    position: relative;
+    flex: 1 1 auto;
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #4a4a4a;
+    gap: 12px;
+}
+
+
+
+.mb-4 {
+    margin-bottom: 24px;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.me-2 {
+    margin-right: 8px;
+}
+
+.mx-1 {
+    margin: 0 4px;
+}
+
+.opacity-50 {
+    opacity: 0.5;
+}
+
+.input-group {
+    display: flex;
+    align-items: stretch;
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: .25rem .7rem;
+    font-size: 0.9rem;
+    font-weight: 400;
+    line-height: 1.625;
+    color: #6c757d;
+    background-color: #252935;
+    background-clip: padding-box;
+    border: 1px solid #2a2e3a;
+    border-bottom-right-radius:0;
+    border-top-right-radius: 0;
+    border-top-left-radius:0.5rem;
+    border-bottom-left-radius:0.5rem;
+    appearance: none;
+    border-radius: .5rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+
+
+/* Стили для input и span, если span есть */
+.input-group:has(.input-trailing-label) .form-control:focus {
+    border-color: #007bff;
+    outline: 0;
+    border-right-color: transparent; /* Убираем правую границу у input */
+}
+
+/* Применяем стиль к span при фокусе на input */
+.input-group:has(.input-trailing-label) .form-control:focus + .input-trailing-label,
+.input-group:has(.input-trailing-label) .form-control:focus ~ .input-trailing-label {
+    border-color: #007bff;
+}
+
+/* Если .input-trailing-label есть — у input правый border скруглён, но без цвета */
+.input-group:has(.input-trailing-label) .form-control {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: none; /* Убираем правую границу */
+}
+
+/* Если .input-trailing-label есть — у span левый border скруглён */
+.input-group:has(.input-trailing-label) .input-trailing-label {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: 0;
+    text-align: right;
+}
+
+.input-trailing-label {
+    display: block;
+    width: 100%;
+    padding: .25rem .7rem;
+    font-size: 0.9rem;
+    font-weight: 400;
+    line-height: 1.625;
+    color: #6c757d;
+    background-color: #252935;
+    background-clip: padding-box;
+    border: 1px solid #2a2e3a;
+    appearance: none;
+    border-top-right-radius:0.5rem;
+    border-bottom-right-radius:0.5rem;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    
+}
+
+
+.input-group:focus-within .input-trailing-label {
+    border-color: #007bff;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    outline: 0;
+}
+
+.input-group:focus-within .form-control {
+    border-color: #007bff;
+    outline: 0;
+}
+.form-label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 400;
+    color: #ffffff;
+    font-size: 0.9rem;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0.7rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    /* min-height: 40px; */
+    line-height: 1.625;
+    gap: 0.5rem;
+}
+
+.btn-primary {
+    background: linear-gradient(145deg, #5c8aff, #4c7cff);
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(145deg, #4c7cff, #3f6fd3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.btn-primary:active {
+    background: linear-gradient(145deg, #3f6fd3, #2f5ba0);
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.btn-secondary {
+    background-color: #3a3a3a;
+    color: #e0e0e0;
+    border: 1px solid #4a4a4a;
+}
+
+.btn-secondary:hover {
+    background-color: #4a4a4a;
+}
+
+.btn-lg {
+    padding: 12px 24px;
+    font-size: 16px;
+}
+
+.svg-icon {
+    width: 14px;
+    height: 14px;
+    color: #ffffff;
+}
+
+/* Кастомный тултип в модальном окне */
+.help-icon {
+    position: relative;
+    cursor: help;
+    color: #a0a0a0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.help-icon:hover {
+    color: #e0e0e0;
+}
+
+
+/* Адаптивность для модального окна */
+@media (max-width: 768px) {
+    .modal-dialog {
+        width: 95%;
+        margin: 10px;
+    }
+    
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: 1rem;
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: 0.75rem;
+    }
+    
+    .btn {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+}
+
+
+/* Стили для кнопки запуска */
+.start-task-btn-group {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    z-index: 1000;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+}
+
+.start-task-btn {
+    /* --- Сохраняем существующие стили для внешнего вида --- */
+    background: linear-gradient(145deg, #5c8aff, #4c7cff);
+    color: white;
+    border: none;
+     /* Увеличиваем отступы для лучшей кликабельности */
+    font-size: 0.9rem; /* Увеличиваем размер шрифта */
+    font-weight: 400;
+    border-radius: 0.7rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(76, 124, 255, 0.4);
+    position: relative;
+    overflow: hidden;
+    /* --- Добавляем новые стили для улучшения внешнего вида --- */
+    min-width: 200px; /* Минимальная ширина для лучшей видимости */
+    gap: 10px; /* Расстояние между иконкой и текстом */
+    /* --- Конец новых стилей --- */
+    padding: 0.7rem 1rem;
+}
+
+.start-task-btn:hover {
+    background: linear-gradient(145deg, #4c7cff, #3f6fd3);
+    transform: translateY(-2px); /* Увеличиваем подъем */
+    box-shadow: 0 6px 20px rgba(76, 124, 255, 0.6); /* Увеличиваем тень */
+}
+
+/* Нажатие на кнопку */
+.start-task-btn:active {
+    background: linear-gradient(145deg, #3f6fd3, #2f5ba0);
+    transform: translateY(0); /* Возвращаем на место */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Иконка внутри кнопки */
+.start-task-btn svg {
+    /* margin-right: 12px; */ /* Убираем margin, используем gap в .start-task-btn */
+    transition: transform 0.3s ease;
+    width: 14px; /* Увеличиваем размер иконки */
+    height: 14px;
+    flex-shrink: 0; /* Запрещаем иконке сжиматься */
+}
+
+.start-task-btn:hover svg {
+    transform: translateX(4px); /* Увеличиваем смещение */
+}
+
+/* Анимация пульсации */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 4px 15px rgba(76, 124, 255, 0.4);
+    }
+    50% {
+        box-shadow: 0 4px 25px rgba(76, 124, 255, 0.8);
+    }
+    100% {
+        box-shadow: 0 4px 15px rgba(76, 124, 255, 0.4);
+    }
+}
+
+/* Класс для пульсации */
+.start-task-btn.pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Адаптивность для кнопки */
+@media (max-width: 768px) {
+    .start-task-btn {
+        padding: 14px 24px;
+        font-size: 16px;
+        max-width: 100%;
+    }
+    
+    .start-task-btn-group {
+        margin: 20px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .start-task-btn {
+        padding: 12px 20px;
+        font-size: 15px;
+    }
+    
+    .start-task-btn svg {
+        margin-right: 8px;
+        width: 18px;
+        height: 18px;
+    }
+}
+
+
+
+/* Основные стили контейнера */
+.proxy-container {
+    max-width: 2000px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #2d2d2d;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Стили кнопок */
+.delete-button {
+    padding: 12px 30px;
+    background: linear-gradient(145deg, #ff4b5c, #ff1e2a);
+    color: white;
+    border: none;
+    border-radius: 40px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.delete-button:hover {
+    background: linear-gradient(145deg, #ff1e2a, #d82e3e);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    transform: scale(1.05);
+}
+
+.delete-button:active {
+    background: linear-gradient(145deg, #d82e3e, #9f1f2a);
+    transform: translateY(2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.delete-button:focus {
+    outline: none;
+    box-shadow: 0 0 12px rgba(92, 138, 255, 0.7);
+}
+
+.add-button {
+    padding: 12px 30px;
+    background: linear-gradient(145deg, #5c8aff, #4c7cff);
+    color: white;
+    border: none;
+    border-radius: 40px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.add-button:hover {
+    background: linear-gradient(145deg, #4c7cff, #3f6fd3);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    transform: scale(1.05);
+}
+
+.add-button:active {
+    background: linear-gradient(145deg, #3f6fd3, #2f5ba0);
+    transform: translateY(2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.add-button:focus {
+    outline: none;
+    box-shadow: 0 0 12px rgba(92, 138, 255, 0.7);
+}
+
+/* Стили таблицы - современный минимализм */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #2d2d2d;
+    font-family: 'Inter', -apple-system, sans-serif;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.check-proxy-btn {
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+.spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+th {
+    padding: 8px 10px;
+    text-align: center;
+    color: #a0a0a0;
+    font-size: 0.85rem;
+    font-weight: 800;
+    background: #3a3a3a;
+    border-bottom: 1px solid #4a4a4a;
+    position: relative;
+    letter-spacing: 0.5px;
+    vertical-align: middle;
+}
+
+td {
+    color: #e0e0e0;
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+    vertical-align: middle;
+    text-align: center; /* Добавлено, выравнивает по горизонтали */
+    justify-content: center;
+}
+
+/* Выравнивание ячеек */
+th:first-child, td:first-child {
+    padding-left: 16px;
+    padding-right: 0px;
+    text-align: center;
+}
+
+
+
+/* Стили для чекбоксов */
+.selector-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.selector-checkbox {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid #6a6a6a;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    outline: none;
+    position: relative;
+}
+
+.selector-checkbox:checked {
+    background: #3b82f6;
+    border-color: #3b82f6;
+}
+
+.selector-checkbox:checked::after {
+    content: "";
+    display: block;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    position: relative;
+    top: -1px;
+}
+
+.selector-checkbox:hover {
+    border-color: #93c5fd;
+}
+
+/* Состояния строк */
+tr:hover td {
+    background: #3a3a3a;
+}
+
+tr.selected td {
+    background: #3a4a5a;
+}
+
+/* Анимация строк */
+tbody tr {
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Полосатый эффект */
+tbody tr:nth-child(even) td {
+    background: #333333;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    th, td {
+        padding: 12px 16px;
+    }
+    
+    th:first-child, td:first-child {
+        width: 36px;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+}
+
+/* Стили формы добавления прокси */
+.add-proxy-form textarea {
+    width: 100%;
+    min-height: 200px;
+    padding: 15px;
+    border: 1px solid #4a4a4a;
+    border-radius: 8px;
+    font-size: 16px;
+    resize: vertical;
+    margin-bottom: 20px;
+    background: #3a3a3a;
+    color: #e0e0e0;
+}
+
+.add-proxy-form textarea::placeholder {
+    color: #a0a0a0;
+}
+
+.add-proxy-form button {
+    width: 100%;
+    padding: 15px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.add-proxy-form button:hover {
+    background: #0056b3;
+}
+
+/* Стили модального окна */
+.modal-add {
+    display: none;
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #2d2d2d;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    animation: modalFadeIn 0.3s ease-out;
+    margin: 0;
+    z-index: 1001;
+    border: 1px solid #4a4a4a;
+}
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 24px;
+    color: #a0a0a0;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: #e0e0e0;
+}
+
+/* Стили для меню действий */
+.action-button-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.action-menu-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 14px;
+    color: #e0e0e0;
+    cursor: pointer;
+    background: none;
+    border: none;
+    text-align: left;
+    transition: background 0.3s;
+}
+
+.action-menu-item:hover {
+    background: #3a3a3a;
+}
+
+.status-badge {
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 15px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    outline: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.status-badge.alive {
+     background-color: rgba(53,173,95,.175);
+     color: #35ad5f;
+}
+
+.status-badge.dead {
+     background-color: #dc3545;
+}
+
+.status-badge.spam-block {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.status-badge.unknown {
+    background-color: #9E9E9E;
+}
+
+.nav-icon-black {
+    height: 1em;
+    width: auto;
+    vertical-align: middle;
+    margin-right: 0.5em;
+    filter: brightness(0) invert(1);
+}
+
+.action-button {
+    background: #007bff;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: background 0.3s ease, transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.action-button:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+}
+
+.action-menu {
+    display: none;
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    background: #2d2d2d;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    z-index: 1000;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px solid #4a4a4a;
+}
+
+.action-menu-item {
+    background: #3a3a3a;
+    color: #e0e0e0;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.3s ease;
+}
+
+.action-menu-item:hover {
+    background: #4a4a4a;
+}
+
+/* Стили для панели управления таблицей */
+.table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+    width: 100%;
+}
+
+.controls-group {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.control-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    background: #3a3a3a;
+    color: #a0a0a0;
+    position: relative;
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.control-button:hover {
+    background: #4a4a4a;
+    color: #e0e0e0;
+}
+
+.control-button:active {
+    transform: scale(0.95);
+}
+
+.control-button svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+/* Конкретные кнопки */
+.delete-selected {
+    background: #4a2a2a;
+    color: #ff6b6b;
+}
+
+.delete-selected:hover {
+    background: #5a3a3a;
+}
+
+.add-new {
+    background: #2a3a4a;
+    color: #6bafff;
+}
+
+.add-new:hover {
+    background: #3a4a5a;
+}
+
+.select-all {
+    background: #3a2a4a;
+    color: #bfa0ff;
+}
+
+.select-all:hover {
+    background: #4a3a5a;
+}
+
+.deselect-all {
+    background: #3a3a3a;
+    color: #a0a0a0;
+}
+
+/* Подсказки при наведении */
+.control-button::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #4a4a4a;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+}
+
+.control-button:hover::after {
+    opacity: 1;
+}
+
+/* Добавляем в существующие стили */
+.deselect-all {
+    display: none;
+    background: #3a3a3a;
+    color: #a0a0a0;
+}
+
+.web-open-button {
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.web-open-button:hover {
+    background-color: #0056b3;
+}
+
+.web-open-button:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.has-selected .deselect-all {
+    display: flex;
+}
+
+.has-selected .select-all {
+    display: none;
+}
+
+/* Стили для селектора папок */
+.account-folder-selector {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.account-folder-btn {
+    position: relative;
+    padding: 12px 20px;
+    background: #3a3a3a;
+    border: 2px solid #4a4a4a;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 299px;
+    width: auto;
+    text-align: left;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    height: 110px;
+}
+
+.control-button.filter-btn.active {
+    border: 2px solid #3b82f6;
+    background-color: #2a3a4a;
+}
+
+.control-button.no-spam.filter-btn.active {
+    border-color: #16a34a;
+    background-color: #2a3a2a;
+}
+
+.control-button.with-spam.filter-btn.active {
+    border-color: #dc2626;
+    background-color: #3a2a2a;
+}
+
+.account-folder-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    border-color: #5a5a5a;
+}
+
+.account-folder-btn.active {
+    background: #3a3a3a;
+    border-color: #007bff;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+}
+
+.account-count {
+    font-size: 24px;
+    font-weight: 700;
+    color: #e0e0e0;
+    min-width: 40px;
+    text-align: left;
+    margin-bottom: 2px;
+}
+
+.account-folder-btn.active .account-count {
+    color: #6bafff;
+    transform: none;
+}
+
+
+
+.account-folder-btn.active .account-label {
+    color: #6bafff;
+    font-weight: 600;
+}
+
+.active-indicator {
+    display: none !important;
+}
+
+.account-label {
+    font-size: 15px;
+    color: #a0a0a0;
+    transition: all 0.3s ease;
+}
+
+.account-folder-btn.active .account-label {
+    color: #6bafff;
+    font-weight: 500;
+}
+
+.active-indicator {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background: #007bff;
+    transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.account-folder-btn.active .active-indicator {
+    width: 100%;
+}
+
+@keyframes countChange {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.account-count.changed {
+    animation: countChange 0.6s ease;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-badge.active {
+    background-color: #2a4a3a;
+    color: #6bff9f;
+}
+
+.status-badge.blocked {
+    background-color: #4a2a2a;
+    color: #ff6b6b;
+}
+
+.info-message {
+    padding: 20px;
+    background-color: #3a3a3a;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    text-align: center;
+    border: 1px dashed #5a5a5a;
+    color: #e0e0e0;
+}
+
+.geo-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
+    justify-content: center;
+}
+
+.selector-cell {
+    width: 40px;
+    text-align: center;
+}
+
+.selector-checkbox {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+}
+
+#accounts-table tbody tr:hover {
+    background-color: #3a3a3a;
+}
+
+#accounts-table tbody tr.selected {
+    background-color: #2a3a4a;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal[style*="display: block"] {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-content h3 {
+    margin: 0 0 20px 0;
+    font-size: 1.5rem;
+    color: #e0e0e0;
+    font-weight: 600;
+    text-align: center;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="file"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 1px solid #4a4a4a;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    background: #3a3a3a;
+    color: #e0e0e0;
+}
+
+.modal-content input:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.modal-actions .cancel-btn, 
+.modal-actions .confirm-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 100px;
+}
+
+.modal-actions .cancel-btn {
+    background-color: #3a3a3a;
+    color: #a0a0a0;
+    border: 1px solid #4a4a4a;
+}
+
+.modal-actions .cancel-btn:hover {
+    background-color: #4a4a4a;
+}
+
+.modal-actions .confirm-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+}
+
+.modal-actions .confirm-btn:hover {
+    background-color: #2980b9;
+}
+
+@keyframes modalFadeIn {
+    from { 
+        opacity: 0;
+    }
+    to { 
+        opacity: 1;
+    }
+}
+
+.file-input-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.file-input-label {
+    display: block;
+    padding: 12px 15px;
+    background: #3a3a3a;
+    border: 2px dashed #4a4a4a;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #e0e0e0;
+}
+
+.file-input-label:hover {
+    background: #4a4a4a;
+    border-color: #3498db;
+}
+
+.file-input-text {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: #a0a0a0;
+}
+
+#photo-input {
+    position: absolute;
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    z-index: -1;
+}
+
+.file-input-icon {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 8px;
+    fill: #3498db;
+}
+
+.file-selected #file-upload-label {
+    border-color: #28a745;
+    background-color: #2a3a2a;
+}
+
+.file-selected #file-name {
+    color: #6bff9f;
+    font-weight: 600;
+}
+
+.file-selected .upload-icon {
+    fill: #28a745;
+}
+
+#pm-mailing-modal .modal-content {
+    background: #2d2d2d;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    padding: 28px;
+    border: 1px solid #4a4a4a;
+}
+
+#pm-mailing-modal h2 {
+    color: #e0e0e0;
+    font-size: 24px;
+    margin-bottom: 25px;
+    font-weight: 600;
+    border-bottom: 2px solid #4a4a4a;
+    padding-bottom: 15px;
+}
+
+.mailing-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.form-group {
+    flex: 1;
+    min-width: 250px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #a0a0a0;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px solid #4a4a4a;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    background: #3a3a3a;
+    color: #e0e0e0;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #4299e1;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+    background: #3a3a3a;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.5;
+}
+
+.hint {
+    font-size: 12px;
+    color: #7a7a7a;
+    margin-top: 6px;
+    line-height: 1.4;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    justify-content: flex-end;
+}
+
+.cancel-btn,
+.confirm-btn {
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: none;
+}
+
+.cancel-btn {
+    background: #3a3a3a;
+    color: #a0a0a0;
+    border: 2px solid #4a4a4a;
+}
+
+.cancel-btn:hover {
+    background: #4a4a4a;
+    transform: translateY(-1px);
+}
+
+.confirm-btn {
+    background: #4299e1;
+    color: white;
+    box-shadow: 0 2px 4px rgba(66, 153, 225, 0.3);
+}
+
+.confirm-btn:hover {
+    background: #3182ce;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(66, 153, 225, 0.35);
+}
+
+.confirm-btn:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 640px) {
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .form-group {
+        min-width: 100%;
+    }
+    
+    #pm-mailing-modal .modal-content {
+        margin: 10px;
+        padding: 20px;
+    }
+}
+
+#pm-mailing-modal .close {
+    color: #7a7a7a;
+    transition: all 0.2s ease;
+}
+
+#pm-mailing-modal .close:hover {
+    color: #a0a0a0;
+    transform: scale(1.1);
+}
+
+/* Стили для аватарок */
+.avatar-cell {
+    width: 40px;
+    text-align: center;
+}
+
+.avatar-image {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #4a4a4a;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.avatar-image:hover {
+    border-color: #007bff;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.avatar-placeholder {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+    color: white;
+    border: 2px solid #4a4a4a;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.avatar-loading {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #3a3a3a;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #4a4a4a;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+
+.avatar-loading::after {
+    content: "...";
+    color: #a0a0a0;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* Стили для ячейки с действиями */
+.action-buttons-cell {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    padding: 8px !important;
+}
+
+.action-icon {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+    filter: brightness(0.9);
+}
+
+.action-icon:hover {
+    opacity: 1;
+    transform: scale(1.1);
+    filter: brightness(1.1);
+}
+
+/* Стили для колонки отлежки */
+.rest-period {
+    text-align: center;
+}
+
+/* Адаптивность для аватарок */
+@media (max-width: 768px) {
+    .avatar-cell {
+        width: 36px;
+        padding: 6px !important;
+    }
+    
+    .avatar-image,
+    .avatar-placeholder,
+    .avatar-loading {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+    
+    .action-icon {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+
+/* Стили для контейнера, который содержит и кнопки, и фильтры */
+.table-filters-panel {
+    display: flex;
+    justify-content: space-between; /* Распределяет элементы по краям */
+    align-items: center;
+    width: 100%;
+    gap: 20px; /* Добавляет расстояние между элементами */
+    flex-wrap: wrap; /* Позволяет элементам переноситься на новую строку при необходимости */
+}
+
+/* Стили для панели кнопок - теперь справа */
+.search-filter-panel {
+    display: flex;
+    justify-content: flex-end; /* Выравнивание кнопок внутри панели по правому краю (если нужно) */
+    align-items: center;
+    gap: 10px; /* Расстояние между кнопками */
+    width: auto;
+    order: 2; /* Порядок отображения - панель кнопок будет второй */
+}
+
+/* Стили для панели фильтров - теперь слева */
+.filters-panel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+    width: auto;
+    order: 1; /* Порядок отображения - панель фильтров будет первой */
+    flex: 1; /* Занимает доступное пространство, толкая search-filter-panel вправо */
+}
+
+/* Поиск в панели фильтров */
+.search-section {
+    margin-left: auto; /* Отталкивает поиск вправо внутри filters-panel */
+}
+
+.filter-section {
+    flex: 0 0 auto;
+}
+
+.search-section {
+    flex: 1 1 auto;
+    max-width: 400px;
+}
+
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 40px 10px 15px;
+    border: 2px solid #4a4a4a;
+    border-radius: 20px;
+    background: #3a3a3a;
+    color: #e0e0e0;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+.search-button {
+    position: absolute;
+    right: 35px;
+    background: none;
+    border: none;
+    color: #a0a0a0;
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.3s ease;
+}
+
+.search-button:hover {
+    color: #e0e0e0;
+}
+
+.clear-search {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    color: #a0a0a0;
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.3s ease;
+}
+
+.clear-search:hover {
+    color: #ff6b6b;
+}
+
+.filter-dropdown {
+    padding: 10px 15px;
+    border: 2px solid #4a4a4a;
+    border-radius: 20px;
+    background: #3a3a3a;
+    color: #e0e0e0;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-dropdown:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+/* Стили для заголовков с сортировкой */
+.sortable-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    justify-content: center; /* Добавьте эту строку */
+    padding: 8px 0;
+}
+
+.sort-icons {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.sort-asc, .sort-desc {
+    transition: color 0.3s ease;
+}
+
+.sortable-header:hover .sort-asc,
+.sortable-header:hover .sort-desc {
+    color: #a0a0a0;
+}
+
+.sortable-header.sort-asc .sort-asc {
+    color: #007bff;
+}
+
+.sortable-header.sort-desc .sort-desc {
+    color: #007bff;
+}
+
+/* Модальное окно для аватарки */
+.avatar-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.avatar-modal.active {
+    display: flex;
+    opacity: 1;
+}
+
+.avatar-modal-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+}
+
+.avatar-modal-image {
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    object-fit: contain;
+}
+
+.avatar-modal-close {
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    color: white;
+    font-size: 32px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar-modal-close:hover {
+    color: #ccc;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .search-filter-panel {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-section {
+        max-width: none;
+    }
+    
+    .avatar-modal-close {
+        top: 10px;
+        right: 10px;
+        font-size: 24px;
+    }
+    
+    .avatar-modal-image {
+        max-width: 95vw;
+        max-height: 80vh;
+    }
+}
+
+/* Стили для чекбокса в заголовке */
+.select-all-checkbox {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* Стили для новых фильтров */
+.filters-panel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 15px 0;
+    padding: 15px;
+    background: #2d2d2d;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #3a3a3a;
+    border-radius: 12px;
+}
+
+.filter-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #4a4a4a;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.filter-item:hover {
+    background-color: #4a4a4a; /* Цвет фона при наведении */
+    border-color: #5a5a5a; /* Цвет границы при наведении */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); /* Тень при наведении */
+}
+
+.filter-item.active  {
+    background: #2c2c2c;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 1px #3b82f6, 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+.filter-text {
+    color: #e0e0e0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.filter-arrow {
+    color: #a0a0a0;
+    font-size: 12px;
+    transition: transform 0.3s ease;
+}
+
+.filter-item.active .filter-arrow {
+    transform: rotate(180deg);
+}
+
+.filter-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #2d2d2d;
+    border: 1px solid #4a4a4a;
+    border-radius: 6px;
+    min-width: 150px;
+    z-index: 1000;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    margin-top: 5px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.filter-item.active .filter-dropdown {
+    display: block;
+}
+
+.filter-option {
+    padding: 10px 15px;
+    color: #e0e0e0;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.filter-option:hover {
+    background: #3a3a3a;
+}
+
+.filter-option.active {
+    background: #007bff;
+    color: white;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .filters-panel {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .filter-item {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+}
+
+/* Убедимся в правильном порядке элементов */
+.account-folder-selector {
+    width: 100%;
+    margin-bottom: 0;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+
+/* Добавим стили для таблицы управления */
+.table-controls {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+
+
+/* --- Стили для новой панели управления аккаунтами --- */
+
+/* Основной контейнер карточки */
+.card {
+    background-color: #2d2d2d; /* Темный фон, как у .proxy-container */
+    color: #e0e0e0; /* Цвет текста по умолчанию */
+    /* Убедимся, что карточка растягивается */
+    width: 100%;
+    box-sizing: border-box; /* Включаем padding и border в общую ширину */
+}
+
+/* Внутренний отступ карточки */
+.card-body {
+    /* Убираем фиксированный padding, используем flex */
+    padding: 1.25rem 1.25rem; /* Можно оставить минимальный отступ */
+    align-items: center; /* Выравниваем элементы по вертикали по центру */
+    justify-content: space-between; /* Распределяем пространство между группами: кнопки слева, счетчик справа */
+    flex-wrap: wrap; /* Позволяем элементам переноситься при необходимости */
+    gap: 10px; /* Расстояние между flex-элементами (кнопками и счетчиком) */
+    width: 100%; /* Убедимся, что тело растянуто */
+    background-color: #1c1f28;
+    border-radius: 12px;
+}
+
+/* Контейнер для кнопок внутри карточки */
+.d-flex.gap-2 {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Расстояние между кнопками */
+    flex-wrap: wrap; /* Перенос кнопок при необходимости */
+    /* Этот блок будет тянуться влево благодаря justify-content: space-between; у .card-body */
+    margin: 0; /* Убираем возможные внешние отступы */
+}
+
+/* Стиль для кнопок управления */
+.btn.btn-light.at-control {
+    /* Сброс стандартных стилей Bootstrap .btn-light */
+    background-color: #4a4a4a; /* Фон, как у .control-button */
+    border: 1px solid #4a4a4a; /* Граница */
+    color: #a0a0a0; /* Цвет иконки */
+    padding: 0px; /* Отступы внутри кнопки */
+    border-radius: 6px; /* Скругление углов */
+    display: flex; /* Для центрирования SVG */
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease; /* Плавные переходы */
+    box-shadow: none; /* Убираем стандартную тень */
+    min-width: 30px; /* Минимальная ширина */
+    min-height: 30px; /* Минимальная высота */
+    width: auto; /* Ширина по содержимому */
+    height: auto; /* Высота по содержимому */
+    flex-shrink: 0; /* Запрещаем кнопкам сжиматься */
+}
+
+/* Эффект наведения на кнопку управления */
+.btn.btn-light.at-control:hover {
+    background-color: #4a4a4a; /* Цвет фона при наведении */
+    color: #e0e0e0; /* Цвет иконки при наведении */
+    border-color: #5a5a5a; /* Цвет границы при наведении */
+    transform: translateY(-1px); /* Легкое приподнимание */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); /* Тень при наведении */
+}
+
+/* Эффект нажатия на кнопку управления */
+.btn.btn-light.at-control:active {
+    background-color: #333333; /* Цвет фона при нажатии */
+    color: #e0e0e0;
+    border-color: #4a4a4a;
+    transform: translateY(1px); /* Опускание при нажатии */
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3); /* Внутренняя тень */
+    outline: none; /* Убираем фокус */
+}
+
+
+
+/* Стиль для иконок внутри кнопок */
+.btn.btn-light.at-control svg {
+    width: 14px; /* Размер иконки */
+    height: 14px;
+    stroke-width: 2; /* Толщина линии */
+    transition: all 0.2s ease; /* Плавный переход цвета */
+}
+
+/* Стиль для кнопки с выпадающим меню (Выделить...) */
+.btn.btn-light.p-0.at-control {
+    padding: 0 !important; /* Сброс внутреннего отступа */
+    /* Наследует другие стили от .btn.btn-light.at-control */
+}
+
+/* Стиль для внутреннего div с отступами внутри кнопки выпадающего меню */
+.btn.btn-light.p-0.at-control > div {
+    padding: 8px; /* Отступы внутри кнопки */
+    /* Наследует цвета и поведение от родителя */
+}
+
+/* Стиль для выпадающего меню */
+.dropdown-menu {
+    background-color: #2d2d2d; /* Темный фон */
+    border: 1px solid #4a4a4a; /* Граница */
+    border-radius: 6px; /* Скругление углов */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Тень */
+    padding: 15px; /* Отступы внутри */
+    color: #e0e0e0; /* Цвет текста */
+    min-width: auto; /* Минимальная ширина по содержимому */
+    display: none;
+}
+
+/* Стиль для формы внутри выпадающего меню */
+#select-range-form {
+    display: flex;
+    flex-wrap: wrap; /* Перенос элементов при необходимости */
+    align-items: center;
+    gap: 8px; /* Расстояние между элементами */
+}
+
+/* Стили для полей ввода "От" и "до" */
+#select-accounts-range-lower-input,
+#select-accounts-range-upper-input {
+    background-color: #3a3a3a; /* Фон */
+    border: 1px solid #4a4a4a; /* Граница */
+    border-radius: 4px; /* Скругление углов */
+    color: #e0e0e0; /* Цвет текста */
+    padding: 6px 8px; /* Отступы */
+    font-size: 14px; /* Размер шрифта */
+    width: auto; /* Ширина по содержимому */
+    max-width: 100px; /* Максимальная ширина */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease; /* Плавные переходы */
+    flex-grow: 1; /* Позволяем полю расти внутри flex-контейнера */
+    min-width: 60px; /* Минимальная ширина поля */
+}
+
+/* Фокус на полях ввода */
+#select-accounts-range-lower-input:focus,
+#select-accounts-range-upper-input:focus {
+    outline: none; /* Убираем стандартный фокус */
+    border-color: #007bff; /* Цвет границы при фокусе */
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2); /* Тень при фокусе */
+}
+
+/* Стиль для кнопки "Выделить" в форме */
+#select-range-form .btn.btn-primary {
+    background-color: #007bff; /* Основной синий цвет */
+    border: none; /* Без границы */
+    border-radius: 4px; /* Скругление углов */
+    color: white; /* Цвет текста */
+    padding: 6px 12px; /* Отступы */
+    font-size: 14px; /* Размер шрифта */
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease; /* Плавные переходы */
+    white-space: nowrap; /* Запрет переноса текста */
+    flex-shrink: 0; /* Не сжимать кнопку */
+}
+
+/* Наведение на кнопку "Выделить" */
+#select-range-form .btn.btn-primary:hover {
+    background-color: #0056b3; /* Цвет при наведении */
+    transform: translateY(-1px); /* Приподнимание */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Тень */
+}
+
+/* Нажатие на кнопку "Выделить" */
+#select-range-form .btn.btn-primary:active {
+    background-color: #004494; /* Цвет при нажатии */
+    transform: translateY(1px); /* Опускание */
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2); /* Внутренняя тень */
+}
+
+/* Стиль для счетчика аккаунтов */
+.at-displayed-accounts-count-label {
+    color: #a0a0a0; /* Цвет текста */
+    font-size: 14px; /* Размер шрифта */
+    white-space: nowrap; /* Запрет переноса текста */
+    margin-left: auto; /* Отталкивает вправо (уже обеспечено justify-content, но для страховки) */
+    padding: 0 10px; /* Отступы слева и справа */
+    /* Выравнивание по центру по вертикали обеспечивается .card-body.align-items-center */
+    /* Этот элемент будет тянуться вправо благодаря justify-content: space-between; у .card-body */
+    flex-shrink: 0; /* Запрет сжатия */
+    text-align: right; /* Выравнивание текста внутри счетчика по правому краю */
+    min-width: fit-content; /* Минимальная ширина по содержимому */
+}
+
+/* --- Адаптивность --- */
+@media (max-width: 768px) {
+    .card-body {
+        flex-direction: column; /* Располагаем элементы вертикально на маленьких экранах */
+        align-items: stretch; /* Растягиваем элементы на всю ширину */
+    }
+
+    .d-flex.gap-2 {
+        justify-content: center; /* Центрируем кнопки */
+        order: 2; /* Порядок: кнопки ниже счетчика */
+    }
+
+    .at-displayed-accounts-count-label {
+        text-align: center; /* Центрируем текст счетчика */
+        order: 1; /* Порядок: счетчик выше кнопок */
+        margin-bottom: 10px; /* Отступ снизу счетчика */
+        margin-left: 0; /* Сброс отталкивания вправо */
+    }
+
+    /* Адаптация формы выпадающего меню */
+    #select-range-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #select-range-form label,
+    #select-range-form input,
+    #select-range-form .btn {
+        width: 100%;
+        max-width: none;
+        text-align: center;
+    }
+}
+
+/* --- Tooltip (если используете Bootstrap или аналог) --- */
+/* Эти стили могут потребоваться, если вы используете Bootstrap tooltips */
+.tooltip {
+    /* Убедитесь, что z-index достаточно высок */
+    z-index: 1080;
+}
+
+.tooltip-inner {
+    background-color: #4a4a4a; /* Темный фон тултипа */
+    color: #ffffff; /* Белый текст */
+    border-radius: 4px; /* Скругление углов */
+    padding: 4px 8px; /* Отступы */
+    font-size: 12px; /* Размер шрифта */
+}
+
+.tooltip.bs-tooltip-top .tooltip-arrow::before,
+.tooltip.bs-tooltip-auto[data-popper-placement^="top"] .tooltip-arrow::before {
+    border-top-color: #4a4a4a; /* Цвет стрелки сверху */
+}
+
+.tooltip.bs-tooltip-end .tooltip-arrow::before,
+.tooltip.bs-tooltip-auto[data-popper-placement^="right"] .tooltip-arrow::before {
+    border-right-color: #4a4a4a; /* Цвет стрелки справа */
+}
+
+.tooltip.bs-tooltip-bottom .tooltip-arrow::before,
+.tooltip.bs-tooltip-auto[data-popper-placement^="bottom"] .tooltip-arrow::before {
+    border-bottom-color: #4a4a4a; /* Цвет стрелки снизу */
+}
+
+.tooltip.bs-tooltip-start .tooltip-arrow::before,
+.tooltip.bs-tooltip-auto[data-popper-placement^="left"] .tooltip-arrow::before {
+    border-left-color: #4a4a4a; /* Цвет стрелки слева */
+}
+
+/* --- Кастомный Tooltip без Bootstrap --- */
+
+[data-bs-title] {
+    position: relative;
+    cursor: pointer;
+}
+
+
+/* Показываем тултип при наведении */
+[data-bs-title]:hover .custom-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Добавьте эти стили в ваш CSS файл */
+
+
+.country-flag {
+    font-family: "Twemoji Country Flags", "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+    font-size: 1.2em;
+    line-height: 1;
+    display: inline-block;
+}
+
+
+:root {
+    --bg: #0F0F0F;
+    --surface: #1F1F1F;
+    --primary: #3E87F6;
+    --text: #FFFFFF;
+    --text-secondary: #AAAAAA;
+    --border: #333333;
+    --success: #4CAF50;
+    --error: #F44336;
+    --accent: #00B8FF;
+    --surface-hover: #2a2a2a;
+    --selection-bg: rgba(0, 184, 255, 0.1);
+      /* Подставьте сюда реальную ширину вашей боковой панели */
+    --sidebar-width: 320px;
+    /* Отступ справа, если надо */
+    --panel-offset-right: 30px;
+}
+
+
+/* Стили для тултипов */
+/* Глобальный стиль для плавающего тултипа */
+#floating-tooltip {
+    position: fixed; /* Используем fixed вместо absolute */
+    background-color: #4a4a4a;
+    color: #ffffff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    white-space: nowrap;
+    /* МАКСИМАЛЬНЫЙ z-index */
+    z-index: 2147483647;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transform: translate(-50%, calc(-100% - 8px)); /* Позиционирование над курсором */
+}
+
+/* Стрелочка тултипа */
+#floating-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #4a4a4a;
+}
+
+.selection-actions {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: var(--sidebar-width);
+    right: var(--panel-offset-right);
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.selection-actions.show-icons .action-icons-group {
+    display: flex;
+}
+.action-icons-group {
+    display: flex;
+    gap: 10px;
+}
+/* Кнопки‑иконки */
+  .action-btn {
+    width: 40px;
+    height: 40px;
+    background: var(--surface-hover);
+    border: none;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  .action-btn i {
+    font-size: 18px;
+    color: var(--text-secondary);
+  }
+  .action-btn:hover {
+    transform: scale(1.1);
+  }
+  .action-btn[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: -36px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 6px 10px;
+    background: var(--bg);
+    color: var(--text);
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1100;
+  }
+  
+  /* Кнопка «Выбрать действие» */
+  .action-button {
+    padding: 12px 20px;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+  }
+  .action-button:active {
+    transform: scale(0.98);
+  }
+
+
+
+.selection-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+    margin-right: auto; /* Это pushes все остальные элементы вправо, оставляя selection-info слева */
+}
+.selection-text {
+    font-size: 14px;
+    color: #666;
+    white-space: nowrap;
+}
+
+  .deselect-btn {
+    width: 40px;
+    height: 40px;
+    background: var(--surface-hover);
+    border: none;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    color: var(--text-secondary);
+  }
+  .deselect-btn i {
+    font-size: 18px;
+    color: var(--text-secondary);
+  }
+  .deselect-btn:hover {
+    transform: scale(1.1);
+  }
+  .deselect-btn[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: -36px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 6px 10px;
+    background: var(--bg);
+    color: var(--text);
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1100;
+  }
+
+
+  /* Стили для кастомного выпадающего меню */
+.custom-dropdown {
+    position: absolute;
+    z-index: 1000;
+    background-color: #2d2d2d;
+    border: 1px solid #4a4a4a;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    color: #e0e0e0;
+    min-width: 280px;
+    display: block;
+}
+
+.custom-dropdown-content {
+    padding: 10px;
+}
+
+#select-range-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+}
+
+#select-range-form label {
+    color: #a0a0a0;
+    font-size: 14px;
+    margin-bottom: 0; /* Убираем нижний отступ у лейблов */
+}
+
+#select-range-form input {
+    background-color: #3a3a3a;
+    border: 1px solid #4a4a4a;
+    border-radius: 4px;
+    color: #e0e0e0;
+    padding: 6px 8px;
+    font-size: 14px;
+    width: 80px;
+}
+
+#select-range-form .btn.btn-primary {
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    padding: 6px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-left: auto; /* Отправляем кнопку вправо */
+}
+
+#select-range-form .btn.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Скрываем стрелки (spinners) у полей ввода типа number в форме выделения диапазона */
+#select-range-form input[type="number"] {
+    /* Для Chrome, Safari, Edge, Opera */
+    -webkit-appearance: none;
+    -moz-appearance: textfield; /* Для Firefox */
+    appearance: none;
+}
+
+/* Дополнительно для Firefox, если предыдущее не сработало полностью */
+#select-range-form input[type="number"]::-webkit-outer-spin-button,
+#select-range-form input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#select-range-form input[type="number"]::-moz-number-spin-box {
+    display: none;
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 1rem 0;
+    gap: 1rem;
+}
+
+.pagination-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pagination-text {
+    font-size: 0.9rem;
+    color: #a0a0a0;
+    white-space: nowrap;
+}
+
+.pagination-select {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.9rem;
+    border: 1px solid #4a4a4a;
+    border-radius: 0.3rem;
+    background-color: #3a3a3a;
+    color: #e0e0e0;
+    min-width: 60px;
+}
+
+.pagination-select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.pagination {
+    --bs-pagination-padding-x: 0.75rem;
+    --bs-pagination-padding-y: 0.3rem;
+    --bs-pagination-font-size: 0.9rem;
+    --bs-pagination-color: #a0a0a0;
+    --bs-pagination-bg: #3a3a3a;
+    --bs-pagination-border-width: 1px;
+    --bs-pagination-border-color: #4a4a4a;
+    --bs-pagination-border-radius: 0.5rem;
+    --bs-pagination-hover-color: #e0e0e0;
+    --bs-pagination-hover-bg: #4a4a4a;
+    --bs-pagination-hover-border-color: #5a5a5a;
+    --bs-pagination-focus-color: #e0e0e0;
+    --bs-pagination-focus-bg: #4a4a4a;
+    --bs-pagination-focus-box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    --bs-pagination-active-color: #fff;
+    --bs-pagination-active-bg: #007bff;
+    --bs-pagination-active-border-color: #007bff;
+    --bs-pagination-disabled-color: #6a6a6a;
+    --bs-pagination-disabled-bg: #3a3a3a;
+    --bs-pagination-disabled-border-color: #4a4a4a;
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+    margin: 0;
+}
+
+.page-link {
+    position: relative;
+    display: block;
+    padding: var(--bs-pagination-padding-y) var(--bs-pagination-padding-x);
+    font-size: var(--bs-pagination-font-size);
+    color: var(--bs-pagination-color);
+    background-color: var(--bs-pagination-bg);
+    border: var(--bs-pagination-border-width) solid var(--bs-pagination-border-color);
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page-link {
+        transition: none;
+    }
+}
+
+.page-link:hover {
+    z-index: 2;
+    color: var(--bs-pagination-hover-color);
+    background-color: var(--bs-pagination-hover-bg);
+    border-color: var(--bs-pagination-hover-border-color);
+}
+
+.page-link:focus {
+    z-index: 3;
+    color: var(--bs-pagination-focus-color);
+    background-color: var(--bs-pagination-focus-bg);
+    outline: 0;
+    box-shadow: var(--bs-pagination-focus-box-shadow);
+}
+
+.page-item.active .page-link {
+    z-index: 3;
+    color: var(--bs-pagination-active-color);
+    background-color: var(--bs-pagination-active-bg);
+    border-color: var(--bs-pagination-active-border-color);
+}
+
+.page-item:not(:first-child) .page-link {
+    margin-left: -1px;
+}
+
+.page-item:first-child .page-link {
+    border-top-left-radius: var(--bs-pagination-border-radius);
+    border-bottom-left-radius: var(--bs-pagination-border-radius);
+}
+
+.page-item:last-child .page-link {
+    border-top-right-radius: var(--bs-pagination-border-radius);
+    border-bottom-right-radius: var(--bs-pagination-border-radius);
+}
+
+.page-link:disabled,
+.page-link[disabled] {
+    color: var(--bs-pagination-disabled-color);
+    pointer-events: none;
+    background-color: var(--bs-pagination-disabled-bg);
+    border-color: var(--bs-pagination-disabled-border-color);
+    cursor: not-allowed;
+}
+
+.pagination-separator {
+    margin: 0 0.25rem;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .pagination-container {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .pagination-left {
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+    
+    .pagination-right {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .pagination-container {
+        gap: 0.5rem;
+    }
+    
+    .pagination-text {
+        font-size: 0.8rem;
+    }
+    
+    .pagination-select {
+        font-size: 0.8rem;
+        padding: 0.2rem 0.4rem;
+        min-width: 50px;
+    }
+}
+
+/* --- Стили для ячейки с действиями --- */
+/* Принудительно делаем ячейку блочным элементом, растягиваем на всю ширину */
+td.dt-center {
+    display: flex !important; /* Принудительно используем flexbox */
+    flex-direction: row !important; /* Располагаем элементы в строку */
+    /* Используем space-between для идеального распределения по краям */
+    justify-content: space-between !important;
+    align-items: center !important; /* Выравниваем элементы по вертикали по центру */
+    padding: 10px !important; /* Внутренний отступ */
+    width: 100% !important;
+    box-sizing: border-box !important;
+    position: relative; /* Для контекста z-index дочерних элементов */
+}
+
+/* --- Стили для контейнера каждой иконки --- */
+.action-icon-wrapper {
+    flex-direction: column; /* Располагаем иконку и текст/кнопку вертикально */
+    align-items: center; /* Центрируем содержимое по горизонтали */
+    justify-content: center; /* Центрируем содержимое по вертикали */
+    flex: 1; /* Каждый элемент будет расти, чтобы заполнить доступное пространство */
+    flex-shrink: 1; /* Позволяем сжиматься, если нужно */
+    flex-grow: 1; /* Позволяем расти */
+    min-width: 0; /* Позволяет flex-элементам сжиматься */
+    position: relative; /* Для позиционирования всплывающих элементов */
+    cursor: pointer;
+    padding: 4px 2px; /* Небольшой внутренний отступ */
+    border-radius: 4px; /* Скругление углов */
+    transition: background-color 0.2s ease; /* Плавный переход фона */
+    text-align: center; /* Центрирование текста внутри обертки */
+    box-sizing: border-box; /* Включаем padding/border в ширину */
+    /* Убираем z-index отсюда, он будет управляться скриптом тултипа */
+}
+
+.action-icon-wrapper:hover {
+    background-color: rgba(255, 255, 255, 0.05); /* Легкий фон при наведении */
+}
+
+/* --- Стили для SVG-иконок --- */
+.action-icon-svg {
+    width: 20px; /* Размер иконки */
+    height: 20px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+    color: #a0a0a0; /* Серый цвет по умолчанию */
+    stroke: currentColor;
+    fill: none;
+    flex-shrink: 0; /* Запрещаем иконке сжиматься */
+    margin-bottom: 4px; /* Отступ снизу до текста */
+}
+
+.action-icon-wrapper:hover .action-icon-svg {
+    opacity: 1;
+}
+
+/* Иконка "Открыть в вебе" - делаем её синей по умолчанию */
+/* Уточняем селектор, чтобы он применялся всегда к этой иконке */
+.action-icon-wrapper:has(a[data-right-col-action-type="open-dialogs"]) .action-icon-svg,
+.action-icon-wrapper:has(a[data-right-col-action-type="open-dialogs"]):hover .action-icon-svg {
+    color: #4c7cff; /* Синий цвет из ваших стилей */
+}
+
+/* --- Стили для текста под иконкой (БОЛЬШЕ НЕ ТУЛТИП) --- */
+/* Теперь это просто скрытый текст, который будет источником для JS-тултипа */
+.action-icon-text {
+    font-size: 13px; /* Используем размер из вашего JS-тултипа */
+    color: #ffffff; /* Цвет из вашего JS-тултипа */
+    white-space: nowrap;
+    opacity: 0; /* Оставляем скрытым визуально */
+    visibility: hidden; /* Оставляем скрытым визуально */
+    pointer-events: none; /* Игнорируем события мыши */
+    position: absolute; /* Выносим из потока, чтобы не мешать layout */
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    /* Убираем все стили позиционирования и оформления тултипа */
+}
+
+/* --- Стили для кнопки "Открыть в вебе" --- */
+.web-open-button {
+    background-color: #007bff; /* Синий цвет фона */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 3px 6px; /* Компактные отступы */
+    font-size: 10px; /* Маленький размер шрифта */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0; /* Скрыто по умолчанию */
+    max-height: 0;
+    overflow: hidden;
+    margin-top: 4px;
+    width: auto;
+    white-space: nowrap;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0; /* Запрещаем кнопке сжиматься */
+    display: block;
+    position: relative; /* Для z-index внутри контейнера */
+}
+
+/* Показываем кнопку при наведении на контейнер "Открыть в вебе" */
+.action-icon-wrapper:has(a[data-right-col-action-type="open-dialogs"]):hover .web-open-button {
+    opacity: 1;
+    max-height: 30px;
+    margin-top: 4px; /* Отступ сверху при появлении */
+}
+/* Альтернативный селектор, если :has не поддерживается */
+.web-open-wrapper:hover .web-open-button { /* Если добавите class="web-open-wrapper" к div */
+    opacity: 1;
+    max-height: 30px;
+    margin-top: 4px;
+}
+
+/* Стили при наведении на кнопку "Открыть в вебе" */
+.web-open-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Стили при нажатии на кнопку "Открыть в вебе" */
+.web-open-button:active {
+    background-color: #004494;
+    transform: translateY(0);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* --- Адаптивность --- */
+@media (max-width: 768px) {
+    td.dt-center {
+        padding: 4px !important;
+        justify-content: space-around !important; /* На маленьких экранах space-around может смотреться лучше */
+    }
+
+    .action-icon-wrapper {
+        padding: 4px 1px; /* Уменьшаем padding по бокам */
+    }
+
+    .action-icon-svg {
+        width: 18px; /* Уменьшаем размер иконок */
+        height: 18px;
+    }
+
+    .action-icon-text {
+        font-size: 11px; /* Уменьшаем размер шрифта текста */
+    }
+
+    .web-open-button {
+        font-size: 8px; /* Уменьшаем размер шрифта кнопки */
+        padding: 2px 4px; /* Уменьшаем отступы */
+    }
+}
+
+
+/* Стили для модального окна выбора аккаунтов */
+#accountsModal .modal-content {
+    width: 90%;
+    max-width: 3600px;
+    height: 90vh;
+}
+
+#accountsModal .modal-body {
+    height: calc(100% - 120px);
+    overflow: hidden;
+}
+
+#accountsModal .proxy-container {
+    height: 100%;
+}
+
+#accountsModal .account-folder-btn {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 16px;
+    background: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    border-radius: 8px;
+    color: #e0e0e0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 120px;
+}
+
+#accountsModal .account-folder-btn:hover {
+    background: #3a3a3a;
+    border-color: #4a4a4a;
+}
+
+#accountsModal .account-folder-btn.active {
+    background: #007bff;
+    border-color: #0056b3;
+    color: white;
+}
+
+#accountsModal .account-count {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+#accountsModal .account-label {
+    font-size: 12px;
+    text-align: center;
+}
+
+#accountsModal .filters-panel {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: #2a2a2a;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+#accountsModal .filter-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #3a3a3a;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#accountsModal .filter-item:hover {
+    background: #4a4a4a;
+}
+
+#accountsModal .filter-item.active {
+    background: #007bff;
+    color: white;
+}
+
+#accountsModal .filter-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    display: none;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+#accountsModal .filter-item.active .filter-dropdown {
+    display: block;
+}
+
+#accountsModal .filter-option {
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+#accountsModal .filter-option:hover {
+    background: #3a3a3a;
+}
+
+#accountsModal .filter-option.active {
+    background: #007bff;
+    color: white;
+}
+
+#accountsModal .search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+#accountsModal .search-input {
+    padding: 8px 40px 8px 12px;
+    background: #3a3a3a;
+    border: 1px solid #4a4a4a;
+    border-radius: 6px;
+    color: #e0e0e0;
+    width: 250px;
+}
+
+#accountsModal .search-input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+#accountsModal .search-button,
+#accountsModal .clear-search {
+    position: absolute;
+    right: 8px;
+    background: none;
+    border: none;
+    color: #a0a0a0;
+    cursor: pointer;
+    padding: 4px;
+}
+
+#accountsModal .search-button:hover,
+#accountsModal .clear-search:hover {
+    color: #e0e0e0;
+}
+
+#accountsModal .proxy-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #2a2a2a;
+}
+
+#accountsModal .proxy-table th,
+#accountsModal .proxy-table td {
+    padding: 12px 8px;
+    text-align: left;
+    border-bottom: 1px solid #3a3a3a;
+}
+
+#accountsModal .proxy-table th {
+    background: #1a1a1a;
+    color: #e0e0e0;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+#accountsModal .proxy-table tbody tr:hover {
+    background: #3a3a3a;
+}
+
+#accountsModal .sortable-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+}
+
+#accountsModal .sort-icons {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+#accountsModal .sort-asc,
+#accountsModal .sort-desc {
+    font-size: 10px;
+    color: #666;
+    transition: color 0.3s ease;
+}
+
+#accountsModal .sortable-header:hover .sort-asc,
+#accountsModal .sortable-header:hover .sort-desc {
+    color: #999;
+}
+
+#accountsModal .sortable-header.sort-asc .sort-asc {
+    color: #007bff;
+}
+
+#accountsModal .sortable-header.sort-desc .sort-desc {
+    color: #007bff;
+}
+
+#accountsModal .status-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+#accountsModal .status-badge.alive {
+    background: #28a745;
+    color: white;
+}
+
+#accountsModal .status-badge.dead {
+    background: #dc3545;
+    color: white;
+}
+
+#accountsModal .status-badge.spam-block {
+    background: #ffc107;
+    color: #212529;
+}
+
+#accountsModal .status-badge.unknown {
+    background: #6c757d;
+    color: white;
+}
+
+#accountsModal .avatar-cell {
+    width: 50px;
+    text-align: center;
+}
+
+#accountsModal .avatar-image {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+#accountsModal .avatar-placeholder {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #4a4a4a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #e0e0e0;
+    margin: 0 auto;
+}
+
+#accountsModal .geo-cell {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#accountsModal .country-flag {
+    font-size: 16px;
+}
+
+#accountsModal .country-code {
+    font-size: 12px;
+    color: #a0a0a0;
+}
+
+#accountsModal .selector-header {
+    width: 40px;
+    text-align: center;
+}
+
+#accountsModal .account-checkbox {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#accountsModal tbody tr {
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    #accountsModal .modal-content {
+        width: 95%;
+        height: 90vh;
+        margin: 5vh auto;
+    }
+    
+    #accountsModal .filters-panel {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    #accountsModal .search-input {
+        width: 200px;
+    }
+    
+    #accountsModal .account-folder-btn {
+        min-width: 100px;
+        padding: 8px 12px;
+    }
+}

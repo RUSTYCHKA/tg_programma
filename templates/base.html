@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeleRocket 1.0.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Боковая панель -->
+    <nav class="sidebar">
+        <div class="logo">
+            TELEROCKET
+        </div>
+        <ul class="menu">
+            <li class="nav-item {% if active_page == 'accounts' %}active{% endif %}" data-page="accounts" data-href="{{ url_for('accounts') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+                <span>Менеджер аккаунтов</span>
+            </li>
+            <li class="nav-item {% if active_page == 'proxy' %}active{% endif %}" data-page="proxy" data-href="{{ url_for('proxy') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.859a10 10 0 0 1 14 0"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/></svg>
+                <span>Прокси</span>
+            </li>
+            <li class="nav-item {% if active_page == 'misc' %}active{% endif %}" data-page="misc" data-href="{{ url_for('misc') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/><path d="m7.5 4.27 9 5.15"/></svg>
+                <span>Разное</span>
+            </li>
+            <li class="nav-item {% if active_page == 'profile-edit' %}active{% endif %}" data-page="profile-edit" data-href="{{ url_for('profile_edit') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/></svg>
+                <span>Изменение профиля</span>
+            </li>
+            <li class="nav-item {% if active_page == 'parsing' %}active{% endif %}" data-page="parsing" data-href="{{ url_for('parsing') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg>
+                <span>Парсер аудитории</span>
+            </li>
+            <li class="nav-item {% if active_page == 'chat-search' %}active{% endif %}" data-page="chat-search" data-href="{{ url_for('chat_search') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+                <span>Поиск чатов/каналов</span>
+            </li>
+            <li class="nav-item {% if active_page == 'dm-mailing' %}active{% endif %}" data-page="dm-mailing" data-href="{{ url_for('dm_mailing') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
+                <span>Рассылка в ЛС</span>
+            </li>
+            <li class="nav-item {% if active_page == 'neuro-spammer' %}active{% endif %}" data-page="neuro-spammer" data-href="{{ url_for('neuro_spammer') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M10 10 7 7"/><path d="m10 14-3 3"/><path d="m14 10 3-3"/><path d="m14 14 3 3"/><path d="M14.205 4.139a4 4 0 1 1 5.439 5.863"/><path d="M19.637 14a4 4 0 1 1-5.432 5.868"/><path d="M4.367 10a4 4 0 1 1 5.438-5.862"/><path d="M9.795 19.862a4 4 0 1 1-5.429-5.873"/><rect x="10" y="8" width="4" height="8" rx="1"/></svg>
+                <span>Нейроспамер</span>
+            </li>
+            <li class="nav-item {% if active_page == 'chat-mailing' %}active{% endif %}" data-page="chat-mailing" data-href="{{ url_for('chat_mailing') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M17 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 1-1.732"/><path d="m22 5.5-6.419 4.179a2 2 0 0 1-2.162 0L7 5.5"/><rect x="7" y="3" width="15" height="12" rx="2"/></svg>
+                <span>Рассылка по чатам</span>
+            </li>
+            <li class="nav-item {% if active_page == 'leadcatcher' %}active{% endif %}" data-page="leadcatcher" data-href="{{ url_for('leadcatcher') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M14 18a2 2 0 0 0-4 0"/><path d="m19 11-2.11-6.657a2 2 0 0 0-2.752-1.148l-1.276.61A2 2 0 0 1 12 4H8.5a2 2 0 0 0-1.925 1.456L5 11"/><path d="M2 11h20"/><circle cx="17" cy="18" r="3"/><circle cx="7" cy="18" r="3"/></svg>
+                <span>Ловец Лидов</span>
+            </li>
+            <li class="nav-item {% if active_page == 'ai-agents' %}active{% endif %}" data-page="ai-agents" data-href="{{ url_for('ai_agents') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+                <span>ИИ агенты</span>
+            </li>
+            <li class="nav-item {% if active_page == 'masslooking' %}active{% endif %}" data-page="masslooking" data-href="{{ url_for('masslooking') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>Масслукинг</span>
+            </li>
+            <li class="nav-item {% if active_page == 'liker' %}active{% endif %}" data-page="liker" data-href="{{ url_for('liker') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>
+                <span>Лайкер</span>
+            </li>
+            <li class="nav-item {% if active_page == 'inviting' %}active{% endif %}" data-page="inviting" data-href="{{ url_for('inviting') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+                <span>Инвайтинг</span>
+            </li>
+            <li class="nav-item {% if active_page == 'auto-reply' %}active{% endif %}" data-page="auto-reply" data-href="{{ url_for('auto_reply') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M12 19v3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><rect x="9" y="2" width="6" height="13" rx="3"/></svg>
+                <span>Автоответчик</span>
+            </li>
+            <li class="nav-item {% if active_page == 'chat-creation' %}active{% endif %}" data-page="chat-creation" data-href="{{ url_for('chat_creation') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                <span>Создание чатов/каналов</span>
+            </li>
+            <li class="nav-item {% if active_page == 'chat-filter' %}active{% endif %}" data-page="chat-filter" data-href="{{ url_for('chat_filter') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M2 5h20"/><path d="M6 12h12"/><path d="M9 19h6"/></svg>
+                <span>Фильтр чатов/каналов</span>
+            </li>
+            <li class="nav-item {% if active_page == 'activity-check' %}active{% endif %}" data-page="activity-check" data-href="{{ url_for('activity_check') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z"/></svg>
+                <span>Проверка активности</span>
+            </li>
+            <li class="nav-item {% if active_page == 'phone-checker' %}active{% endif %}" data-page="phone-checker" data-href="{{ url_for('phone_checker') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/></svg>
+                <span>Чекер номеров</span>
+            </li>
+            <li class="nav-item {% if active_page == 'reauthorizer' %}active{% endif %}" data-page="reauthorizer" data-href="{{ url_for('reauthorizer') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+                <span>Переавторизатор</span>
+            </li>
+            <li class="nav-item {% if active_page == 'training' %}active{% endif %}" data-page="training" onclick="window.open('{{ url_for('training') }}', '_blank')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+                <span>Руководство</span>
+            </li>
+            <li class="nav-item {% if active_page == 'support' %}active{% endif %}" data-page="support" onclick="window.open('{{ url_for('support') }}', '_blank')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z"/><path d="M21 16v2a4 4 0 0 1-4 4h-5"/></svg>
+                <span>Поддержка</span>
+            </li>
+        </ul>
+
+        <!-- Панель подписки -->
+        <div class="subscription-panel">
+            <div class="subscription-title">Подписка активна</div>
+            <div class="subscription-desc">до {{ end_date }}</div>
+            <button class="upgrade-button">Продлить подписку</button>
+        </div>
+    </nav>
+
+    <!-- Основной контент -->
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Система уведомлений нового дизайна -->
+    <div id="notification-container" style="position: fixed; top: 20px; right: 20px; z-index: 10000; pointer-events: none;"></div>
+    
+    <script>
+        // Универсальная система уведомлений нового дизайна
+        function showNotification(message, type = 'info', duration = 5000) {
+            const container = document.getElementById('notification-container');
+            if (!container) return;
+            
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.style.cssText = `
+                background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : type === 'warning' ? '#f59e0b' : '#3b82f6'};
+                color: white;
+                padding: 16px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                margin-bottom: 12px;
+                min-width: 300px;
+                max-width: 500px;
+                pointer-events: auto;
+                animation: slideInRight 0.3s ease-out;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                font-size: 14px;
+                line-height: 1.5;
+            `;
+            
+            const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : type === 'warning' ? '⚠' : 'ℹ';
+            notification.innerHTML = `
+                <span style="font-size: 18px; font-weight: bold;">${icon}</span>
+                <span style="flex: 1;">${message}</span>
+            `;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease-in';
+                setTimeout(() => notification.remove(), 300);
+            }, duration);
+        }
+        
+        // Добавляем стили анимации
+        if (!document.getElementById('notification-styles')) {
+            const style = document.createElement('style');
+            style.id = 'notification-styles';
+            style.textContent = `
+                @keyframes slideInRight {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOutRight {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Переопределяем alert для использования новой системы уведомлений
+        const originalAlert = window.alert;
+        window.alert = function(message) {
+            showNotification(message, 'info', 4000);
+        };
+    </script>
+    
+    <script defer>
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const href = this.getAttribute('data-href');
+                if (href) {
+                    // Сохраняем текущую позицию скролла sidebar
+                    const sidebar = document.querySelector('.sidebar');
+                    localStorage.setItem('sidebarScrollPosition', sidebar.scrollTop);
+                    window.location.href = href;
+                }
+            });
+        });
+
+        // Восстанавливаем позицию скролла после загрузки
+        const savedScrollPosition = localStorage.getItem('sidebarScrollPosition');
+        if (savedScrollPosition) {
+            const sidebar = document.querySelector('.sidebar');
+            // Ждем немного чтобы DOM полностью загрузился
+
+            sidebar.scrollTop = savedScrollPosition;
+            // Очищаем сохраненную позицию после восстановления
+            localStorage.removeItem('sidebarScrollPosition');
+        }
+        
+        // Обработка кнопки продления подписки
+        document.querySelector('.upgrade-button')?.addEventListener('click', function() {
+            window.open('https://telerocket.ru/tariffs', '_blank');
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,1375 @@
+{% extends "base.html" %}
+{% block title %}Автоответчик{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile_edit.css') }}">
+<style>
+    /* Стили для новых модальных окон автоответчика */
+    .auto-reply-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1050;
+        overflow-x: hidden;
+        overflow-y: auto;
+        outline: 0;
+    }
+    .auto-reply-modal.show {
+        display: block;
+    }
+    .auto-reply-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+    .auto-reply-modal-dialog {
+        position: relative;
+        width: 100%;
+        max-width: 900px;
+        margin: 30px auto;
+        pointer-events: none;
+    }
+    .auto-reply-modal-content {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        background-color: #252935;
+        border: 1px solid #2a2e3a;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        pointer-events: auto;
+        max-height: 85vh;
+        overflow: hidden;
+    }
+    .auto-reply-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 24px;
+        padding-bottom: 0;
+        background-color: #252935;
+    }
+    .auto-reply-modal-title {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 500;
+        color: #e0e0e0;
+    }
+    .btn-close {
+        background: none;
+        border: none;
+        font-size: 28px;
+        line-height: 1;
+        color: #a0a0a0;
+        cursor: pointer;
+        padding: 0;
+        margin: 0;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        transition: all 0.2s;
+    }
+    .btn-close:hover {
+        background-color: #3a3a3a;
+        color: #ffffff;
+    }
+    .auto-reply-modal-body {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        flex-grow: 1;
+        background: #252935;
+        overflow-y: auto;
+    }
+    .auto-reply-format-info {
+        background-color: #1c1f28;
+        padding: 14px 18px;
+        border-radius: 8px;
+        border-left: 4px solid #4067c5;
+        font-size: 14px;
+    }
+    .auto-reply-format-info p {
+        margin: 0 0 10px 0;
+        font-weight: 500;
+        color: #e0e0e0;
+    }
+    .auto-reply-format-info pre {
+        margin: 0;
+        font-family: 'Courier New', Courier, monospace;
+        white-space: pre-wrap;
+        word-break: break-all;
+        color: #a0a0a0;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+    .auto-reply-textarea-wrapper {
+        position: relative;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    .auto-reply-textarea-container {
+        position: relative;
+        flex-grow: 1;
+        display: flex;
+        background-color: #1c1f28;
+        border: 1px solid #2a2e3a;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .line-numbers {
+        background-color: #1a1d26;
+        color: #6c757d;
+        padding: 12px 12px 12px 8px;
+        text-align: right;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 14px;
+        line-height: 21px;
+        user-select: none;
+        border-right: 1px solid #2a2e3a;
+        min-width: 50px;
+        overflow: hidden;
+        white-space: pre;
+    }
+    .auto-reply-textarea {
+        width: 100%;
+        min-height: 350px;
+        resize: none;
+        padding: 12px 12px 12px 8px;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 14px;
+        line-height: 21px;
+        border: none;
+        box-sizing: border-box;
+        background-color: #1c1f28;
+        color: #e0e0e0;
+        flex-grow: 1;
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+    .auto-reply-textarea:focus {
+        outline: none;
+    }
+    .auto-reply-textarea::placeholder {
+        color: #6c757d;
+        opacity: 1;
+    }
+    .auto-reply-modal-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 24px;
+        background-color: #252935;
+        border-top: 1px solid #2a2e3a;
+    }
+    .footer-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    .search-toggle-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(145deg, #5c8aff, #4c7cff);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 14px;
+        font-weight: 500;
+    }
+    .search-toggle-btn:hover {
+        background: linear-gradient(145deg, #4c7cff, #3f6fd3);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(92, 138, 255, 0.3);
+    }
+    .search-toggle-btn.active {
+        background: linear-gradient(145deg, #3f6fd3, #2f5ba0);
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    .search-toggle-btn .search-icon {
+        width: 16px;
+        height: 16px;
+    }
+    .search-toggle-btn .search-text {
+        white-space: nowrap;
+    }
+    .search-container {
+        display: flex;
+        align-items: center;
+        background-color: #1c1f28;
+        border: 1px solid #2a2e3a;
+        border-radius: 8px;
+        padding: 6px 12px;
+        min-width: 280px;
+        margin-left: 8px;
+    }
+    .search-input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+    .search-input-icon {
+        color: #6c757d;
+        margin-right: 8px;
+        flex-shrink: 0;
+        width: 16px;
+        height: 16px;
+    }
+    .search-input {
+        background: transparent;
+        border: none;
+        color: #e0e0e0;
+        font-size: 14px;
+        flex: 1;
+        outline: none;
+        padding: 4px 0;
+    }
+    .search-input::placeholder {
+        color: #6c757d;
+    }
+    .clear-search-btn {
+        background: none;
+        border: none;
+        color: #6c757d;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        margin-left: 4px;
+    }
+    .clear-search-btn:hover {
+        background-color: #2a2e3a;
+        color: #e0e0e0;
+    }
+    .row-count {
+        font-size: 14px;
+        color: #a0a0a0;
+        margin-left: 16px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="proxy-page">
+    <h1 class="page-title">Автоответчик</h1>
+
+    <!-- Кнопки материалов/файлов -->
+    <div class="card">
+        <div class="card-body">
+            <div class="file-buttons-container">
+                <button class="btn btn-light" id="btn-auto-reply-messages">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
+                        <path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2z"></path>
+                        <path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"></path>
+                    </svg>
+                    Список ответов
+                    <span class="section-button-counter ms-1" id="counter-auto-reply-messages">0</span>
+                    <span class="help-icon ms-1" data-tooltip="Это сообщения, которые будут отправляться людям, пишущим на ваши аккаунтам. Как настроить сообщения - смотрите в руководстве.">
+                            <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                    </span>
+                </button>
+                <button class="btn btn-light" id="btn-auto-reply-stop-words">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>
+                    Стоп-слова
+                    <span class="section-button-counter ms-1" id="counter-auto-reply-stop-words">0</span>
+                    <span class="help-icon ms-1" data-tooltip="При обнаружении любого из этих слов в сообщениях пользователей, софт больше не будет им отвечать.">
+                            <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Основные настройки -->
+    <div class="card">
+        <div class="card-body">
+            <div class="options-container">
+                <div>
+                    <label for="dialogTimeout" class="form-label">Таймаут диалога</label>
+                    <span class="help-icon" data-tooltip="Если собеседник не ответил за указанное время, то софт перестаёт ждать от него сообщения.">
+                        <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                        </svg>
+                    </span>
+                    <div class="input-group" style="max-width: 200px">
+                        <input class="form-control has-trailing-label" id="dialogTimeout" value="24">
+                        <span class="input-trailing-label">часов</span>
+                        <div class="invalid-feedback" id="invalid-feedback-for-dialogTimeout"></div>
+                    </div>
+                </div>
+                <div>
+                    <label for="replyToUnknown" class="form-label">Отвечать даже тем, кому мы не писали</label>
+                    <span class="help-icon" data-tooltip="Если включить, то автоответчик будет отвечать даже тем, кому мы не отправляли рассылку (т.е. тем, кто написал нам в ЛС сам). При этом аккаунты не будут завершать работу самостоятельно (они будут ждать появления новых диалогов).">
+                        <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                    </span>
+                    <div class="input-group">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="replyToUnknown" checked>
+                        </div>
+                        <div class="invalid-feedback" id="invalid-feedback-for-replyToUnknown"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Дополнительные опции -->
+    <div class="card">
+        <div class="card-body">
+            <h3 class="subsection-title subsection-title-collapse collapsed" id="additionalOptionsHeader">
+                Дополнительные опции
+                <svg class="svg-icon collapse-chevron" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4px" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </h3>
+            <div class="collapse" id="additionalOptions">
+                <div class="options-container">
+                    <div>
+                        <label for="threadsPerAccount" class="form-label">Количество потоков на каждый аккаунт</label>
+                        <span class="help-icon" data-tooltip="Со сколькими собеседниками аккаунт может работать одновременно.">
+<svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                        <div class="input-group" style="max-width: 200px">
+                            <input class="form-control rounded-end" id="threadsPerAccount" value="3">
+                            <div class="invalid-feedback" id="invalid-feedback-for-threadsPerAccount"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="onlineStatusTimeout" class="form-label">Таймаут онлайн статуса</label>
+                        <span class="help-icon" data-tooltip="Когда ваш аккаунт отвечает какому-то собеседнику, он ставит себе статус 'онлайн'. Эта настройка позволяет задать промежуток времени, после которого, если наш аккаунт никому не отвечал, он ставит себе статус 'оффлайн'. Можно указать диапазон. Например '5-20'">
+<svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                        <div class="input-group" style="max-width: 200px">
+                            <input class="form-control has-trailing-label" id="onlineStatusTimeout" value="3-8">
+                            <span class="input-trailing-label">сек</span>
+                            <div class="invalid-feedback" id="invalid-feedback-for-onlineStatusTimeout"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="chatOpenDelay" class="form-label">Задержка перед открытием чата</label>
+                        <span class="help-icon" data-tooltip="Можно указать диапазон. Например '5-20'">
+<svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                        <div class="input-group" style="max-width: 200px">
+                            <input class="form-control has-trailing-label" id="chatOpenDelay" value="2-3">
+                            <span class="input-trailing-label">сек</span>
+                            <div class="invalid-feedback" id="invalid-feedback-for-chatOpenDelay"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="messageReadDelay" class="form-label">Задержка для имитации чтения сообщения</label>
+                        <span class="help-icon" data-tooltip="Можно указать диапазон. Например '5-20'">
+<svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                        <div class="input-group" style="max-width: 200px">
+                            <input class="form-control has-trailing-label" id="messageReadDelay" value="1-2">
+                            <span class="input-trailing-label">сек</span>
+                            <div class="invalid-feedback" id="invalid-feedback-for-messageReadDelay"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="messageTypingDelay" class="form-label">Задержка для имитации подготовки сообщения</label>
+                        <span class="help-icon" data-tooltip="Если сообщение текстовое, то собеседник будет видеть надпись 'печатает...' в течение заданного времени. Для других типов сообщений будет показана соответствующая надпись. Можно указать диапазон. Например '5-20'">
+<svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                        <div class="input-group" style="max-width: 200px">
+                            <input class="form-control has-trailing-label" id="messageTypingDelay" value="2-5">
+                            <span class="input-trailing-label">сек</span>
+                            <div class="invalid-feedback" id="invalid-feedback-for-messageTypingDelay"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Настройки для отправляемых сообщений -->
+    <div class="card">
+        <div class="card-body">
+            <h3 class="subsection-title subsection-title-collapse collapsed" id="messageSettingsHeader">
+                Настройки для отправляемых сообщений
+                <svg class="svg-icon collapse-chevron" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4px" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </h3>
+            <div class="collapse" id="messageSettings">
+                <div class="options-container">
+                    <div>
+                        <label for="sendAsReply" class="form-label">Отправлять сообщения ответом</label>
+                        <span class="help-icon" data-tooltip="Если включить, то наши сообщения будут отправляться как ответ (реплай) на последнее сообщение пользователя.">
+<svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="sendAsReply">
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-sendAsReply"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="hideMediaSpoiler" class="form-label">Скрывать медиа под спойлером</label>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="hideMediaSpoiler">
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-hideMediaSpoiler"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="allowLinkPreview" class="form-label">Разрешить предпросмотр ссылок</label>
+                        <span class="help-icon" data-tooltip="Если в тексте есть ссылка, то Телеграм попробует прикрепить к сообщению её предпросмотр. Выключите эту настройку, чтобы не прикреплять предпросмотр.">
+<svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="allowLinkPreview">
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-allowLinkPreview"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="sendSilently" class="form-label">Отправлять без звука</label>
+                        <span class="help-icon" data-tooltip="Если настройка включена, то пользователи не будут получать уведомления. Однако, если на момент получения сообщения у пользователя открыт телеграм, то оповещение всё равно придёт.">
+<svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="sendSilently">
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-sendSilently"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="sendVideoAsCircle" class="form-label">Отправлять видео в кружочке</label>
+                        <span class="help-icon" data-tooltip="Если включено, то программа будет пытаться отправлять все видео как видео в кружочках. Чтобы отправка прошла успешно, видео должно быть строго квадратным и иметь размер не более 640х640.">
+<svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                        <div class="input-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="sendVideoAsCircle">
+                            </div>
+                            <div class="invalid-feedback" id="invalid-feedback-for-sendVideoAsCircle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Кнопка запуска -->
+<div class="start-task-btn-group">
+    <button type="button" class="start-task-btn" id="start-auto-reply-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
+        Запустить автоответчик
+    </button>
+</div>
+
+<!-- Модальное окно настроек запуска -->
+<div class="modal" id="autoReplyTaskModal">
+    <div class="modal-content">
+        <div class="modal-body">
+            <div class="options-container">
+                <div class="mb-4">
+                    <button class="btn btn-primary w-100" id="select-accounts-btn">
+                        <span>Аккаунты</span>
+                        <span class="mx-1 opacity-50">|</span>
+                        <span id="accounts-picked-for-task-count">0</span>
+                    </button>
+                </div>
+                <div>
+                    <label for="threadCount" class="form-label">Количество потоков</label>
+                    <span class="help-icon ms-1" data-tooltip="Сколько аккаунтов работает одновременно.">
+                        <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                    </span>
+                    <div class="input-group">
+                        <input class="form-control" id="threadCount" type="number" min="1" max="50" value="1">
+                        <div class="invalid-feedback" id="invalid-feedback-for-threadCount"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-lg" id="do-start-auto-reply-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>
+                <span>Запустить</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно выбора аккаунтов (переиспользуем логика как в profile_edit) -->
+<div class="modal" id="accountsModal" style="display: none;">
+    <div class="modal-content" style="width: 90%; max-width: 1200px; height: 80vh;">
+        <div class="modal-header">
+            <h5 class="modal-title">Выбор аккаунтов</h5>
+            <button type="button" class="modal-close" id="accountsModalClose">&times;</button>
+        </div>
+        <div class="modal-body" style="height: calc(100% - 120px); overflow: hidden;">
+            <div class="proxy-container" style="height: 100%;">
+                <div class="header-section">
+                    <div class="table-controls">
+                        <div class="account-folder-selector">
+                            <button class="account-folder-btn active" id="all-folder-accounts">
+                                <div class="account-count" data-count="0">0</div>
+                                <div class="account-label">Все аккаунты</div>
+                                <div class="active-indicator"></div>
+                            </button>
+                            <button class="account-folder-btn" id="working-folder-accounts">
+                                <div class="account-count" data-count="0">0</div>
+                                <div class="account-label">Для работы</div>
+                                <div class="active-indicator"></div>
+                            </button>
+                            <button class="account-folder-btn" id="archive-folder-accounts">
+                                <div class="account-count" data-count="0">0</div>
+                                <div class="account-label">Архив</div>
+                                <div class="active-indicator"></div>
+                            </button>
+                            <button class="account-folder-btn" id="no-spam-folder-accounts">
+                                <div class="account-count" data-count="0">0</div>
+                                <div class="account-label">Без спамблока</div>
+                                <div class="active-indicator"></div>
+                            </button>
+                            <button class="account-folder-btn" id="with-spam-folder-accounts">
+                                <div class="account-count" data-count="0">0</div>
+                                <div class="account-label">Спамблок</div>
+                                <div class="active-indicator"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-3">
+                    <div class="card-body p-3 d-flex align-items-center">
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-light" id="select-all-accounts-modal">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 7 17l-5-5"></path><path d="m22 10-7.5 7.5L13 16"></path></svg>
+                            </button>
+                            <button id="deselect-all-btn-modal" type="button" class="btn btn-light">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+                            </button>
+                        </div>
+                        <span class="text-muted ms-auto" id="accounts-count-label-modal">Показано аккаунтов: 0 / 0</span>
+                    </div>
+                </div>
+
+                <div style="height: calc(100% - 200px); overflow-y: auto;">
+                    <table id="accounts-table-modal" class="proxy-table">
+                        <thead>
+                            <tr>
+                                <th class="selector-header"><input type="checkbox" id="select-all-checkbox-modal" class="select-all-checkbox"></th>
+                                <th>#</th>
+                                <th>Аватар</th>
+                                <th><div class="sortable-header" data-sort="phone">Телефон<div class="sort-icons"><span class="sort-asc">▲</span><span class="sort-desc">▼</span></div></div></th>
+                                <th><div class="sortable-header" data-sort="geo">Гео<div class="sort-icons"><span class="sort-asc">▲</span><span class="sort-desc">▼</span></div></div></th>
+                                <th><div class="sortable-header" data-sort="status">Статус<div class="sort-icons"><span class="sort-asc">▲</span><span class="sort-desc">▼</span></div></div></th>
+                                <th>Отлежка</th>
+                                <th><div class="sortable-header" data-sort="role">Роль<div class="sort-icons"><span class="sort-asc">▲</span><span class="sort-desc">▼</span></div></div></th>
+                                <th>Использован</th>
+                                <th><div class="sortable-header" data-sort="name">Имя<div class="sort-icons"><span class="sort-asc">▲</span><span class="sort-desc">▼</span></div></div></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="accountsModalCancel">Отмена</button>
+            <button type="button" class="btn btn-primary" id="confirmAccountsSelection">Подтвердить (<span id="selected-count-modal">0</span>)</button>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для списка ответов -->
+<div id="autoReplyMessagesModal" class="auto-reply-modal">
+    <div class="auto-reply-modal-overlay"></div>
+    <div class="auto-reply-modal-dialog">
+        <div class="auto-reply-modal-content">
+            <div class="auto-reply-modal-header">
+                <h5 class="auto-reply-modal-title">Список ответов</h5>
+                <button type="button" class="btn-close" id="closeAutoReplyMessagesModalBtn">&times;</button>
+            </div>
+            <div class="auto-reply-modal-body">
+                <div class="auto-reply-format-info">
+                    <p>Введите список ответов (по одному в строке):</p>
+                    <pre>Привет! Спасибо за ваше сообщение. Я сейчас занят, но обязательно отвечу вам позже.
+Здравствуйте! Это автоматический ответ. Я прочитал ваше сообщение и скоро с вами свяжусь.</pre>
+                </div>
+                <div class="auto-reply-textarea-wrapper">
+                    <div class="auto-reply-textarea-container">
+                        <div class="line-numbers" id="lineNumbersAutoReplyMessages"></div>
+                        <textarea
+                            id="autoReplyMessagesTextarea"
+                            class="auto-reply-textarea"
+                            placeholder="Введите ответы автоответчика..."
+                        ></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="auto-reply-modal-footer">
+                <div class="footer-left">
+                    <button class="search-toggle-btn" id="searchToggleAutoReplyMessages">
+                        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <span class="search-text">Поиск</span>
+                    </button>
+                    <div class="search-container" id="searchContainerAutoReplyMessages" style="display: none;">
+                        <div class="search-input-wrapper">
+                            <svg class="search-input-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input type="text" id="searchInputAutoReplyMessages" class="search-input" placeholder="Введите текст для поиска...">
+                            <button class="clear-search-btn" id="clearSearchAutoReplyMessages" style="display: none;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <span class="row-count">Кол-во строк: <span id="autoReplyMessagesLineCount">0</span></span>
+                </div>
+                <button class="btn btn-primary" id="saveAutoReplyMessagesBtn">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для стоп-слов -->
+<div id="autoReplyStopWordsModal" class="auto-reply-modal">
+    <div class="auto-reply-modal-overlay"></div>
+    <div class="auto-reply-modal-dialog">
+        <div class="auto-reply-modal-content">
+            <div class="auto-reply-modal-header">
+                <h5 class="auto-reply-modal-title">Стоп-слова</h5>
+                <button type="button" class="btn-close" id="closeAutoReplyStopWordsModalBtn">&times;</button>
+            </div>
+            <div class="auto-reply-modal-body">
+                <div class="auto-reply-format-info">
+                    <p>Введите список стоп-слов (по одному в строке):</p>
+                    <pre>спам
+реклама
+продажа</pre>
+                </div>
+                <div class="auto-reply-textarea-wrapper">
+                    <div class="auto-reply-textarea-container">
+                        <div class="line-numbers" id="lineNumbersAutoReplyStopWords"></div>
+                        <textarea
+                            id="autoReplyStopWordsTextarea"
+                            class="auto-reply-textarea"
+                            placeholder="Введите стоп-слова..."
+                        ></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="auto-reply-modal-footer">
+                <div class="footer-left">
+                    <button class="search-toggle-btn" id="searchToggleAutoReplyStopWords">
+                        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <span class="search-text">Поиск</span>
+                    </button>
+                    <div class="search-container" id="searchContainerAutoReplyStopWords" style="display: none;">
+                        <div class="search-input-wrapper">
+                            <svg class="search-input-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input type="text" id="searchInputAutoReplyStopWords" class="search-input" placeholder="Введите текст для поиска...">
+                            <button class="clear-search-btn" id="clearSearchAutoReplyStopWords" style="display: none;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <span class="row-count">Кол-во строк: <span id="autoReplyStopWordsLineCount">0</span></span>
+                </div>
+                <button class="btn btn-primary" id="saveAutoReplyStopWordsBtn">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="customTooltip" class="custom-tooltip"></div>
+
+<script>
+// Реиспользование логики модалок и таблицы аккаунтов из profile_edit
+let selectedAccounts = new Set();
+let allAccounts = [];
+let currentFolder = 'all';
+let currentSpamFilter = null;
+let currentSort = { field: null, direction: 'asc' };
+let searchFilter = '';
+let roleFilter = '';
+let geoFilter = '';
+let statusFilter = '';
+
+// --- Новые функции для работы с модальными окнами автоответчика ---
+// --- Структура данных для хранения списков ---
+let autoReplyLists = {
+    messages: [],
+    stopWords: []
+};
+
+// --- Система уведомлений ---
+class NotificationSystem {
+    constructor() {
+        this.container = null;
+        this.init();
+    }
+    init() {
+        this.container = document.createElement('div');
+        this.container.className = 'notification-container';
+        document.body.appendChild(this.container);
+    }
+    show(options) {
+        const {
+            title,
+            message,
+            type = 'info',
+            duration = 5000
+        } = options;
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        const iconSvg = this.getIcon(type);
+        notification.innerHTML = `
+            <div class="notification-icon">
+                ${iconSvg}
+            </div>
+            <div class="notification-content">
+                <div class="notification-title">${title}</div>
+                <div class="notification-message">${message}</div>
+            </div>
+            <button class="notification-close">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        `;
+        this.container.appendChild(notification);
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 10);
+        const closeBtn = notification.querySelector('.notification-close');
+        closeBtn.addEventListener('click', () => {
+            this.hide(notification);
+        });
+        if (duration > 0) {
+            setTimeout(() => {
+                this.hide(notification);
+            }, duration);
+        }
+        return notification;
+    }
+    hide(notification) {
+        notification.classList.remove('show');
+        notification.classList.add('hide');
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 400);
+    }
+    getIcon(type) {
+        const icons = {
+            success: `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2">
+                    <path d="M20 6L9 17l-5-5"/>
+                </svg>
+            `,
+            error: `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc3545" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                </svg>
+            `,
+            warning: `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffc107" stroke-width="2">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            `,
+            info: `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5c8aff" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+            `
+        };
+        return icons[type] || icons.info;
+    }
+    success(title, message, duration = 5000) {
+        return this.show({ title, message, type: 'success', duration });
+    }
+    error(title, message, duration = 5000) {
+        return this.show({ title, message, type: 'error', duration });
+    }
+    warning(title, message, duration = 5000) {
+        return this.show({ title, message, type: 'warning', duration });
+    }
+    info(title, message, duration = 5000) {
+        return this.show({ title, message, type: 'info', duration });
+    }
+}
+const notifications = new NotificationSystem();
+
+// --- Функции для работы с модальными окнами ---
+function openModal(modalId, listKey, textareaId, lineNumbersId, lineCountId) {
+    const modal = document.getElementById(modalId);
+    const textarea = document.getElementById(textareaId);
+    modal.classList.add('show');
+    // Загружаем оригинальный список при открытии
+    if (listKey === 'stopWords') {
+        textarea.value = autoReplyLists[listKey].join('\n');
+    } else {
+        textarea.value = autoReplyLists[listKey].join('\n\n'); // Разделяем сообщения двумя переводами строки
+    }
+    updateLineNumbers(lineNumbersId, textareaId);
+    updateLineCount(lineCountId, textareaId, listKey);
+    resetSearch(listKey);
+}
+
+function closeModal(modalId, listKey) {
+    const modal = document.getElementById(modalId);
+    modal.classList.remove('show');
+    resetSearch(listKey);
+}
+
+function updateLineNumbers(lineNumbersId, textareaId) {
+    const textarea = document.getElementById(textareaId);
+    const lineNumbers = document.getElementById(lineNumbersId);
+    const lineCount = textarea.value.split('\n').length;
+    let numbers = [];
+    for (let i = 1; i <= lineCount; i++) {
+        numbers.push(i);
+    }
+    lineNumbers.textContent = numbers.join('\n');
+    lineNumbers.scrollTop = textarea.scrollTop;
+}
+
+function updateLineCount(lineCountId, textareaId, listKey) {
+    const textarea = document.getElementById(textareaId);
+    let count = 0;
+    if (listKey === 'messages') {
+        // Считаем количество сообщений (разделены двумя \n)
+        const text = textarea.value.trim();
+        count = text ? text.split('\n\n').filter(msg => msg.trim() !== '').length : 0;
+    } else if (listKey === 'stopWords') {
+        // Считаем количество стоп-слов
+        const text = textarea.value.trim();
+        count = text ? text.split('\n').filter(word => word.trim() !== '').length : 0;
+    }
+    document.getElementById(lineCountId).textContent = count;
+    // Обновляем соответствующий счетчик кнопки
+    if (lineCountId === 'autoReplyMessagesLineCount') {
+        document.getElementById('counter-auto-reply-messages').textContent = count;
+    } else if (lineCountId === 'autoReplyStopWordsLineCount') {
+        document.getElementById('counter-auto-reply-stop-words').textContent = count;
+    }
+}
+
+// --- Функции поиска для каждого модального окна ---
+let searchStates = {
+    messages: { active: false, originalList: [] },
+    stopWords: { active: false, originalList: [] }
+};
+
+function toggleSearch(listKey) {
+    if (searchStates[listKey].active) {
+        hideSearch(listKey);
+    } else {
+        showSearch(listKey);
+    }
+}
+
+function showSearch(listKey) {
+    const searchContainerId = `searchContainer${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const searchToggleBtnId = `searchToggle${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const searchInputId = `searchInput${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const searchContainer = document.getElementById(searchContainerId);
+    const searchToggleBtn = document.getElementById(searchToggleBtnId);
+    const searchInput = document.getElementById(searchInputId);
+
+    searchContainer.style.display = 'block';
+    searchToggleBtn.classList.add('active');
+    searchStates[listKey].active = true;
+    setTimeout(() => {
+        searchInput.focus();
+    }, 100);
+}
+
+function hideSearch(listKey) {
+    const searchContainerId = `searchContainer${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const searchToggleBtnId = `searchToggle${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const searchContainer = document.getElementById(searchContainerId);
+    const searchToggleBtn = document.getElementById(searchToggleBtnId);
+
+    searchContainer.style.display = 'none';
+    searchToggleBtn.classList.remove('active');
+    searchStates[listKey].active = false;
+    resetSearch(listKey);
+}
+
+function performSearch(listKey) {
+    const searchInputId = `searchInput${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const textareaId = `${listKey}Textarea`;
+    const clearBtnId = `clearSearch${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const searchInput = document.getElementById(searchInputId);
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    const textarea = document.getElementById(textareaId);
+    const clearBtn = document.getElementById(clearBtnId);
+
+    clearBtn.style.display = searchTerm ? 'flex' : 'none';
+
+    if (searchTerm === '') {
+        textarea.value = searchStates[listKey].originalList.join('\n');
+    } else {
+        const filteredList = searchStates[listKey].originalList.filter(line =>
+            line.toLowerCase().includes(searchTerm)
+        );
+        textarea.value = filteredList.join('\n');
+    }
+    const lineCountId = `${listKey}LineCount`;
+    updateLineCount(lineCountId, textareaId, listKey);
+}
+
+function resetSearch(listKey) {
+    const searchInputId = `searchInput${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const textareaId = `${listKey}Textarea`;
+    const clearBtnId = `clearSearch${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    const searchInput = document.getElementById(searchInputId);
+    const clearBtn = document.getElementById(clearBtnId);
+    const textarea = document.getElementById(textareaId);
+
+    searchInput.value = '';
+    clearBtn.style.display = 'none';
+    // Восстанавливаем оригинальный список
+    if (listKey === 'stopWords') {
+        textarea.value = autoReplyLists[listKey].join('\n');
+    } else {
+        textarea.value = autoReplyLists[listKey].join('\n\n'); // Восстанавливаем оригинальный список
+    }
+    const lineCountId = `${listKey}LineCount`;
+    updateLineCount(lineCountId, textareaId, listKey);
+}
+
+function saveList(listKey, textareaId, modalId) {
+    const textarea = document.getElementById(textareaId);
+    // Если поиск активен, сначала сбрасываем его
+    const searchInputId = `searchInput${listKey.charAt(0).toUpperCase() + listKey.slice(1)}`;
+    if (searchStates[listKey].active && document.getElementById(searchInputId).value.trim() !== '') {
+        resetSearch(listKey);
+    }
+    const list = textarea.value.trim();
+    if (list) {
+        console.log(`Сохранение списка ${listKey}:`, list);
+        if (listKey === 'stopWords') {
+            autoReplyLists[listKey] = list.split('\n').filter(word => word.trim() !== '');
+        } else {
+            autoReplyLists[listKey] = list.split('\n\n').filter(msg => msg.trim() !== '');
+        }
+        notifications.success('Успешно!', `Список ${listKey} успешно сохранен`, 3000);
+    } else {
+        notifications.warning('Внимание', `Список ${listKey} пуст`, 3000);
+    }
+    closeModal(modalId, listKey);
+    // Обновляем счетчик при сохранении
+    const lineCountId = `${listKey}LineCount`;
+    updateLineCount(lineCountId, textareaId, listKey);
+}
+
+function showModal(modalId) {
+    document.getElementById(modalId).classList.add('show');
+    document.getElementById(modalId).style.display = 'block';
+}
+function hideModal(modalId) {
+    document.getElementById(modalId).classList.remove('show');
+    setTimeout(() => { document.getElementById(modalId).style.display = 'none'; }, 1);
+}
+function updateSelectedAccountsCount() {
+    const el = document.getElementById('accounts-picked-for-task-count');
+    if (el) el.textContent = selectedAccounts.size;
+    const el2 = document.getElementById('selected-count-modal');
+    if (el2) el2.textContent = selectedAccounts.size;
+}
+function selectAllAccountsInModal() {
+    document.querySelectorAll('.account-checkbox').forEach(checkbox => {
+        const accountId = checkbox.getAttribute('data-account-id');
+        selectedAccounts.add(accountId);
+        checkbox.checked = true;
+    });
+    updateSelectedAccountsCount();
+}
+function deselectAllAccountsInModal() {
+    selectedAccounts.clear();
+    document.querySelectorAll('.account-checkbox').forEach(checkbox => { checkbox.checked = false; });
+    updateSelectedAccountsCount();
+}
+async function loadAccounts(folder = 'all') {
+    try {
+        const response = await fetch('/get_accounts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ folder }) });
+        if (!response.ok) throw new Error('Ошибка загрузки аккаунтов');
+        allAccounts = await response.json();
+        renderAccountsTable();
+        updateAccountsCount();
+    } catch (e) { console.error(e); }
+}
+function getStatusClass(status) {
+    switch (status) {
+        case 'alive': return 'alive';
+        case 'dead': return 'dead';
+        case 'spam_block': return 'spam-block';
+        default: return 'unknown';
+    }
+}
+function getStatusText(status) {
+    switch (status) {
+        case 'alive': return 'Без ограничений';
+        case 'dead': return 'Мертв';
+        case 'spam_block': return 'Спам блок';
+        default: return 'Неизвестно';
+    }
+}
+function getCountryData(){ return { RU:{name:'Россия'}, UA:{name:'Украина'}, KZ:{name:'Казахстан'}, US:{name:'США'} }; }
+function getCountryInfo(code){ const m=getCountryData(); return m[code]||{name:code||'Неизвестно'}; }
+function getFlagEmoji(code){ if(!code) return '🏳️'; const cps=code.toUpperCase().split('').map(c=>127397+c.charCodeAt(0)); try{ return String.fromCodePoint(...cps);}catch(e){return '🏳️';}}
+
+function renderAccountsTable() {
+    const tbody = document.querySelector('#accounts-table-modal tbody');
+    if (!tbody) return;
+    tbody.innerHTML = (allAccounts || []).map((account, index) => {
+        const fullName = `${account.first_name || ''} ${account.last_name || ''}`.trim();
+        const countryInfo = getCountryInfo(account.geo);
+        const flagEmoji = getFlagEmoji(account.geo);
+        return `
+            <tr data-account-id="${account.id}" class="account-row">
+                <td><input type="checkbox" class="account-checkbox" data-account-id="${account.id}" ${selectedAccounts.has(account.id) ? 'checked' : ''}></td>
+                <td>${index + 1}</td>
+                <td class="avatar-cell"><div class="avatar-placeholder">${(account.first_name||account.last_name||'?').toString().charAt(0).toUpperCase()}</div></td>
+                <td>${account.phone || ''}</td>
+                <td><div class="geo-cell" title="${countryInfo.name}"><span class="country-flag">${flagEmoji}</span><span class="country-code">${account.geo||''}</span></div></td>
+                <td><span class="status-badge ${getStatusClass(account.status)}">${getStatusText(account.status)}</span></td>
+                <td class="rest-period" data="${account.register_time}">${account.rest_until || '-'}</td>
+                <td>${account.role || ''}</td>
+                <td>${account.last_used || 'Нет'}</td>
+                <td>${fullName || ''}</td>
+            </tr>
+        `;
+    }).join('');
+
+    document.querySelectorAll('.account-checkbox').forEach(cb => {
+        cb.addEventListener('change', function(){
+            const id = this.dataset.accountId;
+            if (this.checked) selectedAccounts.add(id); else selectedAccounts.delete(id);
+            updateSelectedAccountsCount();
+        });
+    });
+}
+
+function updateAccountsCount(){
+    const total = allAccounts.length;
+    const displayed = document.querySelectorAll('#accounts-table-modal tbody tr').length;
+    const el = document.getElementById('accounts-count-label-modal');
+    if (el) el.textContent = `Показано аккаунтов: ${displayed} / ${total}`;
+}
+
+// Тогглы секций
+function toggleSection(headerId, contentId) {
+    const content = document.getElementById(contentId);
+    const header = document.getElementById(headerId);
+    const chevron = header?.querySelector('.collapse-chevron');
+    if (!content || !header || !chevron) return;
+    content.classList.toggle('show');
+    header.classList.toggle('collapsed');
+    chevron.classList.toggle('rotated');
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+    // --- Обработчики для кнопок открытия модальных окон ---
+    document.getElementById('btn-auto-reply-messages').addEventListener('click', function() {
+        openModal('autoReplyMessagesModal', 'messages', 'autoReplyMessagesTextarea', 'lineNumbersAutoReplyMessages', 'autoReplyMessagesLineCount');
+    });
+    document.getElementById('btn-auto-reply-stop-words').addEventListener('click', function() {
+        openModal('autoReplyStopWordsModal', 'stopWords', 'autoReplyStopWordsTextarea', 'lineNumbersAutoReplyStopWords', 'autoReplyStopWordsLineCount');
+    });
+
+    // --- Обработчики для кнопок закрытия модальных окон ---
+    document.getElementById('closeAutoReplyMessagesModalBtn').addEventListener('click', function() { closeModal('autoReplyMessagesModal', 'messages'); });
+    document.getElementById('closeAutoReplyStopWordsModalBtn').addEventListener('click', function() { closeModal('autoReplyStopWordsModal', 'stopWords'); });
+
+    // --- Обработчики для кнопок сохранения ---
+    document.getElementById('saveAutoReplyMessagesBtn').addEventListener('click', function() { saveList('messages', 'autoReplyMessagesTextarea', 'autoReplyMessagesModal'); });
+    document.getElementById('saveAutoReplyStopWordsBtn').addEventListener('click', function() { saveList('stopWords', 'autoReplyStopWordsTextarea', 'autoReplyStopWordsModal'); });
+
+    // --- Инициализация для каждого текстового поля ---
+    const textareas = [
+        { id: 'autoReplyMessagesTextarea', lineNumbersId: 'lineNumbersAutoReplyMessages', listKey: 'messages', counterId: 'counter-auto-reply-messages' },
+        { id: 'autoReplyStopWordsTextarea', lineNumbersId: 'lineNumbersAutoReplyStopWords', listKey: 'stopWords', counterId: 'counter-auto-reply-stop-words' }
+    ];
+
+    textareas.forEach(item => {
+        const textarea = document.getElementById(item.id);
+        const lineNumbers = document.getElementById(item.lineNumbersId);
+
+        updateLineNumbers(item.lineNumbersId, item.id);
+
+        textarea.addEventListener('scroll', function() {
+            lineNumbers.scrollTop = this.scrollTop;
+        });
+
+        textarea.addEventListener('input', function() {
+            if (!searchStates[item.listKey].active || document.getElementById(`searchInput${item.listKey.charAt(0).toUpperCase() + item.listKey.slice(1)}`).value.trim() === '') {
+                if (item.listKey === 'stopWords') {
+                    autoReplyLists[item.listKey] = textarea.value.split('\n').filter(word => word.trim() !== '');
+                } else {
+                    autoReplyLists[item.listKey] = textarea.value.split('\n\n').filter(msg => msg.trim() !== '');
+                }
+            }
+            updateLineCount(`${item.listKey}LineCount`, item.id, item.listKey);
+        });
+
+        textarea.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                setTimeout(() => updateLineNumbers(item.lineNumbersId, item.id), 0);
+            }
+        });
+
+        // Обработчики поиска
+        const searchInput = document.getElementById(`searchInput${item.listKey.charAt(0).toUpperCase() + item.listKey.slice(1)}`);
+        searchInput.addEventListener('input', function() { performSearch(item.listKey); });
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                hideSearch(item.listKey);
+            }
+        });
+
+        const clearSearchBtn = document.getElementById(`clearSearch${item.listKey.charAt(0).toUpperCase() + item.listKey.slice(1)}`);
+        clearSearchBtn.addEventListener('click', function() { resetSearch(item.listKey); });
+
+        const searchToggleBtn = document.getElementById(`searchToggle${item.listKey.charAt(0).toUpperCase() + item.listKey.slice(1)}`);
+        searchToggleBtn.addEventListener('click', function() { toggleSearch(item.listKey); });
+
+        // Закрытие по оверлею
+        const overlay = document.querySelector(`#${item.listKey.charAt(0).toUpperCase() + item.listKey.slice(1)}Modal .auto-reply-modal-overlay`);
+        if (overlay) {
+            overlay.addEventListener('click', function() { closeModal(`${item.listKey.charAt(0).toUpperCase() + item.listKey.slice(1)}Modal`, item.listKey); });
+        }
+    });
+
+    // Инициализируем счетчики при загрузке
+    updateLineCount('autoReplyMessagesLineCount', 'autoReplyMessagesTextarea', 'messages');
+    updateLineCount('autoReplyStopWordsLineCount', 'autoReplyStopWordsTextarea', 'stopWords');
+
+    // Кнопка запуска
+    document.getElementById('start-auto-reply-btn').addEventListener('click', function(){ showModal('autoReplyTaskModal'); });
+    document.getElementById('autoReplyTaskModal').addEventListener('click', function(e){ if (e.target === this) hideModal('autoReplyTaskModal'); });
+
+    // Открытие выбора аккаунтов
+    document.getElementById('select-accounts-btn').addEventListener('click', function(){
+        hideModal('autoReplyTaskModal');
+        showModal('accountsModal');
+        loadAccounts();
+    });
+
+    // Закрытие модалки аккаунтов
+    document.getElementById('accountsModalClose').addEventListener('click', () => hideModal('accountsModal'));
+    document.getElementById('accountsModalCancel').addEventListener('click', () => hideModal('accountsModal'));
+    document.getElementById('accountsModal').addEventListener('click', function(e){ if (e.target === this) hideModal('accountsModal'); });
+    document.getElementById('confirmAccountsSelection').addEventListener('click', function(){ hideModal('accountsModal'); showModal('autoReplyTaskModal'); });
+
+    // Селекты папок и спам фильтров
+    document.getElementById('all-folder-accounts')?.addEventListener('click', () => { currentFolder='all'; loadAccounts('all'); });
+    document.getElementById('working-folder-accounts')?.addEventListener('click', () => { currentFolder='working'; loadAccounts('working'); });
+    document.getElementById('archive-folder-accounts')?.addEventListener('click', () => { currentFolder='archive'; loadAccounts('archive'); });
+    document.getElementById('no-spam-folder-accounts')?.addEventListener('click', () => { currentSpamFilter='no-spam'; loadAccounts(currentFolder); });
+    document.getElementById('with-spam-folder-accounts')?.addEventListener('click', () => { currentSpamFilter='with-spam'; loadAccounts(currentFolder); });
+
+    // Выделение/снятие выделения
+    document.getElementById('select-all-accounts-modal').addEventListener('click', selectAllAccountsInModal);
+    document.getElementById('deselect-all-btn-modal').addEventListener('click', deselectAllAccountsInModal);
+    const selectAllCheckbox = document.getElementById('select-all-checkbox-modal');
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', function(){ this.checked ? selectAllAccountsInModal() : deselectAllAccountsInModal(); });
+    }
+
+    // Тогглы секций
+    document.getElementById('additionalOptionsHeader').addEventListener('click', () => toggleSection('additionalOptionsHeader','additionalOptions'));
+    document.getElementById('messageSettingsHeader').addEventListener('click', () => toggleSection('messageSettingsHeader','messageSettings'));
+
+    // Запуск задачи
+    document.getElementById('do-start-auto-reply-btn').addEventListener('click', function(){
+        const threadCount = parseInt(document.getElementById('threadCount').value, 10);
+        const selectedAccountIds = Array.from(selectedAccounts);
+        if (!selectedAccountIds.length) { alert('Выберите аккаунты для автоответчика'); return; }
+        if (!threadCount || threadCount < 1 || threadCount > 50) { alert('Введите корректное количество потоков (1-50)'); return; }
+
+        const settings = {
+            dialogTimeout: parseInt(document.getElementById('dialogTimeout').value || '24', 10),
+            replyToUnknown: document.getElementById('replyToUnknown').checked,
+            additionalOptions: {
+                threadsPerAccount: parseInt(document.getElementById('threadsPerAccount').value || '3', 10),
+                onlineStatusTimeout: document.getElementById('onlineStatusTimeout').value,
+                chatOpenDelay: document.getElementById('chatOpenDelay').value,
+                messageReadDelay: document.getElementById('messageReadDelay').value,
+                messageTypingDelay: document.getElementById('messageTypingDelay').value
+            },
+            messageSettings: {
+                sendAsReply: document.getElementById('sendAsReply').checked,
+                hideMediaSpoiler: document.getElementById('hideMediaSpoiler').checked,
+                allowLinkPreview: document.getElementById('allowLinkPreview').checked,
+                sendSilently: document.getElementById('sendSilently').checked,
+                sendVideoAsCircle: document.getElementById('sendVideoAsCircle').checked
+            }
+        };
+
+        fetch('/start_auto_reply_task', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ account_ids: selectedAccountIds, thread_count: threadCount, settings })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                if (typeof showNotification === 'function') {
+                    showNotification('Автоответчик запущен!', 'success');
+                } else {
+                alert('Автоответчик запущен!');
+                }
+                hideModal('autoReplyTaskModal');
+                selectedAccounts.clear();
+                updateSelectedAccountsCount();
+            } else {
+                if (typeof showNotification === 'function') {
+                    showNotification('Ошибка запуска: ' + (data.error || 'Неизвестная ошибка'), 'error');
+            } else {
+                alert('Ошибка запуска: ' + (data.error || 'Неизвестная ошибка'));
+            }
+            }
+        })
+        .catch(err => { 
+            console.error(err); 
+            if (typeof showNotification === 'function') {
+                showNotification('Ошибка при запуске: ' + err.message, 'error');
+            } else {
+                alert('Ошибка при запуске: ' + err.message);
+            }
+        });
+    });
+
+    // Легкая анимация кнопки запуска
+    setTimeout(() => { document.getElementById('start-auto-reply-btn').classList.add('pulse'); }, 1000);
+});
+
+// Тултипы
+document.addEventListener('mouseover', function(e){
+    if (e.target.closest('[data-tooltip]')) {
+        const t = e.target.closest('[data-tooltip]').getAttribute('data-tooltip');
+        const el = document.getElementById('customTooltip');
+        el.textContent = t; el.style.left = (e.pageX+2)+'px'; el.style.top = (e.pageY-4)+'px'; el.classList.add('show');
+    }
+});
+document.addEventListener('mouseout', function(e){ if (e.target.closest('[data-tooltip]')) document.getElementById('customTooltip').classList.remove('show'); });
+
+// Обработчики для кнопок открытия модальных окон
+document.getElementById('btn-auto-reply-messages')?.addEventListener('click', function() {
+    if (typeof openModal === 'function') {
+        openModal('autoReplyMessagesModal', 'messages', 'autoReplyMessagesTextarea', 'lineNumbersAutoReplyMessages', 'autoReplyMessagesLineCount');
+    } else {
+        showModal('autoReplyMessagesModal');
+    }
+});
+
+document.getElementById('btn-auto-reply-stop-words')?.addEventListener('click', function() {
+    if (typeof openModal === 'function') {
+        openModal('autoReplyStopWordsModal', 'stopWords', 'autoReplyStopWordsTextarea', 'lineNumbersAutoReplyStopWords', 'autoReplyStopWordsLineCount');
+    } else {
+        showModal('autoReplyStopWordsModal');
+    }
+});
+</script>
+{% endblock %}
